@@ -4,7 +4,7 @@ void main() {
   runApp(const MyApp());
 }
 
-enum AppTheme { light, dark }
+enum AppTheme { logo, text }
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,21 +14,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AppTheme _currentTheme = AppTheme.light;
+  AppTheme _currentTheme = AppTheme.logo;
 
   void _toggleTheme() {
     setState(() {
-      _currentTheme = _currentTheme == AppTheme.light ? AppTheme.dark : AppTheme.light;
+      _currentTheme = _currentTheme == AppTheme.logo ? AppTheme.text : AppTheme.logo;
     });
   }
 
   ThemeData _getTheme() {
     switch (_currentTheme) {
-      case AppTheme.light:
+      case AppTheme.logo:
         return ThemeData.light();
-      case AppTheme.dark:
+      case AppTheme.text:
         return ThemeData.dark();
     }
+  }
+
+  Color _getIconColor(BuildContext context) {
+    return _currentTheme == AppTheme.logo ? Colors.orange : Colors.white;
+  }
+
+  Color _getBorderColor(BuildContext context) {
+    return _currentTheme == AppTheme.logo ? Colors.black : Colors.white;
+  }
+
+  IconData _getIconData() {
+    return _currentTheme == AppTheme.logo ? Icons.wb_sunny : Icons.nightlight_round;
   }
 
   @override
@@ -38,27 +50,30 @@ class _MyAppState extends State<MyApp> {
       theme: _getTheme(),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('System-wide Theming Tool'),
+          title: const Text('ChromaCraft'),
         ),
         body: Stack(
           children: [
             Positioned(
               top: 2,
               right: 10,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Toggle Theme: ',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  ElevatedButton(
-                    onPressed: _toggleTheme,
-                    child: Text(
-                      _currentTheme == AppTheme.light ? 'Dark' : 'Light',
+              child: GestureDetector(
+                onTap: _toggleTheme,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: _getBorderColor(context),
+                      width: 2.0,
                     ),
                   ),
-                ],
+                  padding: const EdgeInsets.all(6),
+                  child: Icon(
+                    _getIconData(),
+                    color: _getIconColor(context),
+                    size: 30, // Increased size of the logo
+                  ),
+                ),
               ),
             ),
           ],

@@ -1,83 +1,129 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-enum AppTheme { logo, text }
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  AppTheme _currentTheme = AppTheme.logo;
-
-  void _toggleTheme() {
-    setState(() {
-      _currentTheme = _currentTheme == AppTheme.logo ? AppTheme.text : AppTheme.logo;
-    });
-  }
-
-  ThemeData _getTheme() {
-    switch (_currentTheme) {
-      case AppTheme.logo:
-        return ThemeData.light();
-      case AppTheme.text:
-        return ThemeData.dark();
-    }
-  }
-
-  Color _getIconColor(BuildContext context) {
-    return _currentTheme == AppTheme.logo ? Colors.orange : Colors.white;
-  }
-
-  Color _getBorderColor(BuildContext context) {
-    return _currentTheme == AppTheme.logo ? Colors.black : Colors.white;
-  }
-
-  IconData _getIconData() {
-    return _currentTheme == AppTheme.logo ? Icons.wb_sunny : Icons.nightlight_round;
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: _getTheme(),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('ChromaCraft'),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        '/home': (context) => HomePage(),
+      },
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login Page'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/home');
+          },
+          child: Text('Login'),
         ),
-        body: Stack(
-          children: [
-            Positioned(
-              top: 2,
-              right: 10,
-              child: GestureDetector(
-                onTap: _toggleTheme,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: _getBorderColor(context),
-                      width: 2.0,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(6),
-                  child: Icon(
-                    _getIconData(),
-                    color: _getIconColor(context),
-                    size: 30, // Increased size of the logo
-                  ),
-                ),
+      ),
+    );
+  }
+}
+
+class RegisterPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Register Page'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Register logic here
+            Navigator.pushNamed(context, '/home');
+          },
+          child: Text('Register'),
+        ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Container(
+        child: Row(
+          children: <Widget>[
+            NavigationDrawer(),
+            Expanded(
+              child: Center(
+                child: Text('Main Content'),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class NavigationDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      color: Colors.blue,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Navigation'),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () {
+              // Add navigation functionality here
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              // Add navigation functionality here
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Profile'),
+            onTap: () {
+              // Add navigation functionality here
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            },
+          ),
+        ],
       ),
     );
   }

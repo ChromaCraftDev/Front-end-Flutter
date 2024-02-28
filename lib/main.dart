@@ -1,130 +1,100 @@
+import 'package:chroma_craft_1/LoginPage.dart';
+import 'package:chroma_craft_1/RegisterPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
+      debugShowCheckedModeBanner: true,//Remove Debug tag
+      initialRoute: '/login',
       routes: {
-        '/': (context) => LoginPage(),
+        '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/home': (context) => HomePage(),
+        '/browse': (context) => HomePage(),
+        '/profile': (context) => HomePage(),
+      
       },
     );
   }
 }
 
-class LoginPage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/home');
-          },
-          child: Text('Login'),
-        ),
-      ),
-    );
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class RegisterPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Register Page'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Register logic here
-            Navigator.pushNamed(context, '/home');
-          },
-          child: Text('Register'),
-        ),
-      ),
-    );
-  }
-}
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
 
-class HomePage extends StatelessWidget {
+  final List<Widget> _children = [
+    Center(child: Text('Configure Page')),
+    Center(child: Text('Browse Page')),
+    Center(child: Text('Generate Page')),
+    Center(child: Text('Profile Page')),
+  ];
+
+  void onTabTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Container(
-        child: Row(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: <Widget>[
-            NavigationDrawer(),
-            Expanded(
-              child: Center(
-                child: Text('Main Content'),
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
+              child: Text('ChromaCraft', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+            ListTile(
+              title: Text('Configure'),
+              onTap: () {
+                Navigator.pop(context);
+                onTabTapped(0);
+              },
+            ),
+            ListTile(
+              title: Text('Browse Template'),
+              onTap: () {
+                Navigator.pop(context);
+                onTabTapped(1);
+              },
+            ),
+            ListTile(
+              title: Text('Generate Template'),
+              onTap: () {
+                Navigator.pop(context);
+                onTabTapped(2);
+              },
+            ),
+            ListTile(
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                onTabTapped(3);
+              },
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class NavigationDrawer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      color: Colors.blue,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          DrawerHeader(
-            child: Text('Navigation'),
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
-            onTap: () {
-              // Add navigation functionality here
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {
-              // Add navigation functionality here
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Profile'),
-            onTap: () {
-              // Add navigation functionality here
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
-            onTap: () {
-              Navigator.popUntil(context, ModalRoute.withName('/'));
-            },
-          ),
-        ],
-      ),
+      body: _children[_currentIndex],
     );
   }
 }

@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-import 'package:chroma_craft_1/main.dart';
 import 'package:flutter/material.dart' show AppBar, BuildContext, Column, CrossAxisAlignment, EdgeInsets, ElevatedButton, InputDecoration, MainAxisAlignment, Navigator, Padding, Scaffold, SizedBox, StatelessWidget, Text, TextButton, TextField, Widget;
 
 class LoginPage extends StatelessWidget {

@@ -37,7 +37,7 @@ class RegisterPage extends StatelessWidget {
                 // TODO: Implement registration functionality
                 Navigator.pushNamed(context, '/login');
               },
-              child: Text('Register'),
+              child: const Text('Register'),
             ),
           ],
         ),

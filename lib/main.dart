@@ -1,100 +1,130 @@
-import 'package:chroma_craft_1/LoginPage.dart';
-import 'package:chroma_craft_1/RegisterPage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,//Remove Debug tag
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
-        '/login': (context) => LoginPage(),
+        '/': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
         '/home': (context) => HomePage(),
-        '/browse': (context) => HomePage(),
-        '/profile': (context) => HomePage(),
-      
       },
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login Page'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/home');
+          },
+          child: Text('Login'),
+        ),
+      ),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-
-  final List<Widget> _children = [
-    Center(child: Text('Configure Page')),
-    Center(child: Text('Browse Page')),
-    Center(child: Text('Generate Page')),
-    Center(child: Text('Profile Page')),
-  ];
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+class RegisterPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Register Page'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Register logic here
+            Navigator.pushNamed(context, '/home');
+          },
+          child: Text('Register'),
+        ),
+      ),
+    );
   }
+}
 
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+      body: Container(
+        child: Row(
           children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+            NavigationDrawer(),
+            Expanded(
+              child: Center(
+                child: Text('Main Content'),
               ),
-              child: Text('ChromaCraft', style: TextStyle(color: Colors.white, fontSize: 24)),
-            ),
-            ListTile(
-              title: Text('Configure'),
-              onTap: () {
-                Navigator.pop(context);
-                onTabTapped(0);
-              },
-            ),
-            ListTile(
-              title: Text('Browse Template'),
-              onTap: () {
-                Navigator.pop(context);
-                onTabTapped(1);
-              },
-            ),
-            ListTile(
-              title: Text('Generate Template'),
-              onTap: () {
-                Navigator.pop(context);
-                onTabTapped(2);
-              },
-            ),
-            ListTile(
-              title: Text('Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                onTabTapped(3);
-              },
             ),
           ],
         ),
       ),
-      body: _children[_currentIndex],
+    );
+  }
+}
+
+class NavigationDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      color: Colors.blue,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          DrawerHeader(
+            child: Text('Navigation'),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () {
+              // Add navigation functionality here
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              // Add navigation functionality here
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Profile'),
+            onTap: () {
+              // Add navigation functionality here
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Logout'),
+            onTap: () {
+              Navigator.popUntil(context, ModalRoute.withName('/'));
+            },
+          ),
+        ],
+      ),
     );
   }
 }

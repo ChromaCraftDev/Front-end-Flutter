@@ -15,32 +15,32 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            TextField(
+            const TextField(
               decoration: InputDecoration(
                 labelText: 'Email',
               ),
             ),
-            SizedBox(height: 20.0),
-            TextField(
+            const SizedBox(height: 20.0),
+            const TextField(
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Password',
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
                 // TODO: Implement login functionality
-                Navigator.pushNamed(context, '/home');
+                Navigator.pushNamed(context, '/config');
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             TextButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
               },
-              child: Text('Create an Account'),
+              child: const Text('Create an Account'),
             ),
           ],
         ),

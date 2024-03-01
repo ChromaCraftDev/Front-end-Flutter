@@ -1,4 +1,3 @@
-import 'package:chroma_craft_1/Generate.dart';
 import 'package:chroma_craft_1/RegisterPage.dart';
 import 'package:flutter/material.dart';
 

@@ -111,6 +111,12 @@ class _BrowsePageState extends State<BrowsePage> {
               );
             },
           ),
+          ListTile(
+              title: const Text('Generate Template'),
+              onTap: () {
+                Navigator.pushNamed(context, '/ai');
+              },
+            ),
             ListTile(
               title: const Text('Settings'),
               onTap: () {

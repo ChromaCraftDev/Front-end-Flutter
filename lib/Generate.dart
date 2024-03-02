@@ -48,7 +48,12 @@ class _GenerateAIState extends State<GenerateAI> {
                 Navigator.pushNamed(context, '/settings');
               },
             ),
-            
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+            ),
           ],
         ),
       ),

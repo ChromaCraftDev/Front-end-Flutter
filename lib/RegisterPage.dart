@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+  const RegisterPage({Key? key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -12,25 +12,86 @@ class RegisterPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Full Name',
+            const SizedBox(height: 20.0),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'First Name',
+                        contentPadding: EdgeInsets.all(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10.0),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Last Name',
+                        contentPadding: EdgeInsets.all(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20.0),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: const TextField(
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Email',
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
               ),
             ),
             const SizedBox(height: 20.0),
-            const TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: const TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Password',
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
               ),
             ),
             const SizedBox(height: 20.0),
-            const TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: const TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Confirm Password',
+                  contentPadding: EdgeInsets.all(10.0),
+                ),
               ),
             ),
             const SizedBox(height: 20.0),

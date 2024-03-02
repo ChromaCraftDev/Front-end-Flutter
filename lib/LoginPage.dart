@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key});
-
+  const LoginPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,13 +22,19 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Align(
+                  const Align(
                     alignment: Alignment.topCenter,
-                    child: Container(
-                      child: const Text(
-                        'LOGIN',
-                        style: TextStyle(fontSize: 50),
-                      ),
+                    child: Text(
+                      '',
+                      style: TextStyle(fontSize: 50),
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                  const Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      'LOGIN',
+                      style: TextStyle(fontSize: 80,fontFamily: 'Schyler',),
                     ),
                   ),
                   const SizedBox(height: 60.0), // Add space between "LOGIN" and text fields
@@ -98,7 +103,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50.0),
+                  const SizedBox(height: 30.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

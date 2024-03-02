@@ -22,7 +22,8 @@ class _GenerateAIState extends State<GenerateAI> {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('ChromaCraft', style: TextStyle(color: Colors.white, fontSize: 24)),
+              padding: EdgeInsets.all(60.0),
+              child: Text('ChromaCraft', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 24,)),
             ),
             ListTile(
               title: const Text('Configure'),

@@ -1,5 +1,6 @@
-import 'package:chroma_craft_1/RegisterPage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class BrowsePage extends StatefulWidget {
   const BrowsePage({super.key});
@@ -23,7 +24,8 @@ class _BrowsePageState extends State<BrowsePage> {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('ChromaCraft', style: TextStyle(color: Colors.white, fontSize: 24)),
+              padding: EdgeInsets.all(60.0),
+              child: Text('ChromaCraft', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 24,)),
             ),
             ListTile(
               title: const Text('Configure'),
@@ -37,80 +39,6 @@ class _BrowsePageState extends State<BrowsePage> {
                 Navigator.pushNamed(context, '/browse');
               },
             ),
-            ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Right to left transition'),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => RegisterPage(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    var begin = Offset(1.0, 0.0);
-                    var end = Offset.zero;
-                    var curve = Curves.easeInOut;
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Bottom to top'),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => RegisterPage(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return SlideTransition(
-                      position: Tween<Offset>(
-                        begin: Offset(0, 1),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: child,
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Fade in and out'),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => RegisterPage(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Rotate transition'),
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => RegisterPage(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return RotationTransition(turns: animation, child: child);
-                  },
-                ),
-              );
-            },
-          ),
           ListTile(
               title: const Text('Generate Template'),
               onTap: () {
@@ -132,13 +60,30 @@ class _BrowsePageState extends State<BrowsePage> {
           ],
         ),
       ),
-      body:content(),
+      body: const WebViewExample(),
     );
   }
-  Widget content(){
-      return Center(
-        child: ElevatedButton(onPressed: () {},child: const Text("Open broswer")),
-        //TODO: Implementaion of web view
+}
+class WebViewExample extends StatefulWidget {
+  const WebViewExample({super.key});
+
+  @override
+  _WebViewExampleState createState() => _WebViewExampleState();
+}
+class _WebViewExampleState extends State<WebViewExample> {
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return WebView(
+        initialUrl: 'https://youtube.com/shorts/ARZTuUnZ2-s?si=9QcC4LgMsjMrjKUA',
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {},
       );
+    } catch (e) {
+      if (kDebugMode) {
+        print('WebView Error: $e');
+      }
+      return Text('WebView Error: $e');
     }
+  }
 }

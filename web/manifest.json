@@ -1,6 +1,6 @@
 {
-    "name": "chroma_craft_1",
-    "short_name": "chroma_craft_1",
+    "name": "ChromaCraft",
+    "short_name": "ChromaCraft",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

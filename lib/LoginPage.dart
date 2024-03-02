@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(bottom: 20.0),
               child: Image.asset(
-                'Images/Thanuga.jpg', // Replace 'assets/logo.png' with your actual image path
+                'Images/logo.PNG', // Replace 'assets/logo.png' with your actual image path
                 height: 100, // Adjust height as needed
               ),
             ),

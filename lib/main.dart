@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,//Remove Debug tag
+      debugShowCheckedModeBanner: false,//Remove Debug tag
       initialRoute: '/login',
       routes: {
         '/login': (context) => const LoginPage(),

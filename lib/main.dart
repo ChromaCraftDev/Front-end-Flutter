@@ -5,6 +5,7 @@ import 'package:chroma_craft_1/LoginPage.dart';
 import 'package:chroma_craft_1/Profile.dart';
 import 'package:chroma_craft_1/RegisterPage.dart';
 import 'package:chroma_craft_1/Settings.dart';
+import 'package:chroma_craft_1/configure.dart';
 import 'package:flutter/material.dart';
 
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/ai': (context) => const GenerateAI(),
         '/profile': (context) => const ProfilePage(),
         '/settings': (context) => const SettingsPage(),
+        '/configure':(context) => const Configure(),
       },
     );
   }

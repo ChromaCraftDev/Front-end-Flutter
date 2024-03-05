@@ -55,6 +55,12 @@ class _ConfigurePageState extends State<ConfigurePage> {
                 Navigator.pushNamed(context, '/profile');
               },
             ),
+            ListTile(
+              title: const Text('configureee'),
+              onTap: () {
+                Navigator.pushNamed(context, '/configure');
+              },
+            ),
           ],
         ),
       ),

@@ -1,7 +1,8 @@
+import 'package:chroma_craft_1/Typography.dart';
 import 'package:flutter/material.dart';
 
 class ConfigurePage extends StatefulWidget {
-  const ConfigurePage({super.key});
+  const ConfigurePage({Key? key}) : super(key: key);
 
   @override
   _ConfigurePageState createState() => _ConfigurePageState();
@@ -18,12 +19,32 @@ class _ConfigurePageState extends State<ConfigurePage> {
   Color colorBoxColor8 = const Color.fromARGB(255, 243, 139, 168);
   Color colorBoxColor9 = const Color.fromARGB(255, 249, 226, 175);
   Color colorBoxColor10 = const Color.fromARGB(255, 166, 227, 161);
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configure'),
+        title: const Text('Colour Configure'),
+      actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.palette), // replace with your palette icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ConfigurePage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Text('Tr'), // replace with your "Tr" icon
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TypographyPage()),
+              );
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -70,64 +91,70 @@ class _ConfigurePageState extends State<ConfigurePage> {
         ),
       ),
       body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildColumn([
               buildButton('Base', 'The most prevalent. Usually the background colour.', colorBoxColor1),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Shade', 'Visually below the components using base colour usually used for sidebars', colorBoxColor2),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Container', 'Visually above the components using base, usually used for cards.', colorBoxColor3),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Text', 'Forground, usually used for main text, and icons.', colorBoxColor4),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Subtle', 'Less important than "text" usally used for description texts', colorBoxColor5),
-              const SizedBox(height: 10), // Add some space between the buttons
+            ]),
+            SizedBox(width: 20), // Add space between columns
+            _buildColumn([
               buildButton('Primary', 'The focus. usally used for important buttons.', colorBoxColor6),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Alternate', 'A contracting accent used to create visual interest.', colorBoxColor7),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Error', 'Used to indicate Error', colorBoxColor8),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Warning', 'Used to indicate Warning', colorBoxColor9),
-              const SizedBox(height: 10), // Add some space between the buttons
               buildButton('Success', 'Used to indicate success.', colorBoxColor10),
-            ],
-          ),
+            ]),
+          ],
         ),
+      ),
     );
   }
-}
 
-Widget buildButton(String title, String subtitle, Color colorBoxColor) {
+  Widget _buildColumn(List<Widget> children) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: children.map((widget) => Padding(padding: EdgeInsets.symmetric(vertical: 10), child: widget)).toList(),
+    );
+  }
+
+  Widget buildButton(String title, String subtitle, Color colorBoxColor) {
     return Container(
-      width: 800, // adjust the width as needed
-      height: 70, // adjust the height as needed
+      width: 600, // Adjust the width as needed
+      height: 70, // Adjust the height as needed
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black, // background color
+          backgroundColor: Colors.black, // Background color
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), // rounded corners
+            borderRadius: BorderRadius.circular(10), // Rounded corners
           ),
         ),
         onPressed: () {
-          // handle button press
+          // Handle button press
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center, //vertically align text
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -138,7 +165,12 @@ Widget buildButton(String title, String subtitle, Color colorBoxColor) {
               child: Container(
                 width: 50,
                 height: 50,
-                color: colorBoxColor,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10), // Rounded corners for color box
+                  child: Container(
+                    color: colorBoxColor,
+                  ),
+                )
               ),
             ),
           ],
@@ -146,6 +178,4 @@ Widget buildButton(String title, String subtitle, Color colorBoxColor) {
       ),
     );
   }
-  
-  void setState(Null Function() param0) {
-  }
+}

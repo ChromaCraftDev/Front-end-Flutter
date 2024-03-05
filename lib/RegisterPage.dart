@@ -12,7 +12,7 @@ class RegisterPage extends StatelessWidget {
         title: const Text('Register'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(80.0),
+        padding: const EdgeInsets.all(32.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -34,7 +34,7 @@ class RegisterPage extends StatelessWidget {
                       style: TextStyle(fontSize: 50,fontFamily: 'Schyler',),
                     ),
                   ),
-                  const SizedBox(height: 60.0), // Add space between "LOGIN" and text fields
+                  const SizedBox(height: 50.0), // Add space between "LOGIN" and text fields
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),

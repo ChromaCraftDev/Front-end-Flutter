@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 
 class BrowsePage extends StatefulWidget {
   const BrowsePage({super.key});
@@ -10,6 +10,8 @@ class BrowsePage extends StatefulWidget {
 }
 
 class _BrowsePageState extends State<BrowsePage> {
+  late WebViewController _controller;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,30 +62,10 @@ class _BrowsePageState extends State<BrowsePage> {
           ],
         ),
       ),
-      body: const WebViewExample(),
+      body: const WebView(
+        
+      ),
     );
   }
 }
-class WebViewExample extends StatefulWidget {
-  const WebViewExample({super.key});
 
-  @override
-  _WebViewExampleState createState() => _WebViewExampleState();
-}
-class _WebViewExampleState extends State<WebViewExample> {
-  @override
-  Widget build(BuildContext context) {
-    try {
-      return WebView(
-        initialUrl: 'https://youtube.com/shorts/ARZTuUnZ2-s?si=9QcC4LgMsjMrjKUA',
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {},
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        print('WebView Error: $e');
-      }
-      return Text('WebView Error: $e');
-    }
-  }
-}

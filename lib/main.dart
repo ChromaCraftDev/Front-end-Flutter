@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         '/ai': (context) => const GenerateAI(),
         '/profile': (context) => const ProfilePage(),
         '/settings': (context) => const SettingsPage(),
-        '/configure':(context) => const Configure(),
       },
     );
   }

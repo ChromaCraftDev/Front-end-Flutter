@@ -1,6 +1,8 @@
 import 'package:chroma_craft_1/Typography.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
+import 'theme_notifier.dart'; // Import the ThemeNotifier class
 
 class ConfigurePage extends StatefulWidget {
   const ConfigurePage({Key? key}) : super(key: key);
@@ -23,6 +25,8 @@ class _ConfigurePageState extends State<ConfigurePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final isDarkModeEnabled = themeNotifier.currentTheme == ThemeData.dark();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Colour Configure'),
@@ -51,12 +55,16 @@ class _ConfigurePageState extends State<ConfigurePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
               ),
-              padding: EdgeInsets.all(60.0),
-              child: Text('ChromaCraft', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 24,)),
+              padding: const EdgeInsets.all(40.0),
+              child: Image.asset(
+                  'Images/logo2.PNG',
+                  width: 1000, // Adjust width as needed
+                  height: 1000, // Adjust height as needed
+               ),
             ),
             ListTile(
               title: const Text('Configure'),

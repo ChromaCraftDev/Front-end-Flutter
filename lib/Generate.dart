@@ -18,12 +18,16 @@ class _GenerateAIState extends State<GenerateAI> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
               ),
-              padding: EdgeInsets.all(60.0),
-              child: Text('ChromaCraft', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 24,)),
+              padding: const EdgeInsets.all(40.0),
+              child: Image.asset(
+                  'Images/logo2.PNG',
+                  width: 1000, // Adjust width as needed
+                  height: 1000, // Adjust height as needed
+               ),
             ),
             ListTile(
               title: const Text('Configure'),

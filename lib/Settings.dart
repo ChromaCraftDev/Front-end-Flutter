@@ -1,61 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'theme_notifier.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _darkThemeEnabled = false;
-
-  void _toggleTheme(bool value) {
-    setState(() {
-      _darkThemeEnabled = value;
-      // Update theme based on the toggle value
-      if (_darkThemeEnabled) {
-        // Dark theme
-        _applyTheme(ThemeData.dark());
-      } else {
-        // Light theme
-        _applyTheme(ThemeData.light());
-      }
-    });
-  }
-
-  void _applyTheme(ThemeData theme) {
-    // You can further customize the theme based on your requirements
-    // For example, you might want to change colors, fonts, etc.
-    // Here, we are just updating the whole app's theme
-    MaterialApp app = MaterialApp(
-      theme: theme,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: SettingsContent(_toggleTheme),
-      ),
-    );
-    // Replace the current route with the new themed app
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => app));
-  }
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        leading: Builder(
+          // Wrap the IconButton with Builder
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              padding: EdgeInsets.all(60.0),
-              child: Text('ChromaCraft', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 24,)),
+              padding: const EdgeInsets.all(40.0),
+              child: Image.asset(
+                'Images/logo2.PNG',
+                width: 1000, // Adjust width as needed
+                height: 1000, // Adjust height as needed
+              ),
             ),
             ListTile(
               title: const Text('Configure'),
@@ -90,19 +75,16 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       ),
-      body: SettingsContent(_toggleTheme),
+      body: SettingsContent(),
     );
-    
   }
 }
 
 class SettingsContent extends StatelessWidget {
-  final Function(bool) onThemeChanged;
-
-  const SettingsContent(this.onThemeChanged);
-
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -114,8 +96,10 @@ class SettingsContent extends StatelessWidget {
           ),
           SwitchListTile(
             title: const Text('Dark Theme'),
-            value: false, // You should get the actual theme value from your app settings
-            onChanged: onThemeChanged,
+            value: themeNotifier.currentTheme.brightness == Brightness.dark,
+            onChanged: (value) {
+              themeNotifier.toggleTheme(value);
+            },
           ),
         ],
       ),

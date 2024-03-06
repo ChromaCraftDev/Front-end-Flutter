@@ -25,7 +25,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/config': (context) => const ConfigurePage(),
-        '/browse': (context) => const BrowsePage(),
         '/ai': (context) => const GenerateAI(),
         '/profile': (context) => const ProfilePage(),
         '/settings': (context) => const SettingsPage(),

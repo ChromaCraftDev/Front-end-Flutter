@@ -11,15 +11,15 @@ class ConfigurePage extends StatefulWidget {
 
 class _ConfigurePageState extends State<ConfigurePage> {
   Color colorBoxColor1 =  HexColor('#1E1E2E');
-  Color colorBoxColor2 = const Color.fromARGB(255, 17, 17, 27);
-  Color colorBoxColor3 = const Color.fromARGB(255, 49, 50, 68);
-  Color colorBoxColor4 = const Color.fromARGB(255, 205, 214, 244);
-  Color colorBoxColor5 = const Color.fromARGB(255, 166, 173, 200);
-  Color colorBoxColor6 = const Color.fromARGB(255, 203, 166, 247);
-  Color colorBoxColor7 = const Color.fromARGB(255, 250, 179, 135);
-  Color colorBoxColor8 = const Color.fromARGB(255, 243, 139, 168);
-  Color colorBoxColor9 = const Color.fromARGB(255, 249, 226, 175);
-  Color colorBoxColor10 = const Color.fromARGB(255, 166, 227, 161);
+  Color colorBoxColor2 = HexColor('#11111B');
+  Color colorBoxColor3 = HexColor('#313244');
+  Color colorBoxColor4 = HexColor('#CDD6F4');
+  Color colorBoxColor5 = HexColor('#A6ADC8');
+  Color colorBoxColor6 = HexColor('#CBA6F7');
+  Color colorBoxColor7 = HexColor('#FAB387');
+  Color colorBoxColor8 = HexColor('#F38BA8');
+  Color colorBoxColor9 = HexColor('#F9E2AF');
+  Color colorBoxColor10 = HexColor('#A6E3A1');
 
   @override
   Widget build(BuildContext context) {

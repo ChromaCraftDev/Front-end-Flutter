@@ -84,11 +84,11 @@ class _TypographyPageState extends State<TypographyPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildTextStyle('Sans Serif', 'Used for application UI.', const TextStyle(fontFamily: 'sans serif')),
+            buildTextStyle('Sans Serif', 'Used for application UI.', const TextStyle(fontFamily: 'Sans Serif')),
             const SizedBox(height: 16),
             buildTextStyle('Serif', 'Used for documents.', const TextStyle(fontFamily: 'Serif')),
             const SizedBox(height: 16),
-            buildTextStyle('Monospace', 'Used for code editors, and terminals.', const TextStyle(fontFamily: 'Monospace')),
+            buildTextStyle('Monospace', 'Used for code editors, and terminals.', const TextStyle(fontFamily: 'MonoSpace')),
           ],
         ),
       ),

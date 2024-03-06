@@ -1,3 +1,4 @@
+import 'package:chroma_craft_1/BrowsePage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:chroma_craft_1/LoginPage.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const RegisterPage(),
           '/config': (context) => const ConfigurePage(),
           '/ai': (context) => const GenerateAI(),
+          '/testweb':(context) => const Browse(),
           '/profile': (context) => const ProfilePage(),
           '/settings': (context) => const SettingsPage(),
           '/typography': (context) => const TypographyPage(),

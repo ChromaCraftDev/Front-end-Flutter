@@ -18,7 +18,6 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('Settings'),
         leading: Builder(
-          // Wrap the IconButton with Builder
           builder: (context) => IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
@@ -28,13 +27,11 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
+              decoration: const BoxDecoration(
+              color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -42,31 +39,39 @@ class _SettingsPageState extends State<SettingsPage> {
                 height: 1000, // Adjust height as needed
               ),
             ),
-            ListTile(
-              title: const Text('Configure'),
-              onTap: () {
-                Navigator.pushNamed(context, '/config');
-              },
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  ListTile(
+                    title: const Text('Configure'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/config');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Browse Template'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/browse');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Generate Template'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/ai');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                  ),
+                ],
+              ),
             ),
             ListTile(
-              title: const Text('Browse Template'),
-              onTap: () {
-                Navigator.pushNamed(context, '/browse');
-              },
-            ),
-            ListTile(
-              title: const Text('Generate Template'),
-              onTap: () {
-                Navigator.pushNamed(context, '/ai');
-              },
-            ),
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-            ListTile(
+              leading: Icon(Icons.account_circle), // Icon for Profile
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');

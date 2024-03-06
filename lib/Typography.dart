@@ -64,8 +64,7 @@ class _TypographyPageState extends State<TypographyPage> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 79, 55, 140),
-              ),
+              color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                   'Images/logo2.PNG',

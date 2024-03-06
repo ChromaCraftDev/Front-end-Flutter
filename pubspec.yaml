@@ -39,6 +39,7 @@ dependencies:
   flutter_lints: ^3.0.1
   flutter_svg: ^2.0.10+1
   webview_flutter_web: ^0.2.2+4
+  hexcolor: ^3.0.1
 
 dev_dependencies:
   flutter_test:

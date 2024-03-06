@@ -1,12 +1,54 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
+//import 'package:your_database_package'; // import your database package
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
-
+  const RegisterPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController firstNameController = TextEditingController();
+    TextEditingController lastNameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController confirmPasswordController = TextEditingController();
+
+    void registerUser() {
+      String firstName = firstNameController.text.trim();
+      String lastName = lastNameController.text.trim();
+      String email = emailController.text.trim();
+      String password = passwordController.text;
+      String confirmPassword = confirmPasswordController.text;
+
+      bool isFirstNameNotEmpty = firstName.isNotEmpty;
+
+      // Validate email format
+      bool isEmailValid = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+
+      // Check password length
+      bool isPasswordValid = password.length >= 6;
+
+      if(!isFirstNameNotEmpty){
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('First Name cannot be empty!')));
+      }
+
+      if (!isEmailValid) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid Email Address!')));
+      }
+      if(!isPasswordValid){
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a password more than 6 characters!')));
+      }
+      
+      if (!(password == confirmPassword)) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Passwords you entered doesn't match!")));
+      }
+      if (isEmailValid && isPasswordValid && password == confirmPassword && isFirstNameNotEmpty) {
+        // Save data into the database
+        // Example:
+        // YourDatabase.saveUser(firstName, lastName, email, password);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration successful!')));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -31,92 +73,59 @@ class RegisterPage extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Text(
                       'REGISTER NOW',
-                      style: TextStyle(fontSize: 50,fontFamily: 'Schyler',),
+                      style: TextStyle(fontSize: 40, fontFamily: 'Schyler'),
                     ),
                   ),
-                  const SizedBox(height: 50.0), // Add space between "LOGIN" and text fields
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'First Name',
-                        contentPadding: EdgeInsets.all(10.0),
-                      ),
+                  const SizedBox(height: 40.0), // Add space between "LOGIN" and text fields
+                  TextField(
+                    controller: firstNameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'First Name',
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Last Name',
-                        contentPadding: EdgeInsets.all(10.0),
-                      ),
+                  TextField(
+                    controller: lastNameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Last Name (Optional)',
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email Address',
-                        contentPadding: EdgeInsets.all(10.0),
-                      ),
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Email Address',
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: const TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Password',
-                        contentPadding: EdgeInsets.all(10.0),
-                      ),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Password',
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: const TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Confirm Password',
-                        contentPadding: EdgeInsets.all(10.0),
-                      ),
+                  TextField(
+                    controller: confirmPasswordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Confirm Password',
                     ),
                   ),
                   const SizedBox(height: 20.0),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        // TODO: Implement login functionality
-                        Navigator.pushNamed(context, '/login');
-                      },
+                      onPressed: registerUser,
                       child: const Text('Register'),
                     ),
                   ),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 20.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

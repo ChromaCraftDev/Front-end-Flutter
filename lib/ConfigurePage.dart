@@ -1,5 +1,6 @@
 import 'package:chroma_craft_1/Typography.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class ConfigurePage extends StatefulWidget {
   const ConfigurePage({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class ConfigurePage extends StatefulWidget {
 }
 
 class _ConfigurePageState extends State<ConfigurePage> {
-  Color colorBoxColor1 = const Color.fromARGB(255, 30, 30, 46);
+  Color colorBoxColor1 =  HexColor('#1E1E2E');
   Color colorBoxColor2 = const Color.fromARGB(255, 17, 17, 27);
   Color colorBoxColor3 = const Color.fromARGB(255, 49, 50, 68);
   Color colorBoxColor4 = const Color.fromARGB(255, 205, 214, 244);
@@ -101,7 +102,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
               buildButton('Text', 'Forground, usually used for main text, and icons.', colorBoxColor4),
               buildButton('Subtle', 'Less important than "text" usally used for description texts', colorBoxColor5),
             ]),
-            SizedBox(width: 20), // Add space between columns
+            const SizedBox(width: 20), // Add space between columns
             _buildColumn([
               buildButton('Primary', 'The focus. usally used for important buttons.', colorBoxColor6),
               buildButton('Alternate', 'A contracting accent used to create visual interest.', colorBoxColor7),
@@ -166,7 +167,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
                 width: 50,
                 height: 50,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10), // Rounded corners for color box
+                  borderRadius: BorderRadius.circular(10),// Rounded corners for color box
                   child: Container(
                     color: colorBoxColor,
                   ),

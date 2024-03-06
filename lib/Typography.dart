@@ -15,23 +15,46 @@ class _TypographyPageState extends State<TypographyPage> {
       appBar: AppBar(
         title: const Text('Typography Configure'),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.palette), // replace with your palette icon
-            onPressed: () {
-              Navigator.push(
+          Container(
+              decoration: const BoxDecoration(
+              shape: BoxShape.circle, // Make the container circular
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.palette),
+              onPressed: () {
+                Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ConfigurePage()),
-              );
-            },
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) => const ConfigurePage(),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(-1.0, 0.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeInOutQuart;
+
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
           ),
-          IconButton(
-            icon: const Text('Tr'), // replace with your "Tr" icon
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const TypographyPage()),
-              );
-            },
+          Container(
+              decoration: const BoxDecoration(
+              shape: BoxShape.circle, // Make the container circular
+              color: Color.fromARGB(150, 79, 55, 140), // Set the background color for the icon button
+            ),
+            child: IconButton(
+              icon: const Text('Tr'),
+              onPressed: () {
+                
+              },
+            ),
           ),
         ],
       ),
@@ -41,7 +64,7 @@ class _TypographyPageState extends State<TypographyPage> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromARGB(255, 79, 55, 140),
               ),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(

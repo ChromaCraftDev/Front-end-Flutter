@@ -1,5 +1,59 @@
+
+// NOT A PART OF A SOFTWARE 
+// .
+
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:provider/provider.dart';
+
+class OpenaiService {
+  final String apiKey;
+  final String endpoint = 'https://api.openai.com/v1/engines/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/completions';
+
+  OpenaiService(this.apiKey);
+
+  Future<String> generatePrompt(String prompt) async {
+    final response = await http.post(
+      Uri.parse(endpoint),
+      headers: {
+        'Authorization': 'Bearer $apiKey',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'prompt': prompt}),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return data['choices'][0]['text'];
+    } else {
+      throw Exception('Failed to generate prompt: ${response.statusCode}');
+    }
+  }
+}
+
+class PromptGenerator extends ChangeNotifier {
+  final OpenaiService openaiService;
+  String prompt = '';
+  String generatedText = '';
+  bool isLoading = false;
+
+  PromptGenerator(this.openaiService);
+
+  Future<void> generatePrompt() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      generatedText = await openaiService.generatePrompt(prompt);
+    } catch (e) {
+      generatedText = 'Failed to generate prompt: $e';
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+}
 
 void main() {
   runApp(MyApp());
@@ -8,117 +62,52 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ColorPickerPage(),
+    return ChangeNotifierProvider(
+      create: (_) => PromptGenerator(OpenaiService('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')),
+      child: MaterialApp(
+        title: 'OpenAI Prompt Generator',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: PromptGeneratorScreen(),
+      ),
     );
   }
 }
 
-class ColorPickerPage extends StatefulWidget {
-  @override
-  _ColorPickerPageState createState() => _ColorPickerPageState();
-}
-
-class _ColorPickerPageState extends State<ColorPickerPage> {
-  Color currentColor = Colors.blue; // Default color
-  TextEditingController hexController = TextEditingController();
-
-  void changeColor(Color color) {
-    setState(() {
-      currentColor = color;
-      hexController.text = colorToHex(color);
-    });
-  }
-
-  void changeColorFromHex(String hex) {
-    setState(() {
-      currentColor = hexToColor(hex);
-    });
-  }
-
-  String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
-  }
-
-  Color hexToColor(String hex) {
-    return Color(int.parse(hex.substring(1, 7), radix: 16) + 0xFF000000);
-  }
-
+class PromptGeneratorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final promptGenerator = Provider.of<PromptGenerator>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Color Picker Example'),
+        title: const Text('OpenAI Prompt Generator'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            TextField(
+              decoration: const InputDecoration(labelText: 'Enter prompt'),
+              onChanged: (value) => promptGenerator.prompt = value,
+            ),
+            const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Pick a color'),
-                      content: SingleChildScrollView(
-                        child: ColorPicker(
-                          pickerColor: currentColor,
-                          onColorChanged: changeColor,
-                          showLabel: true,
-                          pickerAreaHeightPercent: 0.8,
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Done'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: Text('Open Color Picker'),
+              onPressed: promptGenerator.generatePrompt,
+              child: const Text('Generate'),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Selected Color:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Container(
-              width: 100,
-              height: 100,
-              color: currentColor,
-            ),
-            SizedBox(height: 10),
-            SizedBox(
-              width: 150,
-              child: TextField(
-                controller: hexController,
-                decoration: InputDecoration(
-                  labelText: 'Hex Color',
-                  hintText: '#RRGGBB',
-                ),
-                onChanged: (value) {
-                  if (value.isNotEmpty && value.startsWith('#') && value.length == 7) {
-                    changeColorFromHex(value);
-                  }
-                },
-              ),
-            ),
+            const SizedBox(height: 16.0),
+            promptGenerator.isLoading
+                ? const CircularProgressIndicator()
+                : Expanded(
+                    child: SingleChildScrollView(
+                      child: Text(promptGenerator.generatedText),
+                    ),
+                  ),
           ],
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    hexController.dispose();
-    super.dispose();
   }
 }

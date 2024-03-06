@@ -39,7 +39,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
           Container(
               decoration: const BoxDecoration(
               shape: BoxShape.circle, // Make the container circular
-              color: Color.fromARGB(150, 79, 55, 140), // Set the background color for the icon button
+              color: Color.fromARGB(255, 79, 55, 140), // Set the background color for the icon button
             ),
             child: IconButton(
               icon: const Icon(Icons.palette),
@@ -85,7 +85,8 @@ class _ConfigurePageState extends State<ConfigurePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-              color: Color.fromARGB(200, 79, 55, 140)),
+                color: Colors.blue,
+              ),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -204,48 +205,77 @@ class _ConfigurePageState extends State<ConfigurePage> {
   }
 
   void _showColorPickerDialog(Color color, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Pick a color'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                ColorPicker(
-                  pickerColor: color,
-                  onColorChanged: (Color newColor) {
-                    setState(() {
-                      colorBoxColors[index] = newColor;
-                      hexController.text = colorToHex(newColor);
-                    });
-                  },
-                  showLabel: true,
-                  pickerAreaHeightPercent: 0.8,
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: hexController,
-                  decoration: const InputDecoration(labelText: 'Hex Color Code'),
-                  onChanged: (String hex) {
-                    _changeColorFromHex(hex, index);
-                  },
-                ),
-              ],
-            ),
+  Color originalColor = colorBoxColors[index]; // Store the original color
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Pick a color'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              ColorPicker(
+                pickerColor: color,
+                onColorChanged: (Color newColor) {
+                  setState(() {
+                    colorBoxColors[index] = newColor;
+                    hexController.text = colorToHex(newColor);
+                  });
+                },
+                showLabel: true,
+                pickerAreaHeightPercent: 0.8,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: hexController,
+                decoration: const InputDecoration(labelText: 'Hex Color Code'),
+                onChanged: (String hex) {
+                  _changeColorFromHex(hex, index);
+                },
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Done'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        colorBoxColors[index] = originalColor; // Revert to original color
+                        hexController.text = colorToHex(originalColor);
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Revert'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  // Apply the chosen color
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Apply'),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   void _changeColorFromHex(String hex, int index) {
     try {

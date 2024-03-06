@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _ProfilePageState createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,14 +14,15 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: const BoxDecoration(
-              color: Color.fromARGB(200, 79, 55, 140)),
+              decoration: BoxDecoration(
+                color: Colors.blue, // Change the drawer header color
+              ),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                  'Images/logo2.PNG',
-                  width: 1000, // Adjust width as needed
-                  height: 1000, // Adjust height as needed
-               ),
+                'Images/logo2.PNG',
+                width: 100, // Adjust width as needed
+                height: 100, // Adjust height as needed
+              ),
             ),
             ListTile(
               title: const Text('Configure'),
@@ -66,21 +61,22 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage('https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'), // Add your profile picture asset here
+            CircleAvatar(
+              radius: 80,
+              backgroundImage: NetworkImage(
+                  'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Example Person',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            const Text(
+            SizedBox(height: 10),
+            Text(
               'example.do@example.com',
               style: TextStyle(fontSize: 18),
             ),
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/login');

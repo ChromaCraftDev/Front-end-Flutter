@@ -85,26 +85,61 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-class SettingsContent extends StatelessWidget {
+class SettingsContent extends StatefulWidget {
+  @override
+  _SettingsContentState createState() => _SettingsContentState();
+}
+
+class _SettingsContentState extends State<SettingsContent> {
+  String _selectedTheme = '    System Default';
+
   @override
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(70.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Theme',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          SwitchListTile(
-            title: const Text('Dark Theme'),
-            value: themeNotifier.currentTheme.brightness == Brightness.dark,
-            onChanged: (value) {
-              themeNotifier.toggleTheme(value);
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Theme',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Container(
+                width: 180,
+                child: DropdownButton<String>(
+                  value: _selectedTheme,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedTheme = newValue!;
+                      if (_selectedTheme == '    Dark') {
+                        themeNotifier.toggleTheme(true);
+                      } else if (_selectedTheme == '    Light') {
+                        themeNotifier.toggleTheme(false);
+                      } else if (_selectedTheme == '    System Default') {
+                        themeNotifier.setSystemDefaultTheme();
+                      }
+                    });
+                  },
+                  items: <String>['    System Default', '    Dark', '    Light']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Center( // Center the dropdown menu items
+                        child: Text(
+                          value,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
         ],
       ),

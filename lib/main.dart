@@ -8,7 +8,7 @@ import 'package:chroma_craft_1/Generate.dart';
 import 'package:chroma_craft_1/Profile.dart';
 import 'package:chroma_craft_1/Settings.dart';
 import 'package:chroma_craft_1/Typography.dart';
-import 'theme_notifier.dart'; // Import the ThemeNotifier class
+import 'theme_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

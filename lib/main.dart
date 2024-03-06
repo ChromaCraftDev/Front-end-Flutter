@@ -9,8 +9,11 @@ import 'package:chroma_craft_1/Profile.dart';
 import 'package:chroma_craft_1/Settings.dart';
 import 'package:chroma_craft_1/Typography.dart';
 import 'theme_notifier.dart'; // Import the ThemeNotifier class
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+void main() async {
+  
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeNotifier(),
@@ -18,6 +21,7 @@ void main() {
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -31,7 +35,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/login',
         routes: {
           '/login': (context) => const LoginPage(),
-          '/register': (context) => const RegisterPage(),
+          '/register': (context) =>  RegisterPage(),
           '/config': (context) => const ConfigurePage(),
           '/ai': (context) => const GenerateAI(),
           '/testweb':(context) => const Browse(),

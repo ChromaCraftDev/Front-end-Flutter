@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'theme_notifier.dart'; // Import the ThemeNotifier class
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ConfigurePage extends StatefulWidget {
   const ConfigurePage({Key? key}) : super(key: key);
@@ -132,54 +133,69 @@ class _ConfigurePageState extends State<ConfigurePage> {
   }
 
   Widget buildButton(String title, String subtitle, Color colorBoxColor) {
-    return Container(
-      width: 600, // Adjust the width as needed
-      height: 70, // Adjust the height as needed
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black, // Background color
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // Rounded corners
-          ),
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Pick a color'),
+              content: SingleChildScrollView(
+                child: ColorPicker(
+                  pickerColor: colorBoxColor,
+                  onColorChanged: (Color color) {
+                    setState(() {
+                      colorBoxColor = color;
+                    });
+                  },
+                  showLabel: true,
+                  pickerAreaHeightPercent: 0.8,
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 600, // Adjust the width as needed
+        height: 70, // Adjust the height as needed
+        decoration: BoxDecoration(
+          color: Colors.black, // Dark color for the rectangle background
+          borderRadius: BorderRadius.circular(10),
         ),
-        onPressed: () {
-          // Handle button press
-        },
+        padding: EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center, //vertically align text
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    title,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  colorBoxColor = colorBoxColor == Colors.red ? Colors.blue : Colors.red;
-                });
-              },
-              child: Container(
-                width: 50,
-                height: 50,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),// Rounded corners for color box
-                  child: Container(
-                    color: colorBoxColor,
-                  ),
-                )
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: colorBoxColor,
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
           ],

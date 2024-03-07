@@ -1,0 +1,116 @@
+/* Style the body element */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    color: #333; /* Change text color to dark */
+}
+
+/* Style the header element */
+.header {
+    padding: 100px;
+    background-color: #cc91f1;
+    color: #333; /* Change text color to dark */
+}
+
+/* Style the navigation bar */
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+/* Style the navigation links */
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Style the right-aligned link */
+.navbar a.right {
+    float: right;
+}
+
+/* Style the main content */
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+/* Style the themes panel */
+.themes {
+    width: 40%;
+    height: 300px;
+    border: 1px solid black;
+    color: #000;
+    margin: 10px;
+    background-image: url("img/themes.jpg");
+}
+
+/* Style the fonts panel */
+.fonts {
+    width: 40%;
+    height: 300px;
+    border: 1px solid black;
+    color: #fff;
+    margin: 10px;
+    background-image: url("img/font.jpg");
+}
+
+/* Style the colors row */
+.colors {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+/* Style the footer */
+.footer {
+    padding: 20px;
+    background-color: #333;
+    color: rgb(255, 255, 255);
+}
+
+/* Style the toggle button */
+#toggle {
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #cc91f1;
+    color: #333; /* Change text color to dark */
+}
+
+/* Additional styles */
+/* Update colors */
+body.dark-mode {
+    background-color: #333;
+    color: #ffffff; /* Change text color to light */
+}
+
+.themes.dark-mode,
+.fonts.dark-mode {
+    background-color: #222;
+}
+
+.footer.dark-mode {
+    background-color: #222;
+}
+
+/* Add purple and white colors */
+.colors.dark-mode {
+    background-color: #7b68ee; /* Purple */
+    color: #fff; /* White */
+}

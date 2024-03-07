@@ -13,7 +13,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
-  
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeNotifier(),
@@ -38,10 +37,11 @@ class MyApp extends StatelessWidget {
           '/register': (context) =>  RegisterPage(),
           '/config': (context) => const ConfigurePage(),
           '/ai': (context) => const GenerateAI(),
-          '/testweb':(context) => const Browse(),
-          '/profile': (context) => const ProfilePage(),
+          '/testweb':(context) => MyWebView(),
+          //'/profile': (context) => const ProfilePage(),
           '/settings': (context) => const SettingsPage(),
           '/typography': (context) => const TypographyPage(),
+          
         },
       ),
     );

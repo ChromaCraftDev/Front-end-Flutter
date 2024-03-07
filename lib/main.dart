@@ -8,11 +8,17 @@ import 'package:chroma_craft_1/Generate.dart';
 import 'package:chroma_craft_1/Profile.dart';
 import 'package:chroma_craft_1/Settings.dart';
 import 'package:chroma_craft_1/Typography.dart';
+import 'package:window_manager/window_manager.dart';
 import 'theme_notifier.dart';
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeNotifier(),
@@ -20,7 +26,6 @@ void main() async {
     ),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -37,8 +42,8 @@ class MyApp extends StatelessWidget {
           '/register': (context) =>  RegisterPage(),
           '/config': (context) => const ConfigurePage(),
           '/ai': (context) => const GenerateAI(),
-          '/testweb':(context) => MyWebView(),
-          //'/profile': (context) => const ProfilePage(),
+          '/testweb':(context) => const Browser(),
+          '/profile': (context) => const ProfilePage(),
           '/settings': (context) => const SettingsPage(),
           '/typography': (context) => const TypographyPage(),
           

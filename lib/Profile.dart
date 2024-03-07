@@ -14,7 +14,7 @@ class ProfilePage extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.blue, // Change the drawer header color
               ),
               padding: const EdgeInsets.all(40.0),
@@ -25,30 +25,35 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(Icons.settings), // Add an icon here
               title: const Text('Configure'),
               onTap: () {
                 Navigator.pushNamed(context, '/config');
               },
             ),
             ListTile(
+              leading: const Icon(Icons.web), // Add an icon here
               title: const Text('Browse Template'),
               onTap: () {
-                Navigator.pushNamed(context, '/browse');
+                Navigator.pushNamed(context, '/testweb');
               },
             ),
             ListTile(
+              leading: const Icon(Icons.create), // Add an icon here
               title: const Text('Generate Template'),
               onTap: () {
                 Navigator.pushNamed(context, '/ai');
               },
             ),
             ListTile(
+              leading: const Icon(Icons.settings), // Add an icon here
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pushNamed(context, '/settings');
               },
             ),
             ListTile(
+              leading: const Icon(Icons.person), // Add an icon here
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');
@@ -59,29 +64,31 @@ class ProfilePage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
+            const CircleAvatar(
               radius: 80,
               backgroundImage: NetworkImage(
                   'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Example Person',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'example.do@example.com',
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: Text('Logout'),
+              child: const Text('Logout'),
             ),
           ],
         ),

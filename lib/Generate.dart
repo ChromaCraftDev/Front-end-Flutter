@@ -37,7 +37,7 @@ class _GenerateAIState extends State<GenerateAI> {
             ListTile(
               title: const Text('Browse Template'),
               onTap: () {
-                Navigator.pushNamed(context, '/browse');
+                Navigator.pushNamed(context, '/testweb');
               },
             ),
             ListTile(

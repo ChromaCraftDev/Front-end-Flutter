@@ -1,26 +1,33 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(60.0),
         child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            // Image asset widget without SizedBox
-            Image.asset(
-              'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
-              width: 600, // Adjust width as needed
-              height: 600, // Adjust height as needed
+            Flexible(
+              flex: 3,
+              child: Image.asset(
+                'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
+                width: 600, // Adjust width as needed
+                height: 600, // Adjust height as needed
+              ),
             ),
-            const SizedBox(width: 50), // Add spacing between image and text boxes
+            const SizedBox(width: 300), // Add spacing between image and text boxes
             Expanded(
+              flex: 3,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   const Align(
                     alignment: Alignment.topCenter,
@@ -34,7 +41,7 @@ class LoginPage extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Text(
                       'LOGIN',
-                      style: TextStyle(fontSize: 80,fontFamily: 'Schyler',),
+                      style: TextStyle(fontSize: 80, fontFamily: 'Schyler'),
                     ),
                   ),
                   const SizedBox(height: 60.0), // Add space between "LOGIN" and text fields
@@ -78,7 +85,9 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30.0),
                   Row(
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       const Text(
                         'Don\'t have an account? ',
@@ -105,7 +114,9 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30.0),
                   Row(
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
                         onPressed: () {

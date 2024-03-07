@@ -52,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ListTile(
                     title: const Text('Browse Template'),
                     onTap: () {
-                      Navigator.pushNamed(context, '/browse');
+                      Navigator.pushNamed(context, '/testweb');
                     },
                   ),
                   ListTile(

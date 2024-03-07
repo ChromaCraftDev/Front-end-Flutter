@@ -1,0 +1,12 @@
+Images
+test
+web
+linux
+windows
+macos
+fonts
+assets
+flake.nix
+flake.lock
+analysis_options.yaml
+pubspec.lock

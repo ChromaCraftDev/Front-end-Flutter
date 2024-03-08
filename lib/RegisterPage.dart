@@ -1,10 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase/supabase.dart';
 
 class RegisterPage extends StatefulWidget {
-  
   RegisterPage({Key? key}) : super(key: key);
 
   @override
@@ -21,9 +18,12 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  final supabase = SupabaseClient(
+    'https://hgblhxdounljhdwemyoz.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnYmxoeGRvdW5samhkd2VteW96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4ODEwMzMsImV4cCI6MjAyNTQ1NzAzM30.kOaLOh5pGrZhAVDfSCd6pYdThxT161IOBeNSuKswZ7g',
+  );
+
   Future<void> registerUser() async {
-
-
     String firstName = firstNameController.text.trim();
     String lastName = lastNameController.text.trim();
     String email = emailController.text.trim();
@@ -61,39 +61,40 @@ class _RegisterPageState extends State<RegisterPage> {
       );
       return;
     }
+    
+    try {
+      // Register user using Supabase Auth
+      final response = await supabase.auth.signUp(
+        email: email,
+        password: password,
+      );
 
-   try {
-      // Create a collection reference for users
-      final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+      if (response == null) {
+        throw Exception('Supabase error'); // Or a custom message
+      }
 
-      // Generate a unique document ID (consider alternatives for scalability)
-      final String userId = usersCollection.id;
-
-      // Prepare user data to save
-      Map<String, dynamic> userData = {
-        'firstName': firstNameController.text.trim(),
-        'lastName': lastNameController.text.trim(),
-        'email': emailController.text.trim(),
-        'password': passwordController.text.trim(),
-        'uid': userId, // Generated ID for reference
-        // ... other user data fields
-      };
-
-      // Save the user data to Firestore
-      await usersCollection.doc(userId).set(userData);
+      // Store additional user data in Supabase database (without ID)
+      final user = response.user;
+      await supabase.from('users').insert({
+        'first_name': firstName,
+        'last_name': lastName,
+        'email': email,
+      }).execute();
 
       _scaffoldKey.currentState!.showSnackBar(
-        SnackBar(content: Text('User data saved successfully!')),
+        SnackBar(
+          content: Text(
+            'Registration successful! Please check your email for a verification link to complete your account.'
+          ),
+        ),
       );
     } catch (e) {
       _scaffoldKey.currentState!.showSnackBar(
-        SnackBar(content: Text('Failed to save data: $e')),
+        SnackBar(content: Text('Failed to register user: $e')),
       );
     }
   }
-
   @override
-
   Widget build(BuildContext context) {
     return ScaffoldMessenger(
       key: _scaffoldKey,
@@ -172,6 +173,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-  
 }

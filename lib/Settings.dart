@@ -16,6 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100.0,
         title: const Text('Settings'),
         leading: Builder(
           builder: (context) => IconButton(

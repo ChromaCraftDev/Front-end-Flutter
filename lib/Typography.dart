@@ -1,4 +1,5 @@
 import 'package:chroma_craft_1/ConfigurePage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TypographyPage extends StatefulWidget {
@@ -13,7 +14,8 @@ class _TypographyPageState extends State<TypographyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Typography Configure'),
+        toolbarHeight: 100.0,
+        title: const Text('Typography Page'),
         actions: <Widget>[
           Container(
               decoration: const BoxDecoration(
@@ -23,16 +25,16 @@ class _TypographyPageState extends State<TypographyPage> {
               icon: const Icon(Icons.palette),
               onPressed: () {
                 Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => const ConfigurePage(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(-1.0, 0.0);
-                  const end = Offset.zero;
-                  const curve = Curves.easeInOutQuart;
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) => const ConfigurePage(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(-1.0, 0.0);
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOutQuart;
 
-                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
 
                       return SlideTransition(
                         position: offsetAnimation,
@@ -47,7 +49,7 @@ class _TypographyPageState extends State<TypographyPage> {
           Container(
               decoration: const BoxDecoration(
               shape: BoxShape.circle, // Make the container circular
-              color: Color.fromARGB(150, 79, 55, 140), // Set the background color for the icon button
+              color: Color.fromARGB(150, 79, 55, 140),
             ),
             child: IconButton(
               icon: const Text('Tr'),
@@ -56,6 +58,27 @@ class _TypographyPageState extends State<TypographyPage> {
               },
             ),
           ),
+           Padding(
+            padding: const EdgeInsets.only(right: 16.0), // Add padding to the right
+            child: TextButton(
+            onPressed: () {
+                // Implement your apply button functionality here
+          if (kDebugMode) {
+            print('Apply button pressed');
+          }
+        },
+        child: const Row(
+          children: [
+            Icon(Icons.edit, color: Color.fromARGB(150, 79, 55, 140)), // Icon
+            SizedBox(width: 15.0), // Add spacing between icon and text
+            Text(
+              'Apply',
+              style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
+            ), // Text
+          ],
+        ),
+      ),
+    ),
         ],
       ),
       drawer: Drawer(

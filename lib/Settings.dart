@@ -75,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.account_circle), // Icon for Profile
+              leading: const Icon(Icons.account_circle), // Icon for Profile
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');

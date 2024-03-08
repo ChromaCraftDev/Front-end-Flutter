@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class OpenaiService {
   final String apiKey;
-  final String endpoint = 'https://api.openai.com/v1/engines/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/completions';
+  final String endpoint = 'https://api.openai.com/v1/engines/text-davinci-002/completions';
 
   OpenaiService(this.apiKey);
 
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => PromptGenerator(OpenaiService('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')),
+      create: (_) => PromptGenerator(OpenaiService('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')),
       child: MaterialApp(
         title: 'OpenAI Prompt Generator',
         theme: ThemeData(

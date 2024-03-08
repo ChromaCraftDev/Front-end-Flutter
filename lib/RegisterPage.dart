@@ -1,4 +1,3 @@
-import 'package:chroma_craft_1/firebase_auth_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +14,6 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
-  final FirebaseAuthService _auth = FirebaseAuthService();
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -24,8 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController confirmPasswordController = TextEditingController();
 
   Future<void> registerUser() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+
 
     String firstName = firstNameController.text.trim();
     String lastName = lastNameController.text.trim();
@@ -65,22 +62,32 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    try {
-      User? user =
-          await _auth.signUpWithEmailAndPassword(
-        email,
-        password,
-      );
+   try {
+      // Create a collection reference for users
+      final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
-      // Save additional user data to Firestore
-      
+      // Generate a unique document ID (consider alternatives for scalability)
+      final String userId = usersCollection.id;
+
+      // Prepare user data to save
+      Map<String, dynamic> userData = {
+        'firstName': firstNameController.text.trim(),
+        'lastName': lastNameController.text.trim(),
+        'email': emailController.text.trim(),
+        'password': passwordController.text.trim(),
+        'uid': userId, // Generated ID for reference
+        // ... other user data fields
+      };
+
+      // Save the user data to Firestore
+      await usersCollection.doc(userId).set(userData);
+
       _scaffoldKey.currentState!.showSnackBar(
-        SnackBar(content: Text('Registration successful!')),
-  
+        SnackBar(content: Text('User data saved successfully!')),
       );
     } catch (e) {
       _scaffoldKey.currentState!.showSnackBar(
-        SnackBar(content: Text('Failed to register: $e')),
+        SnackBar(content: Text('Failed to save data: $e')),
       );
     }
   }
@@ -152,7 +159,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20.0),
                 Center(
                   child: ElevatedButton(
-                    onPressed: registerUser,
+                    onPressed: () async {
+                      await registerUser();
+                    },
                     child: const Text('Register'),
                   ),
                 ),

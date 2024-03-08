@@ -42,11 +42,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) =>  RegisterPage(),
           '/config': (context) => const ConfigurePage(),
           '/ai': (context) => const GenerateAI(),
-<<<<<<< Updated upstream
-          '/testweb':(context) => const Browser(),
-=======
-          '/testweb':(context) => MyWebView(),
->>>>>>> Stashed changes
+          '/browse':(context) => const Browser(),
           '/profile': (context) => const ProfilePage(),
           '/settings': (context) => const SettingsPage(),
           '/typography': (context) => const TypographyPage(),

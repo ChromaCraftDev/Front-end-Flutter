@@ -14,12 +14,8 @@ class ProfilePage extends StatelessWidget {
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-<<<<<<< Updated upstream
                 color: Colors.blue, // Change the drawer header color
               ),
-=======
-              color: Color.fromARGB(200, 79, 55, 140)),
->>>>>>> Stashed changes
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -59,7 +55,6 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             ListTile(
-<<<<<<< Updated upstream
               leading: const Icon(Icons.settings), // Add an icon here
               title: const Text('Configure'),
               onTap: () {
@@ -89,9 +84,6 @@ class ProfilePage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.person), // Add an icon here
-=======
-              leading: Icon(Icons.account_circle), // Icon for Profile
->>>>>>> Stashed changes
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');

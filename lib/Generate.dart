@@ -22,36 +22,6 @@ class _GenerateAIState extends State<GenerateAI> {
               color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-<<<<<<< Updated upstream
-                  'Images/logo2.PNG',
-                  width: 1000, // Adjust width as needed
-                  height: 1000, // Adjust height as needed
-               ),
-            ),
-            ListTile(
-              title: const Text('Configure'),
-              onTap: () {
-                Navigator.pushNamed(context, '/config');
-              },
-            ),
-            ListTile(
-              title: const Text('Browse Template'),
-              onTap: () {
-                Navigator.pushNamed(context, '/testweb');
-              },
-            ),
-            ListTile(
-              title: const Text('Generate Template'),
-              onTap: () {
-                Navigator.pushNamed(context, '/ai');
-              },
-            ),
-            ListTile(
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-=======
                 'Images/logo2.PNG',
                 width: 1000, // Adjust width as needed
                 height: 1000, // Adjust height as needed
@@ -62,24 +32,28 @@ class _GenerateAIState extends State<GenerateAI> {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
+                    leading: const Icon(Icons.settings),
                     title: const Text('Configure'),
                     onTap: () {
                       Navigator.pushNamed(context, '/config');
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.web),
                     title: const Text('Browse Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/browse');
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.create),
                     title: const Text('Generate Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
                       Navigator.pushNamed(context, '/settings');
@@ -87,7 +61,6 @@ class _GenerateAIState extends State<GenerateAI> {
                   ),
                 ],
               ),
->>>>>>> Stashed changes
             ),
             ListTile(
               leading: Icon(Icons.account_circle), // Icon for Profile

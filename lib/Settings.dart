@@ -44,24 +44,28 @@ class _SettingsPageState extends State<SettingsPage> {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
+                    leading: const Icon(Icons.settings),
                     title: const Text('Configure'),
                     onTap: () {
                       Navigator.pushNamed(context, '/config');
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.web),
                     title: const Text('Browse Template'),
                     onTap: () {
-                      Navigator.pushNamed(context, '/testweb');
+                      Navigator.pushNamed(context, '/browse');
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.create),
                     title: const Text('Generate Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
                       Navigator.pushNamed(context, '/settings');

@@ -10,21 +10,56 @@ class ProfilePage extends StatelessWidget {
         title: const Text('Profile'),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
+<<<<<<< Updated upstream
                 color: Colors.blue, // Change the drawer header color
               ),
+=======
+              color: Color.fromARGB(200, 79, 55, 140)),
+>>>>>>> Stashed changes
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
-                width: 100, // Adjust width as needed
-                height: 100, // Adjust height as needed
+                width: 1000, // Adjust width as needed
+                height: 1000, // Adjust height as needed
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  ListTile(
+                    title: const Text('Configure'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/config');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Browse Template'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/browse');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Generate Template'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/ai');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                  ),
+                ],
               ),
             ),
             ListTile(
+<<<<<<< Updated upstream
               leading: const Icon(Icons.settings), // Add an icon here
               title: const Text('Configure'),
               onTap: () {
@@ -54,6 +89,9 @@ class ProfilePage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.person), // Add an icon here
+=======
+              leading: Icon(Icons.account_circle), // Icon for Profile
+>>>>>>> Stashed changes
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');

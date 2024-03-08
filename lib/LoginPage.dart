@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:supabase/supabase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  // Initialize Supabase instance
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +63,9 @@ class LoginPage extends StatelessWidget {
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: const TextField(
-                      decoration: InputDecoration(
+                    child: TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Email Address',
                         contentPadding: EdgeInsets.all(10.0),
@@ -64,9 +78,10 @@ class LoginPage extends StatelessWidget {
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(5.0),
                     ),
-                    child: const TextField(
+                    child: TextField(
+                      controller: passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Password',
                         contentPadding: EdgeInsets.all(10.0),
@@ -76,9 +91,48 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 50.0),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        // TODO: Implement login functionality
-                        Navigator.pushNamed(context, '/config');
+                      onPressed: () async {
+                        // Perform login with Supabase
+                        final email = emailController.text; // Get email from TextField
+                        final password = passwordController.text; // Get password from TextField
+
+                        try {
+                          final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
+
+                          if (response == null) {
+                            // Show Snackbar for login error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Login failed'),
+                              ),
+                            );
+                          } else {
+                            // Show Snackbar for successful login
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Login successful'),
+                              ),
+                            );
+                            // Navigate to configure page
+                            Navigator.pushNamed(context, '/config');
+                          }
+                        } catch (e) {
+                          if (e is AuthException) {
+                            // Show Snackbar for invalid email or password
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Invalid email or password'),
+                              ),
+                            );
+                          } else {
+                            // Show Snackbar for other exceptions
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('An error occurred: ${e.toString()}'),
+                              ),
+                            );
+                          }
+                        }
                       },
                       child: const Text('Login'),
                     ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

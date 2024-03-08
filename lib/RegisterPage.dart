@@ -62,36 +62,38 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
     
-    try {
-      // Register user using Supabase Auth
-      final response = await supabase.auth.signUp(
-        email: email,
-        password: password,
-      );
+    if(isFirstNameNotEmpty && isEmailValid && isPasswordValid && password == confirmPassword){
+      try {
+        // Register user using Supabase Auth
+        final response = await supabase.auth.signUp(
+          email: email,
+          password: password,
+        );
 
-      if (response == null) {
-        throw Exception('Supabase error'); // Or a custom message
-      }
+        if (response == null) {
+          throw Exception('Supabase error'); // Or a custom message
+        }
 
-      // Store additional user data in Supabase database (without ID)
-      final user = response.user;
-      await supabase.from('users').insert({
-        'first_name': firstName,
-        'last_name': lastName,
-        'email': email,
-      }).execute();
+        // Store additional user data in Supabase database (without ID)
+        final user = response.user;
+        await supabase.from('users').insert({
+          'first_name': firstName,
+          'last_name': lastName,
+          'email': email,
+        }).execute();
 
-      _scaffoldKey.currentState!.showSnackBar(
-        SnackBar(
-          content: Text(
-            'Registration successful! Please check your email for a verification link to complete your account.'
+        _scaffoldKey.currentState!.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Registration successful! Please check your email for a verification link to complete your account.'
+            ),
           ),
-        ),
-      );
-    } catch (e) {
-      _scaffoldKey.currentState!.showSnackBar(
-        SnackBar(content: Text('Failed to register user: $e')),
-      );
+        );
+      } catch (e) {
+        _scaffoldKey.currentState!.showSnackBar(
+          SnackBar(content: Text('Failed to register user: $e')),
+        );
+      }
     }
   }
   @override

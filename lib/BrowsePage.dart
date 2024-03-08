@@ -48,7 +48,7 @@ class _Browser extends State<Browser> {
 
       await _controller.setBackgroundColor(Colors.transparent);
       await _controller.setPopupWindowPolicy(WebviewPopupWindowPolicy.deny);
-      await _controller.loadUrl('https://www.youtube.com');
+      await _controller.loadUrl('http://localhost/HomePage/homepage.html');
 
       if (!mounted) return;
       setState(() {});
@@ -146,6 +146,7 @@ class _Browser extends State<Browser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 60.0,
           title: StreamBuilder<String>(
         stream: _controller.title,
         builder: (context, snapshot) {

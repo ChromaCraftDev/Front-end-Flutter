@@ -41,9 +41,6 @@ dependencies:
   flutter_svg: ^2.0.10+1
   hexcolor: ^3.0.1
   provider: ^6.1.2
-
-  flutter_inappwebview: ^6.0.0
-  shared_preferences: ^2.2.2
   webview_windows: ^0.4.0
   window_manager: ^0.3.8
   supabase: ^1.11.11

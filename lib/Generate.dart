@@ -12,6 +12,7 @@ class _GenerateAIState extends State<GenerateAI> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100.0,
         title: const Text('Generate Template'),
       ),
       drawer: Drawer(

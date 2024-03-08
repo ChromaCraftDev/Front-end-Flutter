@@ -1,4 +1,5 @@
 import 'package:chroma_craft_1/Typography.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'theme_notifier.dart';
@@ -34,12 +35,13 @@ class _ConfigurePageState extends State<ConfigurePage> {
     final isDarkModeEnabled = themeNotifier.currentTheme == ThemeData.dark();
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100.0,
         title: const Text('Colour Configure'),
         actions: <Widget>[
           Container(
               decoration: const BoxDecoration(
               shape: BoxShape.circle, // Make the container circular
-              color: Color.fromARGB(255, 79, 55, 140), // Set the background color for the icon button
+              color: Color.fromARGB(150, 79, 55, 140), // Set the background color for the icon button
             ),
             child: IconButton(
               icon: const Icon(Icons.palette),
@@ -77,6 +79,27 @@ class _ConfigurePageState extends State<ConfigurePage> {
               },
             ),
           ),
+           Padding(
+            padding: const EdgeInsets.only(right: 16.0), // Add padding to the right
+            child: TextButton(
+            onPressed: () {
+                // Implement your apply button functionality here
+          if (kDebugMode) {
+            print('Apply button pressed');
+          }
+        },
+        child: const Row(
+          children: [
+            Icon(Icons.edit, color: Color.fromARGB(150, 79, 55, 140)), // Icon
+            SizedBox(width: 15.0), // Add spacing between icon and text
+            Text(
+              'Apply',
+              style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
+            ), // Text
+          ],
+        ),
+      ),
+    ),
         ],
       ),
       drawer: Drawer(
@@ -128,7 +151,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.account_circle), // Icon for Profile
+              leading: const Icon(Icons.account_circle), // Icon for Profile
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');

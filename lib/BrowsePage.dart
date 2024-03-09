@@ -1,5 +1,6 @@
 import 'package:chroma_craft_1/engine/fetch.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -11,7 +12,7 @@ class Browser extends StatefulWidget {
 }
 
 class _Browser extends State<Browser> {
-  late final Map<String, dynamic> _metadata;
+  late final List<TemplateMetadata> _metadata;
   var _loaded = false;
 
   @override
@@ -34,19 +35,36 @@ class _Browser extends State<Browser> {
             )
           : Column(
               mainAxisSize: MainAxisSize.max,
-              children: _metadata.entries.map(_buildTemplateCard).toList(),
+              children: _metadata.map(_buildTemplateCard).toList(),
             ),
     );
   }
 
-  Widget _buildTemplateCard(MapEntry<String, dynamic> e) {
+  Widget _buildTemplateCard(TemplateMetadata meta) {
     return Card(
       child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            e.key,
-            style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
-          )),
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(meta.name),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("Supported Platforms: "),
+                Column(
+                  children: meta.platforms.map((e) => Text(e.name)).toList(),
+                )
+              ],
+            ),
+            InkWell(
+              child: const Text("Project Homepage"),
+              onTap: () => launchUrl(meta.projectHomepage),
+            )
+          ],
+        ),
+      ),
     );
   }
 

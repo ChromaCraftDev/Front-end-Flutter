@@ -114,6 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
           email: email,
           password: password,
         );
+        
 
         if (response == null) {
           throw Exception('Supabase error'); // Or a custom message

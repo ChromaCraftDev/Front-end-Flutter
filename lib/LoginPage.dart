@@ -114,6 +114,15 @@ class _LoginPageState extends State<LoginPage> {
                                     content: Text('Login successful'),
                                   ),
                                 );
+                                Navigator.pushNamed(
+                                  context,
+                                  '/profile',
+                                  arguments: {
+                                    'name': response.user?.userMetadata?['first_name'],
+                                    'email': email,
+                                  },
+                                );
+                                
                                 // Navigate to configure page
                                 Navigator.pushNamed(context, '/config');
                               }

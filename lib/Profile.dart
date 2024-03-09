@@ -5,6 +5,12 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve arguments
+    
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+    // Get user name and email from arguments
+    final name = args['name'] ?? 'Example Person';
+    final email = args['email']?? 'example@gmail.com';
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -58,6 +64,7 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
+            
             ListTile(
               leading: const Icon(Icons.account_circle), // Icon for Profile
               title: const Text('Profile'),
@@ -80,13 +87,13 @@ class ProfilePage extends StatelessWidget {
                   'https://images.unsplash.com/photo-1511367461989-f85a21fda167?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D'),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Example Person',
+            Text(
+              name,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'example.do@example.com',
+          Text(
+              email,
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 30),

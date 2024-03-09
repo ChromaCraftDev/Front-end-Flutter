@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 150.0),
+        padding: const EdgeInsets.all(1.0),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(60.0),

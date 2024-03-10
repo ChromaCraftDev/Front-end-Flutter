@@ -8,7 +8,7 @@ import 'storage.dart';
 import 'template.dart';
 
 const domain = "chromacraftdev.github.io";
-const offline = false;
+const offline = true;
 final testTemplate = File(path.join("lib", "engine", "test.zip")).readAsBytes();
 final testJson = File(path.join("lib", "engine", "test.json")).readAsString();
 

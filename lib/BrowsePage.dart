@@ -14,14 +14,14 @@ class Browser extends StatefulWidget {
 }
 
 class _Browser extends State<Browser> {
-  late final List<TemplateMetadata> _metadata;
+  late final List<TemplateMetadata> _templates;
   var _loaded = false;
 
   @override
   void initState() {
     super.initState();
-    fetchTemplateMetadata().then((value) => setState(() {
-          _metadata = value;
+    fetchTemplatesList().then((value) => setState(() {
+          _templates = value;
           _loaded = true;
         }));
   }
@@ -37,7 +37,7 @@ class _Browser extends State<Browser> {
             )
           : Column(
               mainAxisSize: MainAxisSize.max,
-              children: _metadata.map(_buildTemplateCard).toList(),
+              children: _templates.map(_buildTemplateCard).toList(),
             ),
     );
   }
@@ -56,14 +56,22 @@ class _Browser extends State<Browser> {
               children: [
                 const Text("Supported Platforms: "),
                 Column(
-                  children: meta.platforms.map((e) => Text(e.name)).toList(),
+                  children: meta.platforms.map((it) => Text(it.name)).toList(),
                 )
               ],
             ),
             InkWell(
               child: const Text("Project Homepage"),
               onTap: () => launchUrl(meta.projectHomepage),
-            )
+            ),
+            FutureBuilder(
+              future: templateNeedsUpdate(meta.name, _templates),
+              builder: (_, it) => Text(
+                it.hasError
+                    ? "Update Error: ${it.error}"
+                    : (it.data! ? "Needs Update" : "Already up to date"),
+              ),
+            ),
           ],
         ),
       ),

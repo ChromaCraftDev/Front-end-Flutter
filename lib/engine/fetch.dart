@@ -1,44 +1,60 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart';
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
 
+import 'storage.dart';
 import 'template.dart';
 
-const bool offline = true;
-const String json = """
-[
-  {
-    "version": 0,
-    "project_homepage": "https://codeberg.org/dnkl/foot",
-    "platforms": [
-      "linux"
-    ],
-    "install": {
-      "src": "src.ini",
-      "destination": {
-        "linux": ".config/foot/foot.ini"
-      }
-    },
-    "name": "foot"
-  }
-]
-""";
+const domain = "chromacraftdev.github.io";
+const offline = false;
+final testTemplate = File(path.join("lib", "engine", "test.zip")).readAsBytes();
+final testJson = File(path.join("lib", "engine", "test.json")).readAsString();
 
-Future<List<TemplateMetadata>> fetchTemplateMetadata() async {
-  if (offline) {
-    return (jsonDecode(json) as List<dynamic>)
-        .map((e) => e as Map<String, dynamic>)
-        .map(TemplateMetadata.fromJson)
-        .toList(growable: false);
-  }
-  final response = await get(
-      Uri.https("chromacraftdev.github.io", "/templates/templates.json"));
+Future<http.Response> _get(String name) async {
+  final response = await http.get(Uri.https(domain, "/templates/$name"));
   if (response.statusCode == 200) {
-    return (jsonDecode(response.body) as List<dynamic>)
-        .map((e) => e as Map<String, dynamic>)
-        .map(TemplateMetadata.fromJson)
-        .toList(growable: false);
+    return response;
   }
   return Future.error(
-      "Could not reach chromacraftdev.github.io, error code: ${response.statusCode}");
+      "Could not reach $domain, error code: ${response.statusCode}");
+}
+
+Future<List<TemplateMetadata>> fetchTemplatesList() async {
+  final json = offline ? await testJson : (await _get("templates.json")).body;
+  return (jsonDecode(json) as List<dynamic>)
+      .map((it) => it as Map<String, dynamic>)
+      .map(TemplateMetadata.fromJson)
+      .toList(growable: false);
+}
+
+Future<Directory> fetchTemplate(String name) async {
+  final bytes =
+      offline ? await testTemplate : (await _get("foot.zip")).bodyBytes;
+  return await storeTemplate("foot", bytes);
+}
+
+Future<bool> templateNeedsUpdate(
+    String name, List<TemplateMetadata> list) async {
+  final TemplateMetadata remote;
+  try {
+    remote = list.singleWhere((it) => it.name == name);
+  } catch (_) {
+    return Future.error(
+        "Could not find template for $name in server ($domain).");
+  }
+  final local = await getStoredTemplateMetadata(name);
+  if (local == null) {
+    return Future.error("Could not find template for $name locally.");
+  }
+  return local.version < remote.version;
+}
+
+main() async {
+  final list = await fetchTemplatesList();
+  print(list);
+  for (var TemplateMetadata(name: name) in list) {
+    print(await fetchTemplate(name));
+  }
 }

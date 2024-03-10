@@ -31,7 +31,7 @@ class TemplateMetadata {
       parsed['version'],
       Uri.parse(parsed['project_homepage']),
       (parsed['platforms'] as List<dynamic>)
-          .map((e) => e as String)
+          .map((it) => it as String)
           .map(Platform.fromString)
           .toList(),
       InstallerConfig.fromJson(parsed['install']),

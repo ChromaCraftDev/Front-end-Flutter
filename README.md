@@ -1,4 +1,4 @@
-# chroma_craft_1
+# ChromaCraft
 
 A new Flutter project.
 

@@ -1,4 +1,4 @@
-import 'package:chroma_craft_1/ConfigurePage.dart';
+import 'ConfigurePage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class _TypographyPageState extends State<TypographyPage> {
         title: const Text('Typography Page'),
         actions: <Widget>[
           Container(
-              decoration: const BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle, // Make the container circular
             ),
             child: IconButton(
@@ -27,13 +27,16 @@ class _TypographyPageState extends State<TypographyPage> {
                 Navigator.push(
                   context,
                   PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) => const ConfigurePage(),
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(-1.0, 0.0);
-                    const end = Offset.zero;
-                    const curve = Curves.easeInOutQuart;
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const ConfigurePage(),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      const begin = Offset(-1.0, 0.0);
+                      const end = Offset.zero;
+                      const curve = Curves.easeInOutQuart;
 
-                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
                       var offsetAnimation = animation.drive(tween);
 
                       return SlideTransition(
@@ -47,46 +50,46 @@ class _TypographyPageState extends State<TypographyPage> {
             ),
           ),
           Container(
-              decoration: const BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle, // Make the container circular
               color: Color.fromARGB(150, 79, 55, 140),
             ),
             child: IconButton(
               icon: const Text('Tr'),
-              onPressed: () {
-                
-              },
+              onPressed: () {},
             ),
           ),
-           Padding(
-            padding: const EdgeInsets.only(right: 16.0), // Add padding to the right
+          Padding(
+            padding:
+                const EdgeInsets.only(right: 16.0), // Add padding to the right
             child: TextButton(
-            onPressed: () {
+              onPressed: () {
                 // Implement your apply button functionality here
-          if (kDebugMode) {
-            print('Apply button pressed');
-          }
-        },
-        child: const Row(
-          children: [
-            Icon(Icons.edit, color: Color.fromARGB(150, 79, 55, 140)), // Icon
-            SizedBox(width: 15.0), // Add spacing between icon and text
-            Text(
-              'Apply',
-              style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
-            ), // Text
-          ],
-        ),
-      ),
-    ),
+                if (kDebugMode) {
+                  print('Apply button pressed');
+                }
+              },
+              child: const Row(
+                children: [
+                  Icon(Icons.edit,
+                      color: Color.fromARGB(150, 79, 55, 140)), // Icon
+                  SizedBox(width: 15.0), // Add spacing between icon and text
+                  Text(
+                    'Apply',
+                    style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
+                  ), // Text
+                ],
+              ),
+            ),
+          ),
         ],
       ),
       drawer: Drawer(
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: const BoxDecoration(
-              color: Color.fromARGB(200, 79, 55, 140)),
+              decoration:
+                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -144,18 +147,21 @@ class _TypographyPageState extends State<TypographyPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            buildTextStyle('Sans Serif', 'Used for application UI.', const TextStyle(fontFamily: 'Sans Serif')),
+            buildTextStyle('Sans Serif', 'Used for application UI.',
+                const TextStyle(fontFamily: 'Sans Serif')),
             const SizedBox(height: 16),
-            buildTextStyle('Serif', 'Used for documents.', const TextStyle(fontFamily: 'Serif')),
+            buildTextStyle('Serif', 'Used for documents.',
+                const TextStyle(fontFamily: 'Serif')),
             const SizedBox(height: 16),
-            buildTextStyle('Monospace', 'Used for code editors, and terminals.', const TextStyle(fontFamily: 'MonoSpace')),
+            buildTextStyle('Monospace', 'Used for code editors, and terminals.',
+                const TextStyle(fontFamily: 'MonoSpace')),
           ],
         ),
       ),
     );
   }
 
- Widget buildTextStyle(String title, String subtitle, TextStyle style) {
+  Widget buildTextStyle(String title, String subtitle, TextStyle style) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[

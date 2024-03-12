@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:window_manager/window_manager.dart';
 import 'theme_notifier.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
@@ -17,7 +16,6 @@ import 'Typography.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
 
   try {
@@ -42,13 +40,13 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
+  
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
       builder: (context, themeNotifier, _) => MaterialApp(
         debugShowCheckedModeBanner: false, // Remove Debug tag
-        theme: themeNotifier.currentTheme,
+        themeMode: ThemeMode.system,
         initialRoute: '/login',
         routes: {
           '/login': (context) => LoginPage(),

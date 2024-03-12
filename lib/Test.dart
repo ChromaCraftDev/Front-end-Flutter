@@ -1,58 +1,6 @@
-// NOT A PART OF A SOFTWARE 
-// .
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-import 'package:provider/provider.dart';
-
-class OpenaiService {
-  final String apiKey;
-  final String endpoint = 'https://api.openai.com/v1/engines/text-davinci-002/completions';
-
-  OpenaiService(this.apiKey);
-
-  Future<String> generatePrompt(String prompt) async {
-    final response = await http.post(
-      Uri.parse(endpoint),
-      headers: {
-        'Authorization': 'Bearer $apiKey',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({'prompt': prompt}),
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      return data['choices'][0]['text'];
-    } else {
-      throw Exception('Failed to generate prompt: ${response.statusCode}');
-    }
-  }
-}
-
-class PromptGenerator extends ChangeNotifier {
-  final OpenaiService openaiService;
-  String prompt = '';
-  String generatedText = '';
-  bool isLoading = false;
-
-  PromptGenerator(this.openaiService);
-
-  Future<void> generatePrompt() async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      generatedText = await openaiService.generatePrompt(prompt);
-    } catch (e) {
-      generatedText = 'Failed to generate prompt: $e';
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
-  }
-}
 
 void main() {
   runApp(MyApp());
@@ -61,51 +9,80 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PromptGenerator(OpenaiService('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')),
-      child: MaterialApp(
-        title: 'OpenAI Prompt Generator',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: PromptGeneratorScreen(),
+    return MaterialApp(
+      title: 'AI Text Generation',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: AIPage(),
     );
   }
 }
 
-class PromptGeneratorScreen extends StatelessWidget {
+class AIPage extends StatefulWidget {
+  @override
+  _AIPageState createState() => _AIPageState();
+}
+
+class _AIPageState extends State<AIPage> {
+  final TextEditingController _promptController = TextEditingController();
+  String _generatedText = '';
+
+  Future<void> _generateText(String prompt) async {
+    // Replace 'YOUR_OPENAI_API_KEY' with your actual OpenAI API key
+    String apiKey = 'YOUR_OPENAI_API_KEY';
+    String endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey',
+    };
+
+    Map<String, dynamic> data = {
+      'prompt': prompt,
+      'max_tokens': 50, // Adjust the number of tokens generated as needed
+    };
+
+    try {
+      final response = await http.post(Uri.parse(endpoint), headers: headers, body: jsonEncode(data));
+      final responseData = json.decode(response.body);
+      setState(() {
+        _generatedText = responseData['choices'][0]['text'];
+      });
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final promptGenerator = Provider.of<PromptGenerator>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('OpenAI Prompt Generator'),
+        title: Text('AI Text Generation'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              decoration: const InputDecoration(labelText: 'Enter prompt'),
-              onChanged: (value) => promptGenerator.prompt = value,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _promptController,
+              decoration: InputDecoration(labelText: 'Enter Prompt'),
             ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: promptGenerator.generatePrompt,
-              child: const Text('Generate'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _generateText(_promptController.text);
+            },
+            child: Text('Generate Text'),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(8.0),
+              child: Text(_generatedText),
             ),
-            const SizedBox(height: 16.0),
-            promptGenerator.isLoading
-                ? const CircularProgressIndicator()
-                : Expanded(
-                    child: SingleChildScrollView(
-                      child: Text(promptGenerator.generatedText),
-                    ),
-                  ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -323,7 +323,6 @@ class _ConfigurePageState extends State<ConfigurePage> {
                               originalColor; // Revert to original color
                           hexController.text = colorToHex(originalColor);
                         });
-                        Navigator.of(context).pop();
                       },
                       child: const Text('Revert'),
                     ),

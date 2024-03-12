@@ -55,6 +55,7 @@ dependencies:
   archive: ^3.4.10
   window_manager: ^0.3.8
   webview_windows: ^0.4.0
+  shared_preferences: ^2.0.7
   
 dev_dependencies:
   flutter_test:

@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 Navigator.pushNamed(context, '/config');
                               },
-                              child: const Text('Devloper only'),
+                              child: const Text('Developer only'),
                             ),
                           const SizedBox(height: 30.0),
                           Row(

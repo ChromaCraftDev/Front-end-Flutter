@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeNotifier>(
       builder: (context, themeNotifier, _) => MaterialApp(
         debugShowCheckedModeBanner: false, // Remove Debug tag
-        themeMode: ThemeMode.system,
+        theme: themeNotifier.currentTheme,
         initialRoute: '/login',
         routes: {
           '/login': (context) => LoginPage(),

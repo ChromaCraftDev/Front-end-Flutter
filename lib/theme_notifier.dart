@@ -12,7 +12,7 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   void setSystemDefaultTheme() {
-    final Brightness brightness = WidgetsBinding.instance!.window.platformBrightness;
+    final Brightness brightness = WidgetsBinding.instance.window.platformBrightness;
     _currentTheme = brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
     notifyListeners();
   }

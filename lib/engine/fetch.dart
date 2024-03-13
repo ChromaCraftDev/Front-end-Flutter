@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
 import 'storage.dart';
-import 'template.dart';
+import 'meta.dart';
 
 const domain = "chromacraftdev.github.io";
 const offline = true;

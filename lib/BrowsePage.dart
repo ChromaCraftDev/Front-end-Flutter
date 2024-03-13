@@ -2,7 +2,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
-// import 'engine/template.dart';
+// import 'engine/meta.dart';
 
 // final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -92,7 +92,6 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 class Browser extends StatefulWidget {
   const Browser({super.key});
-
 
   @override
   State<Browser> createState() => _Browser();
@@ -233,8 +232,7 @@ class _Browser extends State<Browser> {
           title: StreamBuilder<String>(
         stream: _controller.title,
         builder: (context, snapshot) {
-          return Text(
-              snapshot.hasData ? snapshot.data! : 'ChromaCraft');
+          return Text(snapshot.hasData ? snapshot.data! : 'ChromaCraft');
         },
       )),
       body: Center(

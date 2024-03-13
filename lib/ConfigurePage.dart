@@ -1,3 +1,4 @@
+import 'engine/config.dart';
 import 'Typography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +14,13 @@ class ConfigurePage extends StatefulWidget {
 }
 
 class _ConfigurePageState extends State<ConfigurePage> {
-  // Define a list of color variables
-  List<Color> colorBoxColors = [
-    const Color.fromARGB(255, 30, 30, 46),
-    const Color.fromARGB(255, 17, 17, 27),
-    const Color.fromARGB(255, 49, 50, 68),
-    const Color.fromARGB(255, 205, 214, 244),
-    const Color.fromARGB(255, 166, 173, 200),
-    const Color.fromARGB(255, 203, 166, 247),
-    const Color.fromARGB(255, 250, 179, 135),
-    const Color.fromARGB(255, 243, 139, 168),
-    const Color.fromARGB(255, 249, 226, 175),
-    const Color.fromARGB(255, 166, 227, 161),
-  ];
-
+  final Config config = Config();
   TextEditingController hexController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
-    final isDarkModeEnabled = themeNotifier.currentTheme == ThemeData.dark();
+    final colorScheme =
+        Provider.of<ThemeNotifier>(context).currentTheme.colorScheme;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -165,80 +153,27 @@ class _ConfigurePageState extends State<ConfigurePage> {
         ),
       ),
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildColumn([
-              buildButton(
-                  'Base',
-                  'The most prevalent. Usually the background colour.',
-                  colorBoxColors[0],
-                  0),
-              buildButton(
-                  'Shade',
-                  'Visually below the components using base colour usually used for sidebars',
-                  colorBoxColors[1],
-                  1),
-              buildButton(
-                  'Container',
-                  'Visually above the components using base, usually used for cards.',
-                  colorBoxColors[2],
-                  2),
-              buildButton(
-                  'Text',
-                  'Forground, usually used for main text, and icons.',
-                  colorBoxColors[3],
-                  3),
-              buildButton(
-                  'Subtle',
-                  'Less important than "text" usally used for description texts',
-                  colorBoxColors[4],
-                  4),
-            ]),
-            const SizedBox(width: 20), // Add space between columns
-            _buildColumn([
-              buildButton(
-                  'Primary',
-                  'The focus. usally used for important buttons.',
-                  colorBoxColors[5],
-                  5),
-              buildButton(
-                  'Alternate',
-                  'A contracting accent used to create visual interest.',
-                  colorBoxColors[6],
-                  6),
-              buildButton(
-                  'Error', 'Used to indicate Error', colorBoxColors[7], 7),
-              buildButton(
-                  'Warning', 'Used to indicate Warning', colorBoxColors[8], 8),
-              buildButton(
-                  'Success', 'Used to indicate success.', colorBoxColors[9], 9),
-            ]),
-          ],
+        child: Wrap(
+          // a run is the column
+          runAlignment: WrapAlignment.center,
+          runSpacing: 20,
+          // the gap between the individual items in the column
+          spacing: 10,
+          children:
+              config.semanticColors.map(_buildButton).toList(growable: false),
         ),
       ),
     );
   }
 
-  Widget _buildColumn(List<Widget> children) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children
-          .map((widget) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10), child: widget))
-          .toList(),
-    );
-  }
-
-  Widget buildButton(
-      String title, String subtitle, Color colorBoxColor, int index) {
+  Widget _buildButton(ColorOption option) {
     return GestureDetector(
       onTap: () {
-        _showColorPickerDialog(colorBoxColor, index);
+        _showColorPickerDialog(option);
       },
       child: Container(
         width: 600, // Adjust the width as needed
-        height: 70, // Adjust the height as needed
+        // height: 70, // Adjust the height as needed
         decoration: BoxDecoration(
           color: Colors.black, // Dark color for the rectangle background
           borderRadius: BorderRadius.circular(10),
@@ -247,17 +182,18 @@ class _ConfigurePageState extends State<ConfigurePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 Text(
-                  title,
+                  option.name,
                   style: const TextStyle(color: Colors.white),
+                  softWrap: true,
                 ),
                 Text(
-                  subtitle,
+                  option.description,
                   style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
@@ -266,7 +202,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: colorBoxColor,
+                color: option.color,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -276,9 +212,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
     );
   }
 
-  void _showColorPickerDialog(Color color, int index) {
-    Color originalColor = colorBoxColors[index]; // Store the original color
-
+  void _showColorPickerDialog(ColorOption option) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -288,14 +222,11 @@ class _ConfigurePageState extends State<ConfigurePage> {
             child: Column(
               children: [
                 ColorPicker(
-                  pickerColor: color,
-                  onColorChanged: (Color newColor) {
-                    setState(() {
-                      colorBoxColors[index] = newColor;
-                      hexController.text = colorToHex(newColor);
-                    });
-                  },
-                  showLabel: true,
+                  pickerColor: option.color,
+                  onColorChanged: (Color newColor) => setState(() {
+                    option.color = newColor;
+                    hexController.text = colorToHex(newColor);
+                  }),
                   pickerAreaHeightPercent: 0.8,
                 ),
                 const SizedBox(height: 20),
@@ -303,9 +234,9 @@ class _ConfigurePageState extends State<ConfigurePage> {
                   controller: hexController,
                   decoration:
                       const InputDecoration(labelText: 'Hex Color Code'),
-                  onChanged: (String hex) {
-                    _changeColorFromHex(hex, index);
-                  },
+                  onChanged: (String hex) => setState(() {
+                    option.color = hexToColor(hex);
+                  }),
                 ),
               ],
             ),
@@ -317,13 +248,10 @@ class _ConfigurePageState extends State<ConfigurePage> {
                 Row(
                   children: [
                     TextButton(
-                      onPressed: () {
-                        setState(() {
-                          colorBoxColors[index] =
-                              originalColor; // Revert to original color
-                          hexController.text = colorToHex(originalColor);
-                        });
-                      },
+                      onPressed: () => setState(() {
+                        option.color = option.original;
+                        hexController.text = colorToHex(option.original);
+                      }),
                       child: const Text('Revert'),
                     ),
                     TextButton(
@@ -347,17 +275,6 @@ class _ConfigurePageState extends State<ConfigurePage> {
         );
       },
     );
-  }
-
-  void _changeColorFromHex(String hex, int index) {
-    try {
-      Color newColor = hexToColor(hex);
-      setState(() {
-        colorBoxColors[index] = newColor;
-      });
-    } catch (e) {
-      print('Invalid hex color');
-    }
   }
 
   String colorToHex(Color color) {

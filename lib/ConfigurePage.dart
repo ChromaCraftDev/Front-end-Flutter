@@ -1,10 +1,13 @@
-import 'engine/config.dart';
 import 'Typography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'theme_notifier.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+
+import 'engine/config.dart';
+import 'engine/storage.dart' as storage;
+import 'engine/fetch.dart' as fetch;
 
 class ConfigurePage extends StatefulWidget {
   const ConfigurePage({Key? key}) : super(key: key);
@@ -73,7 +76,10 @@ class _ConfigurePageState extends State<ConfigurePage> {
             padding:
                 const EdgeInsets.only(right: 16.0), // Add padding to the right
             child: TextButton(
-              onPressed: () {
+              onPressed: () async {
+                storage
+                    .apply(config, [await fetch.fetchTemplate("foot")]).listen(
+                        (it) => print(it));
                 // Implement your apply button functionality here
                 if (kDebugMode) {
                   print('Apply button pressed');

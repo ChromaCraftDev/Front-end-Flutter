@@ -89,17 +89,17 @@ flutter:
 
     - family: Sans Serif
       fonts:
-        - asset: fonts/SansSerifFLF.otf
+        - asset: fonts/RobotoFlex.ttf
           style: italic
 
     - family: MonoSpace
       fonts:
-        - asset: fonts/SansSerifFLF-DemiItalic.otf
+        - asset: fonts/RobotoMono.ttf
           style: italic
 
     - family: Serif
       fonts:
-        - asset: fonts/AbrilFatface-Regular.otf
+        - asset: fonts/RobotoSerif.ttf
           style: italic
 
   # For details regarding fonts from package dependencies,

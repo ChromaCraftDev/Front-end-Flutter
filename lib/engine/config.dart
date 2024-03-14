@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ColorOption {
   final Color original;
@@ -20,53 +23,53 @@ class FontOption {
 class Config {
   final List<ColorOption> semanticColors = [
     ColorOption(
-      const Color.fromARGB(255, 30, 30, 46),
-      'Base',
+      const Color(0xFF1E1E2E),
+      'base',
       'The most prevalent.\nUsually the background colour.',
     ),
     ColorOption(
-      const Color.fromARGB(255, 17, 17, 27),
-      'Shade',
+      const Color(0xFF11111B),
+      'shade',
       'Visually below the components using base colour.\nUsually used for sidebars',
     ),
     ColorOption(
-      const Color.fromARGB(255, 49, 50, 68),
-      'Container',
+      const Color(0xFF313244),
+      'container',
       'Visually above the components using base.\nUsually used for cards.',
     ),
     ColorOption(
-      const Color.fromARGB(255, 205, 214, 244),
-      'Text',
+      const Color(0xFFCDD6F4),
+      'text',
       'Forground.\nUsually used for main text, and icons.',
     ),
     ColorOption(
-      const Color.fromARGB(255, 166, 173, 200),
-      'Subtle',
+      const Color(0xFFA6ADC8),
+      'subtle',
       'Less important than "text".\nUsally used for description texts',
     ),
     ColorOption(
-      const Color.fromARGB(255, 203, 166, 247),
-      'Primary',
+      const Color(0xFFCBA6F7),
+      'primary',
       'The focus.\nUsually used for important buttons.',
     ),
     ColorOption(
-      const Color.fromARGB(255, 250, 179, 135),
-      'Alternate',
+      const Color(0xFFF5C2E7),
+      'alternate',
       'A contracting accent used to create visual interest.',
     ),
     ColorOption(
-      const Color.fromARGB(255, 243, 139, 168),
-      'Error',
+      const Color(0xFFF38BA8),
+      'error',
       'Used to indicate Error',
     ),
     ColorOption(
-      const Color.fromARGB(255, 249, 226, 175),
-      'Warning',
+      const Color(0xFFFAB387),
+      'warning',
       'Used to indicate Warning',
     ),
     ColorOption(
-      const Color.fromARGB(255, 166, 227, 161),
-      'Success',
+      const Color(0xFFA6E3A1),
+      'success',
       'Used to indicate success.',
     ),
   ];

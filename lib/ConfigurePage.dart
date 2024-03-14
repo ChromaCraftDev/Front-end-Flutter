@@ -19,7 +19,6 @@ class ConfigurePage extends StatefulWidget {
 class _ConfigurePageState extends State<ConfigurePage> {
   final Config config = Config();
   TextEditingController hexController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final colorScheme =
@@ -229,19 +228,20 @@ class _ConfigurePageState extends State<ConfigurePage> {
               children: [
                 ColorPicker(
                   pickerColor: option.color,
-                  onColorChanged: (Color newColor) => setState(() {
+                  onColorChanged: (newColor) => setState(() {
                     option.color = newColor;
-                    hexController.text = colorToHex(newColor);
+                    hexController.text = colorToHex(option.color,
+                        includeHashSign: true, enableAlpha: false);
                   }),
                   pickerAreaHeightPercent: 0.8,
+                  enableAlpha: false,
                 ),
-                const SizedBox(height: 20),
                 TextFormField(
                   controller: hexController,
                   decoration:
                       const InputDecoration(labelText: 'Hex Color Code'),
                   onChanged: (String hex) => setState(() {
-                    option.color = hexToColor(hex);
+                    option.color = colorFromHex(hex)!;
                   }),
                 ),
               ],
@@ -256,7 +256,8 @@ class _ConfigurePageState extends State<ConfigurePage> {
                     TextButton(
                       onPressed: () => setState(() {
                         option.color = option.original;
-                        hexController.text = colorToHex(option.original);
+                        hexController.text = colorToHex(option.original,
+                            includeHashSign: true, enableAlpha: false);
                       }),
                       child: const Text('Revert'),
                     ),
@@ -281,14 +282,6 @@ class _ConfigurePageState extends State<ConfigurePage> {
         );
       },
     );
-  }
-
-  String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
-  }
-
-  Color hexToColor(String hex) {
-    return Color(int.parse(hex.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
   @override

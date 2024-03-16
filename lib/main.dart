@@ -53,21 +53,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
-      builder: (context, themeNotifier, _) => MaterialApp(
-        debugShowCheckedModeBanner: false, // Remove Debug tag
-        theme: themeNotifier.currentTheme,
-        initialRoute: '/login',
-        routes: {
-          '/login': (context) => LoginPage(),
-          '/register': (context) => const RegisterPage(),
-          '/config': (context) => const ConfigurePage(),
-          '/ai': (context) => const GenerateAI(),
-          '/browse': (context) => const Browser(),
-          '/profile': (context) => const ProfilePage(),
-          '/settings': (context) => const SettingsPage(),
-          '/typography': (context) => const TypographyPage(),
-        },
-      ),
+      builder: (context, themeNotifier, _) {        
+        return MaterialApp(
+          debugShowCheckedModeBanner: false, // Remove Debug tag
+          theme: themeNotifier.currentTheme,
+          initialRoute: '/login',
+          routes: {
+            '/login': (context) => LoginPage(),
+            '/register': (context) => const RegisterPage(),
+            '/config': (context) => const ConfigurePage(),
+            '/ai': (context) => const GenerateAI(),
+            '/browse': (context) => const Browser(),
+            '/profile': (context) => const ProfilePage(),
+            '/settings': (context) => const SettingsPage(),
+            '/typography': (context) => const TypographyPage(),
+          },
+        );
+      },
     );
   }
 }

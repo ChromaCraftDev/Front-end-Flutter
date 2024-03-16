@@ -41,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String lastName = lastNameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text;
-    String ImageID = 'https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg';
+    String ImageID = 'https://drive.google.com/uc?export=download&id=1eJHO1ewFgmXIZRU358hD5oPi_GRGOGwb';
     String confirmPassword = confirmPasswordController.text;
 
     bool isFirstNameNotEmpty = firstName.isNotEmpty;
@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (password != confirmPassword) {
       _scaffoldKey.currentState!.showSnackBar(
         const SnackBar(
-            content: const Text("Passwords you entered don't match!")),
+            content: Text("Passwords you entered don't match!")),
       );
       return;
     }
@@ -191,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Center(
-                              child: const Text(
+                              child: Text(
                                 'REGISTER NOW',
                                 style: TextStyle(fontSize: 50, fontFamily: 'Schyler'),
                               ),

@@ -23,19 +23,29 @@ class _ProfilePageState extends State<ProfilePage> {
   String _firstName = 'Developer';
   String _lastName = 'mode';
   String _selectedProfilePicture =
-      'https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg'; // Default profile picture URL
+      'https://drive.google.com/uc?export=download&id=1eJHO1ewFgmXIZRU358hD5oPi_GRGOGwb'; // Default profile picture URL
 
   final List<String> _profilePictures = [
-    'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?cs=srgb&dl=pexels-mohamed-abdelghaffar-771742.jpg&fm=jpg',
-    'https://wallpapers.com/images/featured/cool-profile-picture-87h46gcobjl5e4xu.jpg',
-    'https://imgv3.fotor.com/images/blog-richtext-image/10-profile-picture-ideas-to-make-you-stand-out.jpg',
-    'https://static.vecteezy.com/system/resources/thumbnails/009/209/212/small/neon-glowing-profile-icon-3d-illustration-vector.jpg',
-    'https://w0.peakpx.com/wallpaper/979/89/HD-wallpaper-purple-smile-design-eye-smily-profile-pic-face.jpg',
-    'https://static.vecteezy.com/system/resources/thumbnails/001/991/212/small/avatar-profile-pink-neon-icon-brick-wall-background-colour-neon-icon-vector.jpg',
-    'https://i.pinimg.com/564x/00/9e/10/009e1061d2c4c46c2e48d21bdb41becb.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRtsqj52oiZx9rBGAcIU_8gjGntvorvWai2P67-0agznp_uomCVdFwxPcfdHXvvVDOD7c&usqp=CAU',
-    'https://e0.pxfuel.com/wallpapers/89/756/desktop-wallpaper-emoji-black-theme-smile.jpg',
-    'https://w0.peakpx.com/wallpaper/903/252/HD-wallpaper-man-on-fire-heat-whatsapp-valuable-post-science-dp-profile-pic-vip-whatsapp-profile-pic-display-thumbnail.jpg',
+    'https://drive.google.com/uc?export=download&id=13XPOdVXjqjFaEI7msMXVcGAkWILdIZq_',
+    'https://drive.google.com/uc?export=download&id=1nJLwE5MeRKVqQunfbiR9lPQLn2xLcVTD',
+    'https://drive.google.com/uc?export=download&id=1lnEUE7oa-kqDImhxUMtIi7p5p2TFmWRn',
+    'https://drive.google.com/uc?export=download&id=1OpragTe3MAC_7E7XhmcSfQ2_c95Y7CJ7',
+    'https://drive.google.com/uc?export=download&id=19hHPgEizywoT9PM3_vecfKP65h0_udXs',
+    'https://drive.google.com/uc?export=download&id=1RSRAu31Q0u5kROWRNuAmh8Yv5jql0t7s',
+    'https://drive.google.com/uc?export=download&id=1YvKazKAzFxT9JcWYZMk6RPEkdx-YNs36',
+    'https://drive.google.com/uc?export=download&id=1OWUueu1kKEqwHW4TB0uYpu_SnSemaePY',
+    'https://drive.google.com/uc?export=download&id=1IL7qmR824YwOQCkwHbpE106y3bBVw640',
+    'https://drive.google.com/uc?export=download&id=1bhMBtctgfzz20r1M0TufxHTFHMBIP2rG',
+    'https://drive.google.com/uc?export=download&id=17qYOh_VA6IR6FXR4H13zGY4Y8wsxvk9T',
+    'https://drive.google.com/uc?export=download&id=1icwODDS8YcDHejC3oxuLlgZSuN7pnQHo',
+    'https://drive.google.com/uc?export=download&id=1JuLHM76WNDpGIUN64WxXrqNooiqgDN4C',
+    'https://drive.google.com/uc?export=download&id=1lkcfBB-arVshVRBwZqdKXzB-hDjTmkJ1',
+    'https://drive.google.com/uc?export=download&id=1HmCtA-ZE1FhvyjrWtl_A0DorwFqhDYRg',
+    'https://drive.google.com/uc?export=download&id=1Rsdu1yLfXntZ0lZj1enBTeY6VXwPY4zc',
+    'https://drive.google.com/uc?export=download&id=1MTdU3k33pMl4PP3TJQ4wfsbokZ8lTbln',
+    'https://drive.google.com/uc?export=download&id=12Npi0igO9H_7vgI-xxCGZvp3ANbo0FG1',
+    'https://drive.google.com/uc?export=download&id=1z1-1VI5JLIveA-hY2yj7XVidbWRXlD-d',
+    'https://drive.google.com/uc?export=download&id=1StJudLV0E0u_84ohMVmYICOWFDb3Llh0',
     // Add more profile picture URLs as needed
   ];
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -141,6 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: <Widget>[
                               IconButton(
                                 onPressed: () {
+                                  _signInWithGoogle();
                                   // TODO: Implement Google login functionality
                                 },
                                 icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
@@ -294,4 +296,47 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 }
+Future<void> _signInWithGoogle() async {
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  try {
+    // Start the Google Sign-In process
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    // Check if the user signed in successfully
+    if (googleUser != null) {
+      // Get the authentication token (idToken) from Google Sign-In
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final String idToken = googleAuth.idToken ?? '';
+
+      // Authenticate with Supabase using the Google idToken
+      await _authenticateWithSupabase(idToken);
+    }
+  } catch (error) {
+    print(error); // Handle sign-in errors
+  }
+}
+
+Future<void> _authenticateWithSupabase(String idToken) async {
+  try {
+    final response = await Supabase.instance.client.auth.signInWithOAuth(
+      'google' as Provider ,
+        redirectTo: 'https://hgblhxdounljhdwemyoz.supabase.co/auth/v1/callback', // Replace with your redirect URL
+        //accessToken: idToken, // Pass the Google idToken as the accessToken
+    );
+
+    if (response != null) {
+      // Handle error
+      print('Error: ${response}');
+    } else {
+      // Login successful
+      print('Login successful');
+    }
+  } catch (error) {
+    // Handle error
+    print('Error: $error');
+  }
+}
+
+
 }

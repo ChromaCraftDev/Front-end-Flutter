@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/login',
         routes: {
           '/login': (context) => LoginPage(),
-          '/register': (context) => RegisterPage(),
+          '/register': (context) => const RegisterPage(),
           '/config': (context) => const ConfigurePage(),
           '/ai': (context) => const GenerateAI(),
           '/browse': (context) => const Browser(),

@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 void main() {
   runApp(MyApp());
@@ -10,47 +10,64 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AI Text Generation',
+      title: 'Text Generation with Google AI',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AIPage(),
+      home: TextGenerationScreen(),
     );
   }
 }
 
-class AIPage extends StatefulWidget {
+class TextGenerationScreen extends StatefulWidget {
   @override
-  _AIPageState createState() => _AIPageState();
+  _TextGenerationScreenState createState() => _TextGenerationScreenState();
 }
 
-class _AIPageState extends State<AIPage> {
-  final TextEditingController _promptController = TextEditingController();
+class _TextGenerationScreenState extends State<TextGenerationScreen> {
+  TextEditingController _promptController = TextEditingController();
   String _generatedText = '';
+  bool _loading = false;
 
   Future<void> _generateText(String prompt) async {
-    // Replace 'YOUR_OPENAI_API_KEY' with your actual OpenAI API key
-    String apiKey = 'YOUR_OPENAI_API_KEY';
-    String endpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+    setState(() {
+      _loading = true;
+    });
 
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $apiKey',
+    const String apiKey = 'AIzaSyBXe8a9jS50NmXW6T_FpDjdubZ1nd-RPvM';
+    const String endpoint ='https://language.googleapis.com/v1/documents:analyzeText';
+
+    final Map<String, dynamic> requestBody = {
+      'document': {
+        'type': 'PLAIN_TEXT',
+        'content': prompt,
+      },
+      'features': {
+        'extractSyntax': false,
+        'extractEntities': false,
+        'extractDocumentSentiment': false,
+        'extractEntitySentiment': false,
+        'classifyText': true,
+      },
     };
 
-    Map<String, dynamic> data = {
-      'prompt': prompt,
-      'max_tokens': 50, // Adjust the number of tokens generated as needed
-    };
+    final Uri uri = Uri.parse('$endpoint?key=$apiKey');
 
-    try {
-      final response = await http.post(Uri.parse(endpoint), headers: headers, body: jsonEncode(data));
-      final responseData = json.decode(response.body);
+    final http.Response response =
+        await http.post(uri, body: jsonEncode(requestBody));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final String generatedText = data['text'] as String;
       setState(() {
-        _generatedText = responseData['choices'][0]['text'];
+        _generatedText = generatedText;
+        _loading = false;
       });
-    } catch (error) {
-      print('Error: $error');
+    } else {
+      setState(() {
+        _generatedText = 'Failed to generate text';
+        _loading = false;
+      });
     }
   }
 
@@ -58,31 +75,44 @@ class _AIPageState extends State<AIPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AI Text Generation'),
+        title: const Text('Text Generation with Google AI'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
               controller: _promptController,
-              decoration: InputDecoration(labelText: 'Enter Prompt'),
+              decoration: const InputDecoration(
+                labelText: 'Enter Prompt',
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              _generateText(_promptController.text);
-            },
-            child: Text('Generate Text'),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(8.0),
-              child: Text(_generatedText),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _loading
+                  ? null
+                  : () {
+                      final String prompt = _promptController.text.trim();
+                      if (prompt.isNotEmpty) {
+                        _generateText(prompt);
+                      }
+                    },
+              child: _loading
+                  ? const CircularProgressIndicator()
+                  : const Text('Generate Text'),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  _generatedText,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

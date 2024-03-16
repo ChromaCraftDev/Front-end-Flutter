@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -100,11 +102,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           //------Dev only-----------------
                           ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/config');
-                              },
-                              child: const Text('Developer only'),
-                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/config');
+                            },
+                            child: const Text('Developer only'),
+                          ),
                           const SizedBox(height: 30.0),
                           Row(
                             mainAxisSize: MainAxisSize.max,
@@ -196,74 +198,39 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() async {
-  setState(() {
-    isLoading = true;
-    loadingStatus = 'Validating credentials...';
-  });
-
-  final email = emailController.text;
-  final password = passwordController.text;
-
-  try {
-    // Set status message for validating credentials
     setState(() {
+      isLoading = true;
       loadingStatus = 'Validating credentials...';
-    });
-
-    final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
-
-    if (response == null) {
-      // Set status message for login failed
-      setState(() {
-        loadingStatus = 'Login failed. Please check your credentials and try again.';
-      });
-    } else {
-      // Set status message for successful login
-      setState(() {
-        loadingStatus = 'Login successful. Redirecting to Home Page...';
-      });
-
-      // Delay before navigating to give user time to see status message
-      await Future.delayed(Duration(seconds: 1));
-
-      Navigator.pushNamed(
-        context,
-        '/profile',
-        arguments: {
-          'name': response.user?.userMetadata?['first_name'],
-          'email': email,
-        },
-      );
-      Navigator.pushNamed(context, '/config');
-    }
-  } catch (e) {
-    // Set status message for error
-    setState(() {
-      loadingStatus = 'An error occurred: ${e.toString()}';
-    });
-  } finally {
-    setState(() {
-      isLoading = false;
     });
 
     final email = emailController.text;
     final password = passwordController.text;
 
     try {
+      // Set status message for validating credentials
+      setState(() {
+        loadingStatus = 'Validating credentials...';
+      });
+
       final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
 
       if (response == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: const Text('Login failed'),
-          ),
-        );
+        // Set status message for login failed
+        setState(() {
+          loadingStatus = 'Login failed. Please check your credentials and try again.';
+        });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful'),
-          ),
-        );
+        // Set status message for successful login
+        setState(() {
+          loadingStatus = 'Login successful. Redirecting to Home Page...';
+        });
+
+        // Delay before navigating to give user time to see status message
+        await Future.delayed(Duration(seconds: 1));
+
+        // Save email to a text file
+        _saveEmailToFile(email);
+
         Navigator.pushNamed(
           context,
           '/profile',
@@ -275,68 +242,62 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushNamed(context, '/config');
       }
     } catch (e) {
-      if (e is AuthException) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password. Check your credentials and try again'),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('An error occurred: ${e.toString()}'),
-          ),
-        );
-      }
+      // Set status message for error
+      setState(() {
+        loadingStatus = 'An error occurred: ${e.toString()}';
+      });
     } finally {
       setState(() {
         isLoading = false;
-        loadingStatus = '';
       });
     }
   }
-}
-Future<void> _signInWithGoogle() async {
-  final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  try {
-    // Start the Google Sign-In process
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  Future<void> _signInWithGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    // Check if the user signed in successfully
-    if (googleUser != null) {
-      // Get the authentication token (idToken) from Google Sign-In
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String idToken = googleAuth.idToken ?? '';
+    try {
+      // Start the Google Sign-In process
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-      // Authenticate with Supabase using the Google idToken
-      await _authenticateWithSupabase(idToken);
+      // Check if the user signed in successfully
+      if (googleUser != null) {
+        // Get the authentication token (idToken) from Google Sign-In
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final String idToken = googleAuth.idToken ?? '';
+
+        // Authenticate with Supabase using the Google idToken
+        await _authenticateWithSupabase(idToken);
+      }
+    } catch (error) {
+      print(error); // Handle sign-in errors
     }
-  } catch (error) {
-    print(error); // Handle sign-in errors
   }
-}
 
-Future<void> _authenticateWithSupabase(String idToken) async {
-  try {
-    final response = await Supabase.instance.client.auth.signInWithOAuth(
-      'google' as Provider ,
+  Future<void> _authenticateWithSupabase(String idToken) async {
+    try {
+      final response = await Supabase.instance.client.auth.signInWithOAuth(
+        'google' as Provider,
         redirectTo: 'https://hgblhxdounljhdwemyoz.supabase.co/auth/v1/callback', // Replace with your redirect URL
         //accessToken: idToken, // Pass the Google idToken as the accessToken
-    );
+      );
 
-    if (response != null) {
+      if (response != null) {
+        // Handle error
+        print('Error: ${response}');
+      } else {
+        // Login successful
+        print('Login successful');
+      }
+    } catch (error) {
       // Handle error
-      print('Error: ${response}');
-    } else {
-      // Login successful
-      print('Login successful');
+      print('Error: $error');
     }
-  } catch (error) {
-    // Handle error
-    print('Error: $error');
   }
-}
 
-
+  void _saveEmailToFile(String email) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/email.txt');
+    await file.writeAsString(email);
+  }
 }

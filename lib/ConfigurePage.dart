@@ -1,13 +1,14 @@
-import 'Typography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'theme_notifier.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Typography.dart';
 import 'engine/config.dart';
-import 'engine/storage.dart' as storage;
 import 'engine/fetch.dart' as fetch;
+import 'engine/storage.dart' as storage;
+import 'theme_notifier.dart';
 
 class ConfigurePage extends StatefulWidget {
   const ConfigurePage({Key? key}) : super(key: key);
@@ -16,9 +17,60 @@ class ConfigurePage extends StatefulWidget {
   _ConfigurePageState createState() => _ConfigurePageState();
 }
 
-class _ConfigurePageState extends State<ConfigurePage> {
+class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserver {
   final Config config = Config();
   TextEditingController hexController = TextEditingController();
+
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeSharedPreferences();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  void initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    loadSavedColors();
+  }
+
+  void loadSavedColors() {
+    config.semanticColors.forEach((option) {
+      final savedColor = prefs.getInt(option.name);
+      if (savedColor != null) {
+        setState(() {
+          option.color = Color(savedColor);
+        });
+      }
+    });
+  }
+
+  void saveColorToPrefs(ColorOption option) {
+    prefs.setInt(option.name, option.color.value);
+  }
+
+  void clearSharedPreferences() async {
+    await prefs.clear();
+  }
+
+  void revertToDefaultColors() {
+    config.semanticColors.forEach((option) {
+      setState(() {
+        option.color = option.original;
+      });
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      clearSharedPreferences();
+    } else if (state == AppLifecycleState.resumed) {
+      revertToDefaultColors();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme =
@@ -30,9 +82,8 @@ class _ConfigurePageState extends State<ConfigurePage> {
         actions: <Widget>[
           Container(
             decoration: const BoxDecoration(
-              shape: BoxShape.circle, // Make the container circular
-              color: Color.fromARGB(150, 79, 55,
-                  140), // Set the background color for the icon button
+              shape: BoxShape.circle,
+              color: Color.fromARGB(150, 79, 55, 140),
             ),
             child: IconButton(
               icon: const Icon(Icons.palette),
@@ -41,7 +92,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
           ),
           Container(
             decoration: const BoxDecoration(
-              shape: BoxShape.circle, // Make the container circular
+              shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: const Text('Tr'),
@@ -72,27 +123,18 @@ class _ConfigurePageState extends State<ConfigurePage> {
             ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.only(right: 16.0), // Add padding to the right
+            padding: const EdgeInsets.only(right: 16.0),
             child: TextButton(
-              onPressed: () async {
-                storage
-                    .apply(config, [await fetch.fetchTemplate("foot")]).listen(
-                        (it) => print(it));
-                // Implement your apply button functionality here
-                if (kDebugMode) {
-                  print('Apply button pressed');
-                }
-              },
+              onPressed: _applyButtonPressed,
               child: const Row(
                 children: [
                   Icon(Icons.edit,
-                      color: Color.fromARGB(150, 79, 55, 140)), // Icon
-                  SizedBox(width: 15.0), // Add spacing between icon and text
+                      color: Color.fromARGB(150, 79, 55, 140)),
+                  SizedBox(width: 15.0),
                   Text(
                     'Apply',
                     style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
-                  ), // Text
+                  ),
                 ],
               ),
             ),
@@ -108,8 +150,8 @@ class _ConfigurePageState extends State<ConfigurePage> {
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
-                width: 1000, // Adjust width as needed
-                height: 1000, // Adjust height as needed
+                width: 1000,
+                height: 1000,
               ),
             ),
             Expanded(
@@ -148,7 +190,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.account_circle), // Icon for Profile
+              leading: const Icon(Icons.account_circle),
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');
@@ -159,10 +201,8 @@ class _ConfigurePageState extends State<ConfigurePage> {
       ),
       body: Center(
         child: Wrap(
-          // a run is the column
           runAlignment: WrapAlignment.center,
           runSpacing: 20,
-          // the gap between the individual items in the column
           spacing: 10,
           children:
               config.semanticColors.map(_buildButton).toList(growable: false),
@@ -177,10 +217,9 @@ class _ConfigurePageState extends State<ConfigurePage> {
         _showColorPickerDialog(option);
       },
       child: Container(
-        width: 600, // Adjust the width as needed
-        // height: 70, // Adjust the height as needed
+        width: 600,
         decoration: BoxDecoration(
-          color: Colors.black, // Dark color for the rectangle background
+          color: Colors.black,
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(10),
@@ -271,7 +310,7 @@ class _ConfigurePageState extends State<ConfigurePage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Apply the chosen color
+                    saveColorToPrefs(option);
                     Navigator.of(context).pop();
                   },
                   child: const Text('Apply'),
@@ -284,8 +323,18 @@ class _ConfigurePageState extends State<ConfigurePage> {
     );
   }
 
+  void _applyButtonPressed() {
+    config.semanticColors.forEach((option) {
+      saveColorToPrefs(option);
+    });
+    if (kDebugMode) {
+      print('Apply button pressed');
+    }
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
     hexController.dispose();
     super.dispose();
   }

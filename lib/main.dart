@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'theme_notifier.dart';
 import 'package:flutter/foundation.dart'
@@ -17,6 +18,9 @@ import 'Typography.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+
+  // Clear shared preferences
+  await clearSharedPreferences();
 
   try {
     await Supabase.initialize(
@@ -36,6 +40,11 @@ Future<void> main() async {
       child: const MyApp(),
     ),
   );
+}
+
+Future<void> clearSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
 }
 
 class MyApp extends StatelessWidget {

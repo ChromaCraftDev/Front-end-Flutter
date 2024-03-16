@@ -41,6 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String lastName = lastNameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text;
+    String ImageID = 'https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg';
     String confirmPassword = confirmPasswordController.text;
 
     bool isFirstNameNotEmpty = firstName.isNotEmpty;
@@ -126,6 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'first_name': firstName,
           'last_name': lastName,
           'email': email,
+          'image_id': ImageID,
         }).execute();
 
         Navigator.pop(context); // Close loading dialog

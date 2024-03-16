@@ -239,7 +239,6 @@ class _LoginPageState extends State<LoginPage> {
         context,
         '/profile',
         arguments: {
-          'name': response.user?.userMetadata?['first_name'],
           'email': email,
         },
       );

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -13,7 +15,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _email = 'you cant get the email from ';
+  final supabase = SupabaseClient(
+    'https://hgblhxdounljhdwemyoz.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnYmxoeGRvdW5samhkd2VteW96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4ODEwMzMsImV4cCI6MjAyNTQ1NzAzM30.kOaLOh5pGrZhAVDfSCd6pYdThxT161IOBeNSuKswZ7g',
+  );
+  String email = 'you cant get the email from ';
   String _firstName = 'Developer';
   String _lastName = 'mode';
   String _selectedProfilePicture =
@@ -36,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _getUserData();
     _getEmailFromStorage();
     _loadSelectedProfilePicture(); // Load selected profile picture URL from shared preferences
   }
@@ -47,34 +52,39 @@ class _ProfilePageState extends State<ProfilePage> {
       final file = File('${directory.path}/userData.txt');
       final savedEmail = await file.readAsString();
       setState(() {
-        _email = savedEmail;
+        email = savedEmail;
       });
+      _getUserData();
+      _loadSelectedProfilePicture();
     } catch (e) {
       print('Error reading email from file: $e');
     }
   }
 
-  Future<void> _getUserData() async {
-    try {
-      final response = await Supabase.instance.client
-          .from('users')
-          .select('first_name, last_name')
-          .eq('email', _email)
-          .single()
-          .execute();
+Future<void> _getUserData() async {
+  try {
+    final response = await Supabase.instance.client
+        .from('users')
+        .select('first_name , last_name')
+        .eq('email',email);
 
-      final user = response.data;
-
-      if (user != null) {
-        setState(() {
-          _firstName = user['first_name'];
-          _lastName = user['last_name'];
-        });
-      }
-    } catch (e) {
-      print('Error fetching user data: $e');
+    if (response != null && response.isNotEmpty) {
+      final user = response[0];
+      setState(() {
+        _firstName = user['first_name'] as String;
+        if (user['last_name'] as String == null) {
+          _lastName = " ";
+        }else{
+          _lastName = user ['last_name'] as String;
+        }
+      });
+    } else {
+      print('No user data found for this email: $email');
     }
+  } catch (e) {
+    print('Error fetching user data: $e');
   }
+}
 
   Future<void> _logout() async {
     try {
@@ -89,9 +99,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _changeProfilePicture(String newProfilePicture) {
-    _saveSelectedProfilePicture(newProfilePicture);
+    
     setState(() {
-      _selectedProfilePicture = newProfilePicture;
+        _selectedProfilePicture = newProfilePicture;
+        _saveSelectedProfilePicture(_selectedProfilePicture);
     });
     Navigator.of(context).pop(); // Close the dialog
   }
@@ -102,9 +113,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Save image ID to a text file
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/image_id.txt');
-      await file.writeAsString(newProfilePicture);
+        await supabase.from('users').update({
+          'image_id' : newProfilePicture,})
+          .match({'email': email})
+          .execute();
     } catch (e) {
       print('Error saving image ID to file: $e');
     }
@@ -121,11 +133,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Load image ID from text file
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/image_id.txt');
-      String savedImageId = await file.readAsString();
+      final response = await Supabase.instance.client
+        .from('users')
+        .select('image_id')
+        .eq('email',email);
+
+        final user = response[0];
       setState(() {
-        _selectedProfilePicture = savedImageId;
+          _selectedProfilePicture = user['image_id'] as String;
+
       });
     } catch (e) {
       print('Error loading image ID from file: $e');
@@ -134,11 +150,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
-            {};
-    final name = args['name'] ?? '';
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -150,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountName: Center(child: Text('$_firstName $_lastName')),
-              accountEmail: Center(child: Text(_email)),
+              accountEmail: Center(child: Text(email)),
               currentAccountPicture: GestureDetector(
                 onTap: () {
                   showDialog(
@@ -300,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 10),
             Text(
-              _email,
+              email,
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 30),

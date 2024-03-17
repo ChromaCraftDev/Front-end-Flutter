@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'theme_notifier.dart';
 
 class GenerateAI extends StatefulWidget {
-  const GenerateAI({Key? key}) : super(key: key);
+  const GenerateAI({super.key});
 
   @override
   _GenerateAIState createState() => _GenerateAIState();
@@ -16,20 +14,16 @@ class _GenerateAIState extends State<GenerateAI> {
       appBar: AppBar(
         toolbarHeight: 100.0,
         title: const Text('Generate Template'),
-        actions: <Widget>[
-          ThemeToggle(),
-        ],
       ),
       drawer: Drawer(
         child: Column(
           children: <Widget>[
             DrawerHeader(
               decoration: const BoxDecoration(
-                color: Color.fromARGB(200, 79, 55, 140),
-              ),
+              color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.png',
+                'Images/logo2.PNG',
                 width: 1000, // Adjust width as needed
                 height: 1000, // Adjust height as needed
               ),
@@ -59,11 +53,18 @@ class _GenerateAIState extends State<GenerateAI> {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
+                  ListTile(
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                  ),
                 ],
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.account_circle), // Icon for Profile
+              leading: Icon(Icons.account_circle), // Icon for Profile
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');
@@ -72,20 +73,6 @@ class _GenerateAIState extends State<GenerateAI> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ThemeToggle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
-    final isDarkMode = themeNotifier.currentThemeMode == ThemeMode.dark;
-    return IconButton(
-      icon: Icon(isDarkMode ? Icons.brightness_2_rounded : Icons.brightness_7_rounded),
-      onPressed: () {
-        themeNotifier.toggleTheme();
-      },
     );
   }
 }

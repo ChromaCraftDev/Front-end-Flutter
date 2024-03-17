@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
     'https://hgblhxdounljhdwemyoz.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnYmxoeGRvdW5samhkd2VteW96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4ODEwMzMsImV4cCI6MjAyNTQ1NzAzM30.kOaLOh5pGrZhAVDfSCd6pYdThxT161IOBeNSuKswZ7g',
   );
-  String email = 'cant fetch the email';
+  String email = 'you cant get the email from ';
   String _firstName = 'Developer';
   String _lastName = 'mode';
   String _selectedProfilePicture =
@@ -173,7 +173,7 @@ Future<void> _getUserData() async {
                 color: Color.fromARGB(200, 79, 55, 140),
               ),
               child: Image.asset(
-                'Images/logo2.png', // Replace with your image path
+                'Images/logo2.PNG', // Replace with your image path
                 width: 300, // Specify width as needed
                 height: 300, // Specify height as needed
               ),

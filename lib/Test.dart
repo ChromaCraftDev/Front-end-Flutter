@@ -1,83 +1,115 @@
-import 'dart:ui';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  Brightness systemBrightness = window.platformBrightness;
-  ThemeMode themeMode =
-      systemBrightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-
-  runApp(MyApp(initialThemeMode: themeMode));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ThemeMode initialThemeMode;
-
-  const MyApp({Key? key, required this.initialThemeMode}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeProvider(initialThemeMode: initialThemeMode),
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, _) {
-          return MaterialApp(
-            theme: themeProvider.getTheme(),
-            darkTheme: themeProvider.getDarkTheme(),
-            themeMode: themeProvider.getThemeMode(),
-            home: ThemeToggleScreen(),
-          );
-        },
+    return MaterialApp(
+      title: 'Text Generation with Google AI',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: TextGenerationScreen(),
     );
   }
 }
 
-class ThemeProvider extends ChangeNotifier {
-  ThemeData _lightTheme = ThemeData.light();
-  ThemeData _darkTheme = ThemeData.dark();
-  ThemeMode _themeMode;
-
-  ThemeProvider({required ThemeMode initialThemeMode})
-      : _themeMode = initialThemeMode;
-
-  ThemeData getTheme() => _lightTheme;
-  ThemeData getDarkTheme() => _darkTheme;
-  ThemeMode getThemeMode() => _themeMode;
-
-  void toggleTheme() {
-    _themeMode =
-        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    notifyListeners();
-  }
+class TextGenerationScreen extends StatefulWidget {
+  @override
+  _TextGenerationScreenState createState() => _TextGenerationScreenState();
 }
 
-class ThemeToggleScreen extends StatelessWidget {
+class _TextGenerationScreenState extends State<TextGenerationScreen> {
+  TextEditingController _promptController = TextEditingController();
+  String _generatedText = '';
+  bool _loading = false;
+
+  Future<void> _generateText(String prompt) async {
+    setState(() {
+      _loading = true;
+    });
+
+    const String apiKey = 'AIzaSyBXe8a9jS50NmXW6T_FpDjdubZ1nd-RPvM';
+    const String endpoint ='https://language.googleapis.com/v1/documents:analyzeText';
+
+    final Map<String, dynamic> requestBody = {
+      'document': {
+        'type': 'PLAIN_TEXT',
+        'content': prompt,
+      },
+      'features': {
+        'extractSyntax': false,
+        'extractEntities': false,
+        'extractDocumentSentiment': false,
+        'extractEntitySentiment': false,
+        'classifyText': true,
+      },
+    };
+
+    final Uri uri = Uri.parse('$endpoint?key=$apiKey');
+
+    final http.Response response =
+        await http.post(uri, body: jsonEncode(requestBody));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final String generatedText = data['text'] as String;
+      setState(() {
+        _generatedText = generatedText;
+        _loading = false;
+      });
+    } else {
+      setState(() {
+        _generatedText = 'Failed to generate text';
+        _loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Theme Toggle'),
+        title: const Text('Text Generation with Google AI'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Toggle the theme',
-              style: Theme.of(context).textTheme.headline5,
+            TextField(
+              controller: _promptController,
+              decoration: const InputDecoration(
+                labelText: 'Enter Prompt',
+              ),
             ),
-            Consumer<ThemeProvider>(
-              builder: (context, themeProvider, _) {
-                return Switch(
-                  value: themeProvider.getThemeMode() == ThemeMode.dark,
-                  onChanged: (value) {
-                    themeProvider.toggleTheme();
-                  },
-                );
-              },
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _loading
+                  ? null
+                  : () {
+                      final String prompt = _promptController.text.trim();
+                      if (prompt.isNotEmpty) {
+                        _generateText(prompt);
+                      }
+                    },
+              child: _loading
+                  ? const CircularProgressIndicator()
+                  : const Text('Generate Text'),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(
+                  _generatedText,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
             ),
           ],
         ),

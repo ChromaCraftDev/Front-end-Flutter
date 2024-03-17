@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -22,8 +20,8 @@ class ConfigurePage extends StatefulWidget {
 class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserver {
   final Config config = Config();
   TextEditingController hexController = TextEditingController();
+
   late SharedPreferences prefs;
-  late ThemeNotifier _themeNotifier;
 
   @override
   void initState() {
@@ -75,8 +73,8 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
 
   @override
   Widget build(BuildContext context) {
-    _themeNotifier = Provider.of<ThemeNotifier>(context);
-    final colorScheme = _themeNotifier.currentTheme.colorScheme;
+    final colorScheme =
+        Provider.of<ThemeNotifier>(context).currentTheme.colorScheme;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -141,7 +139,6 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
               ),
             ),
           ),
-          ThemeToggle(), // Adding the theme toggle button
         ],
       ),
       drawer: Drawer(
@@ -152,7 +149,7 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
                   const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.png',
+                'Images/logo2.PNG',
                 width: 1000,
                 height: 1000,
               ),
@@ -180,6 +177,13 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
                     title: const Text('Generate Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/settings');
                     },
                   ),
                 ],
@@ -333,19 +337,5 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
     WidgetsBinding.instance?.removeObserver(this);
     hexController.dispose();
     super.dispose();
-  }
-}
-
-class ThemeToggle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final _themeNotifier = Provider.of<ThemeNotifier>(context);
-    final isDarkMode = _themeNotifier.currentThemeMode == ThemeMode.dark;
-    return IconButton(
-      icon: Icon(isDarkMode ? Icons.brightness_2_rounded : Icons.brightness_7_rounded),
-      onPressed: () {
-        _themeNotifier.toggleTheme();
-      },
-    );
   }
 }

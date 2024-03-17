@@ -172,6 +172,7 @@ Future<void> _getUserData() async {
               decoration: const BoxDecoration(
                 color: Color.fromARGB(200, 79, 55, 140),
               ),
+              padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG', // Replace with your image path
                 width: 300, // Specify width as needed
@@ -204,7 +205,7 @@ Future<void> _getUserData() async {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.create),
+                    leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
                       Navigator.pushNamed(context, '/settings');

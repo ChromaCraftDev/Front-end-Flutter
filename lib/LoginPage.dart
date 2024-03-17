@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
                     Flexible(
                       flex: 3,
                       child: Image.asset(
-                        'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
+                        'Images/logo2.png', // Replace 'assets/logo.png' with your actual image path
                         width: 600, // Adjust width as needed
                         height: 600, // Adjust height as needed
                       ),
@@ -95,30 +95,6 @@ class _LoginPageState extends State<LoginPage> {
                                 contentPadding: EdgeInsets.all(10.0),
                               ),
                             ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/resetPassword');
-                                  },
-                                  child: const Text(
-                                    'Forgot Password ?',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.blue, // Change font color here
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
                           const SizedBox(height: 50.0),
                           ElevatedButton(

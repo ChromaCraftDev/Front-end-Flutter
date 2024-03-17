@@ -81,23 +81,25 @@
 //   @override
 //   void dispose() => super.dispose();
 // }
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_windows/webview_windows.dart';
 import 'package:window_manager/window_manager.dart';
+import 'theme_notifier.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
 class Browser extends StatefulWidget {
-  const Browser({super.key});
+  const Browser({Key? key}) : super(key: key);
 
   @override
-  State<Browser> createState() => _Browser();
+  State<Browser> createState() => _BrowserState();
 }
 
-class _Browser extends State<Browser> {
+class _BrowserState extends State<Browser> {
   final _controller = WebviewController();
   final _textController = TextEditingController();
   final List<StreamSubscription> _subscriptions = [];
@@ -229,12 +231,16 @@ class _Browser extends State<Browser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: StreamBuilder<String>(
-        stream: _controller.title,
-        builder: (context, snapshot) {
-          return Text(snapshot.hasData ? snapshot.data! : 'ChromaCraft');
-        },
-      )),
+        title: StreamBuilder<String>(
+          stream: _controller.title,
+          builder: (context, snapshot) {
+            return Text(snapshot.hasData ? snapshot.data! : 'ChromaCraft');
+          },
+        ),
+        actions: <Widget>[
+          ThemeToggle(),
+        ],
+      ),
       body: Center(
         child: compositeView(),
       ),
@@ -271,5 +277,19 @@ class _Browser extends State<Browser> {
     _subscriptions.forEach((s) => s.cancel());
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class ThemeToggle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final isDarkMode = themeNotifier.currentThemeMode == ThemeMode.dark;
+    return IconButton(
+      icon: Icon(isDarkMode ? Icons.brightness_2_rounded : Icons.brightness_7_rounded),
+      onPressed: () {
+        themeNotifier.toggleTheme();
+      },
+    );
   }
 }

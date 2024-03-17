@@ -1,6 +1,8 @@
-import 'ConfigurePage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'ConfigurePage.dart';
+import 'theme_notifier.dart';
 
 class TypographyPage extends StatefulWidget {
   const TypographyPage({Key? key}) : super(key: key);
@@ -12,6 +14,7 @@ class TypographyPage extends StatefulWidget {
 class _TypographyPageState extends State<TypographyPage> {
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -19,7 +22,7 @@ class _TypographyPageState extends State<TypographyPage> {
         actions: <Widget>[
           Container(
             decoration: const BoxDecoration(
-              shape: BoxShape.circle, // Make the container circular
+              shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: const Icon(Icons.palette),
@@ -51,7 +54,7 @@ class _TypographyPageState extends State<TypographyPage> {
           ),
           Container(
             decoration: const BoxDecoration(
-              shape: BoxShape.circle, // Make the container circular
+              shape: BoxShape.circle,
               color: Color.fromARGB(150, 79, 55, 140),
             ),
             child: IconButton(
@@ -60,11 +63,9 @@ class _TypographyPageState extends State<TypographyPage> {
             ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.only(right: 16.0), // Add padding to the right
+            padding: const EdgeInsets.only(right: 16.0),
             child: TextButton(
               onPressed: () {
-                // Implement your apply button functionality here
                 if (kDebugMode) {
                   print('Apply button pressed');
                 }
@@ -72,16 +73,17 @@ class _TypographyPageState extends State<TypographyPage> {
               child: const Row(
                 children: [
                   Icon(Icons.edit,
-                      color: Color.fromARGB(150, 79, 55, 140)), // Icon
-                  SizedBox(width: 15.0), // Add spacing between icon and text
+                      color: Color.fromARGB(150, 79, 55, 140)),
+                  SizedBox(width: 15.0),
                   Text(
                     'Apply',
                     style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
-                  ), // Text
+                  ),
                 ],
               ),
             ),
           ),
+          ThemeToggle(),
         ],
       ),
       drawer: Drawer(
@@ -92,9 +94,9 @@ class _TypographyPageState extends State<TypographyPage> {
                   const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.PNG',
-                width: 1000, // Adjust width as needed
-                height: 1000, // Adjust height as needed
+                'Images/logo2.png',
+                width: 1000,
+                height: 1000,
               ),
             ),
             Expanded(
@@ -122,18 +124,11 @@ class _TypographyPageState extends State<TypographyPage> {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: const Text('Settings'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/settings');
-                    },
-                  ),
                 ],
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.account_circle), // Icon for Profile
+              leading: const Icon(Icons.account_circle),
               title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');
@@ -190,6 +185,20 @@ class _TypographyPageState extends State<TypographyPage> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ThemeToggle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final isDarkMode = themeNotifier.currentThemeMode == ThemeMode.dark;
+    return IconButton(
+      icon: Icon(isDarkMode ? Icons.brightness_2_rounded : Icons.brightness_7_rounded),
+      onPressed: () {
+        themeNotifier.toggleTheme();
+      },
     );
   }
 }

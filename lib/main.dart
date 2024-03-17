@@ -13,7 +13,6 @@ import 'RegisterPage.dart';
 import 'ConfigurePage.dart';
 import 'Generate.dart';
 import 'Profile.dart';
-import 'Settings.dart';
 import 'Typography.dart';
 
 Future<void> main() async {
@@ -66,7 +65,6 @@ class MyApp extends StatelessWidget {
             '/ai': (context) => const GenerateAI(),
             '/browse': (context) => const Browser(),
             '/profile': (context) => const ProfilePage(),
-            '/settings': (context) => const SettingsPage(),
             '/typography': (context) => const TypographyPage(),
             '/resetPassword': (context) => const ResetPassword(),
           },

@@ -167,58 +167,40 @@ Future<void> _getUserData() async {
       ),
       drawer: Drawer(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Center(child: Text('$_firstName $_lastName')),
-              accountEmail: Center(child: Text(email)),
-              currentAccountPicture: GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Change Profile Picture'),
-                        content: Container(
-                          width: 400, // Width of the dialog
-                          height: 300,
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            itemCount: _profilePictures.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 5,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  _changeProfilePicture(_profilePictures[index]);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage:
-                                        NetworkImage(_profilePictures[index]),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundImage: NetworkImage(_selectedProfilePicture),
-                ),
+              accountName: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(_selectedProfilePicture),
+                  ),
+                  SizedBox(width: 5), // Add some spacing between image and text
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '$_firstName $_lastName',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        email,
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Color.fromARGB(200, 79, 55, 140),
               ),
-              otherAccountsPictures: <Widget>[],
+              otherAccountsPictures: [],
+              accountEmail: null,
             ),
             Expanded(
               child: ListView(

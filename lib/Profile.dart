@@ -19,9 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
     'https://hgblhxdounljhdwemyoz.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhnYmxoeGRvdW5samhkd2VteW96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk4ODEwMzMsImV4cCI6MjAyNTQ1NzAzM30.kOaLOh5pGrZhAVDfSCd6pYdThxT161IOBeNSuKswZ7g',
   );
-  String email = 'you cant get the email from ';
-  String _firstName = 'Developer';
-  String _lastName = 'mode';
+  String email = '';
+  String _firstName = '';
+  String _lastName = '';
   String _selectedProfilePicture =
       'https://drive.google.com/uc?export=download&id=1eJHO1ewFgmXIZRU358hD5oPi_GRGOGwb'; // Default profile picture URL
 
@@ -201,6 +201,13 @@ Future<void> _getUserData() async {
                     title: const Text('Generate Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.create),
+                    title: const Text('Settings'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/settings');
                     },
                   ),
                 ],

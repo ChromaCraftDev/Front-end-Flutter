@@ -9,6 +9,8 @@ class ColorOption {
   final String description;
 
   ColorOption(this.original, this.name, this.description) : color = original;
+
+  get presets => null;
 }
 
 class FontOption {

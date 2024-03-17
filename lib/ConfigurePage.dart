@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,10 +17,9 @@ class ConfigurePage extends StatefulWidget {
   _ConfigurePageState createState() => _ConfigurePageState();
 }
 
-class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserver {
+class _ConfigurePageState extends State<ConfigurePage>
+    with WidgetsBindingObserver {
   final Config config = Config();
-  TextEditingController hexController = TextEditingController();
-
   late SharedPreferences prefs;
 
   @override
@@ -76,6 +75,7 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
     final colorScheme =
         Provider.of<ThemeNotifier>(context).currentTheme.colorScheme;
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 100.0,
         title: const Text('Colour Configure'),
@@ -91,19 +91,22 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
             ),
           ),
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white,
+                width: 2,
+              ),
             ),
-            child: IconButton(
-              icon: const Text('Tr'),
+            child: TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         const TypographyPage(),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
+                    transitionsBuilder: (context, animation,
+                        secondaryAnimation, child) {
                       const begin = Offset(1.0, 0.0);
                       const end = Offset.zero;
                       const curve = Curves.easeInOutQuart;
@@ -120,6 +123,21 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
                   ),
                 );
               },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                    Colors.transparent),
+                padding: MaterialStateProperty.all(
+                    EdgeInsets.zero),
+                shape: MaterialStateProperty.all(
+                    const CircleBorder()),
+              ),
+              child: const Text(
+                'Tr',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
           Padding(
@@ -128,12 +146,12 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
               onPressed: _applyButtonPressed,
               child: const Row(
                 children: [
-                  Icon(Icons.edit,
-                      color: Color.fromARGB(150, 79, 55, 140)),
+                  Icon(Icons.edit, color: Color.fromARGB(150, 79, 55, 140)),
                   SizedBox(width: 15.0),
                   Text(
                     'Apply',
-                    style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
+                    style: TextStyle(
+                        color: Color.fromARGB(150, 79, 55, 140)),
                   ),
                 ],
               ),
@@ -145,8 +163,8 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration:
-                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -204,8 +222,7 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
           runAlignment: WrapAlignment.center,
           runSpacing: 20,
           spacing: 10,
-          children:
-              config.semanticColors.map(_buildButton).toList(growable: false),
+          children: config.semanticColors.map((option) => _buildButton(option)).toList(growable: false),
         ),
       ),
     );
@@ -217,12 +234,12 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
         _showColorPickerDialog(option);
       },
       child: Container(
-        width: 600,
+        width: 550,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: const Color.fromARGB(200, 0, 0, 0),
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -233,12 +250,15 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
               children: [
                 Text(
                   option.name,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
                   softWrap: true,
                 ),
                 Text(
                   option.description,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ],
             ),
@@ -247,7 +267,11 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
               height: 50,
               decoration: BoxDecoration(
                 color: option.color,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: const Color.fromARGB(50, 255, 255, 255),
+                  width: 3,
+                ),
               ),
             ),
           ],
@@ -257,63 +281,80 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
   }
 
   void _showColorPickerDialog(ColorOption option) {
+    Color pickerColor = option.color;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Pick a color'),
-          content: SingleChildScrollView(
+          title: const Text('Pick a Color'),
+          content: SizedBox(
+          width: 700, // Set the width of the popup
+          height: 550, // Set the height of the popup
+          child: SingleChildScrollView(
             child: Column(
               children: [
-                ColorPicker(
-                  pickerColor: option.color,
-                  onColorChanged: (newColor) => setState(() {
-                    option.color = newColor;
-                    hexController.text = colorToHex(option.color,
-                        includeHashSign: true, enableAlpha: false);
-                  }),
-                  pickerAreaHeightPercent: 0.8,
-                  enableAlpha: false,
-                ),
-                TextFormField(
-                  controller: hexController,
-                  decoration:
-                      const InputDecoration(labelText: 'Hex Color Code'),
-                  onChanged: (String hex) => setState(() {
-                    option.color = colorFromHex(hex)!;
-                  }),
+                // ColorPicker widget
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: ColorPicker(
+                    color: pickerColor,
+                    enableOpacity: true,
+                    onColorChanged: (Color color) {
+                      setState(() {
+                        pickerColor = color;
+                        option.color = color;
+                      });
+                    },
+                    heading: Text(
+                      'Select color from wheel',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    pickersEnabled: const <ColorPickerType, bool>{
+                      ColorPickerType.wheel: true,
+                      ColorPickerType.primary: false,
+                      ColorPickerType.accent: false,
+                      ColorPickerType.both: true,
+                    },
+                    wheelWidth: 40,
+                    width: 40,
+                    height: 40,
+                    spacing: 0,
+                    runSpacing: 0,
+                    borderRadius: 1,
+                    wheelDiameter: 300,
+                    showColorCode: true,
+                    colorCodeHasColor: true,
+                  ),
                 ),
               ],
             ),
-          ),
+          ),),
           actions: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () => setState(() {
-                        option.color = option.original;
-                        hexController.text = colorToHex(option.original,
-                            includeHashSign: true, enableAlpha: false);
-                      }),
-                      child: const Text('Revert'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                  ],
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      option.color = option.original;
+                      pickerColor = option.original;
+                    });
+                  },
+                  child: const Text(
+                    'Revert',
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     saveColorToPrefs(option);
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Apply'),
+                  child: const Text(
+                    'Apply',
+                    style: TextStyle(color: Colors.green),
+                  ),
                 ),
               ],
             ),
@@ -335,7 +376,6 @@ class _ConfigurePageState extends State<ConfigurePage> with WidgetsBindingObserv
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
-    hexController.dispose();
     super.dispose();
   }
 }

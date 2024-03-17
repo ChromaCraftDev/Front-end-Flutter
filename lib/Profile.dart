@@ -165,42 +165,18 @@ Future<void> _getUserData() async {
         toolbarHeight: 100.0,
         title: const Text('Profile'),
       ),
-      drawer: Drawer(
+      drawer:Drawer(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(_selectedProfilePicture),
-                  ),
-                  SizedBox(width: 5), // Add some spacing between image and text
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        '$_firstName $_lastName',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        email,
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Color.fromARGB(200, 79, 55, 140),
               ),
-              otherAccountsPictures: [],
-              accountEmail: null,
+              child: Image.asset(
+                'Images/logo2.PNG', // Replace with your image path
+                width: 300, // Specify width as needed
+                height: 300, // Specify height as needed
+              ),
             ),
             Expanded(
               child: ListView(
@@ -227,23 +203,47 @@ Future<void> _getUserData() async {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: const Text('Settings'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/settings');
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.account_circle),
-                    title: const Text('Profile'),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/profile');
-                    },
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(_selectedProfilePicture),
+                      ),
+                      const SizedBox(width: 5), // Add some spacing between image and text
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '$_firstName $_lastName',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            email,
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+
           ],
         ),
       ),

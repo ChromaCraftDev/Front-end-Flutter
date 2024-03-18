@@ -239,93 +239,41 @@ class _LoginPageState extends State<LoginPage> {
 
     final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
 
-    if (response == null) {
-      // Set status message for login failed
-      setState(() {
-        loadingStatus = 'Login failed. Please check your credentials and try again.';
-      });
-      
-    } else {
-      // Set status message for successful login
-      setState(() {
-        loadingStatus = 'Login successful. Redirecting to Home Page...';
-        
-      });
-      await Future.delayed(Duration(seconds: 1));
-
-        // Save email to a text file
-        _saveEmailToFile(email);
-
-      // Delay before navigating to give user time to see status message
-      await Future.delayed(Duration(seconds: 1));
-
-      Navigator.pushNamed(
-        context,
-        '/profile',
-        arguments: {
-          'email': email,
-        },
-      );
-      Navigator.pushNamed(context, '/config');
-    }
-  } catch (e) {
-    // Set status message for error
+    // Set status message for successful login
     setState(() {
-      loadingStatus = 'An error occurred: ${e.toString()}';
+      loadingStatus = 'Login successful. Redirecting to Home Page...';
+      
     });
+    await Future.delayed(Duration(seconds: 1));
+
+      // Save email to a text file
+    _saveEmailToFile(email);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Login successful'),
+      ),
+    );
+    Navigator.pushNamed(context, '/config');
+    } catch (e) {
+    if (e is AuthException) {
+      setState(() {
+      loadingStatus = 'Invalid email or password. Check your credentials and try again';
+      });
+      await Future.delayed(Duration(seconds: 2));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid email or password. Check your Credentials and try again'),
+        ),
+      );
+    }else{
+      setState(() {
+      loadingStatus = 'An error occured !';
+      });
+    }
   } finally {
     setState(() {
       isLoading = false;
     });
-
-    final email = emailController.text;
-    final password = passwordController.text;
-
-    try {
-      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
-
-      if (response == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: const Text('Login failed'),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful'),
-          ),
-        );
-        Navigator.pushNamed(
-          context,
-          '/profile',
-          arguments: {
-            'name': response.user?.userMetadata?['first_name'],
-            'email': email,
-          },
-        );
-        Navigator.pushNamed(context, '/config');
-      }
-    } catch (e) {
-      if (e is AuthException) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password. Check your credentials and try again'),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('An error occurred: ${e.toString()}'),
-          ),
-        );
-      }
-    } finally {
-      setState(() {
-        isLoading = false;
-        loadingStatus = '';
-      });
-    }
   }
 }
 Future<void> _signInWithGoogle() async {

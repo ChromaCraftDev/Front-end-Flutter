@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(ChromaCraftApp());
 }
 
-class ChromaCraftApp extends StatelessWidget {
+class ChromaCraftApp extends StatefulWidget {
+  @override
+  _ChromaCraftAppState createState() => _ChromaCraftAppState();
+}
+
+class _ChromaCraftAppState extends State<ChromaCraftApp> {
+  TextEditingController _textEditingController = TextEditingController();
+  String _response = '';
+  OpenAIService _aiService = OpenAIService();
+
   // Define the colors for the palettes
   final List<Color> paletteColors = [
     Colors.red, // Base
@@ -32,6 +43,19 @@ class ChromaCraftApp extends StatelessWidget {
     'Subtle',
     'Success',
   ];
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  void _generateResponse(String textPrompt) async {
+    String response = await _aiService.chatGPTAPI(textPrompt);
+    setState(() {
+      _response = response;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +142,7 @@ class ChromaCraftApp extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: TextField(
+                            controller: _textEditingController,
                             decoration: InputDecoration(
                               labelText: 'Text prompt',
                               border: OutlineInputBorder(),
@@ -126,12 +151,23 @@ class ChromaCraftApp extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // Add functionality for the generate button
+                            _generateResponse(_textEditingController.text);
                           },
                           child: Text('Generate'),
                         ),
                       ],
                     ),
+                  ),
+                  // Display Response section
+                  Expanded(
+                    child: SingleChildScrollView(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        _response,
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    )),
                   ),
                 ],
               ),
@@ -215,4 +251,50 @@ class ChromaCraftApp extends StatelessWidget {
       ),
     );
   }
+}
+
+class OpenAIService {
+  final List<Map<String, String>> messages = [];
+  static const apiUri = 'https://api.openai.com/v1/chat/completions';
+  static const apiKey = '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';
+
+  Future<String> chatGPTAPI(String prompt) async {
+  messages.add({
+    "role": "user",
+    "content":  "$prompt you are used to generated color codes for a theming application so you have generate colour codes according to the given prompt above in HEX to below template, base-colour = [color in hex]"
+  });
+  try {
+    final res = await http.post(
+      Uri.parse(apiUri),
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": 'Bearer $apiKey',
+        'OpenAI-Organization': ''
+      },
+      body: jsonEncode({
+        "model": "gpt-3.5-turbo",
+        "messages": messages,
+        "temperature": 0.7
+      }),
+    );
+
+    if (res.statusCode == 200) {
+      String content =
+          jsonDecode(res.body)['choices'][0]['message']['content'];
+      content = content.trim();
+
+      messages.add({
+        'role': 'assistant',
+        'content': content,
+      });
+      return content;
+    } else {
+      // Handle API errors here
+      return 'An error occurred while communicating with the server. Please try again later.';
+    }
+  } catch (e) {
+    return 'An unexpected error occurred: ${e.toString()}';
+  }
+}
+
 }

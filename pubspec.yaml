@@ -57,6 +57,7 @@ dependencies:
   shared_preferences: ^2.0.8
   google_generative_ai: ^0.2.2
   flex_color_picker: ^3.4.1
+  chat_gpt_sdk: ^2.0.2
   
 dev_dependencies:
   flutter_test:

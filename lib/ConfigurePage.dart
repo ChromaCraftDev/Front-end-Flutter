@@ -105,8 +105,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         const TypographyPage(),
-                    transitionsBuilder: (context, animation,
-                        secondaryAnimation, child) {
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
                       const begin = Offset(1.0, 0.0);
                       const end = Offset.zero;
                       const curve = Curves.easeInOutQuart;
@@ -124,12 +124,9 @@ class _ConfigurePageState extends State<ConfigurePage>
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                    Colors.transparent),
-                padding: MaterialStateProperty.all(
-                    EdgeInsets.zero),
-                shape: MaterialStateProperty.all(
-                    const CircleBorder()),
+                backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                padding: MaterialStateProperty.all(EdgeInsets.zero),
+                shape: MaterialStateProperty.all(const CircleBorder()),
               ),
               child: const Text(
                 'Tr',
@@ -150,8 +147,7 @@ class _ConfigurePageState extends State<ConfigurePage>
                   SizedBox(width: 15.0),
                   Text(
                     'Apply',
-                    style: TextStyle(
-                        color: Color.fromARGB(150, 79, 55, 140)),
+                    style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
                   ),
                 ],
               ),
@@ -163,8 +159,8 @@ class _ConfigurePageState extends State<ConfigurePage>
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(200, 79, 55, 140)),
+              decoration:
+                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -222,7 +218,9 @@ class _ConfigurePageState extends State<ConfigurePage>
           runAlignment: WrapAlignment.center,
           runSpacing: 20,
           spacing: 10,
-          children: config.semanticColors.map((option) => _buildButton(option)).toList(growable: false),
+          children: config.semanticColors
+              .map((option) => _buildButton(option))
+              .toList(growable: false),
         ),
       ),
     );
@@ -289,48 +287,49 @@ class _ConfigurePageState extends State<ConfigurePage>
         return AlertDialog(
           title: const Text('Pick a Color'),
           content: SizedBox(
-          width: 700, // Set the width of the popup
-          height: 550, // Set the height of the popup
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // ColorPicker widget
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: ColorPicker(
-                    color: pickerColor,
-                    enableOpacity: true,
-                    onColorChanged: (Color color) {
-                      setState(() {
-                        pickerColor = color;
-                        option.color = color;
-                      });
-                    },
-                    heading: Text(
-                      'Select color from wheel',
-                      style: Theme.of(context).textTheme.headline5,
+            width: 700, // Set the width of the popup
+            height: 550, // Set the height of the popup
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // ColorPicker widget
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                    child: ColorPicker(
+                      color: pickerColor,
+                      enableOpacity: true,
+                      onColorChanged: (Color color) {
+                        setState(() {
+                          pickerColor = color;
+                          option.color = color;
+                        });
+                      },
+                      heading: Text(
+                        'Select color from wheel',
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      pickersEnabled: const <ColorPickerType, bool>{
+                        ColorPickerType.wheel: true,
+                        ColorPickerType.primary: false,
+                        ColorPickerType.accent: false,
+                        ColorPickerType.both: true,
+                      },
+                      wheelWidth: 40,
+                      width: 40,
+                      height: 40,
+                      spacing: 2,
+                      runSpacing: 2,
+                      borderRadius: 1,
+                      wheelDiameter: 300,
+                      showColorCode: true,
+                      hasBorder: true,
+                      colorCodeHasColor: true,
                     ),
-                    pickersEnabled: const <ColorPickerType, bool>{
-                      ColorPickerType.wheel: true,
-                      ColorPickerType.primary: false,
-                      ColorPickerType.accent: false,
-                      ColorPickerType.both: true,
-                    },
-                    wheelWidth: 40,
-                    width: 40,
-                    height: 40,
-                    spacing: 2,
-                    runSpacing: 2,
-                    borderRadius: 1,
-                    wheelDiameter: 300,
-                    showColorCode: true,
-                    hasBorder: true,
-                    colorCodeHasColor: true,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),),
+          ),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -365,10 +364,14 @@ class _ConfigurePageState extends State<ConfigurePage>
     );
   }
 
-  void _applyButtonPressed() {
-    config.semanticColors.forEach((option) {
+  void _applyButtonPressed() async {
+    for (var option in config.semanticColors) {
       saveColorToPrefs(option);
-    });
+    }
+    storage.apply(
+      config,
+      [await fetch.fetchTemplate("foot")],
+    ).listen(print);
     if (kDebugMode) {
       print('Apply button pressed');
     }

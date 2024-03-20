@@ -18,6 +18,8 @@ class FontOption {
   FontOption(this.fontName);
 }
 
+final config = Config();
+
 class Config {
   final List<ColorOption> semanticColors = [
     ColorOption(

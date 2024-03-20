@@ -19,7 +19,6 @@ class ConfigurePage extends StatefulWidget {
 
 class _ConfigurePageState extends State<ConfigurePage>
     with WidgetsBindingObserver {
-  final Config config = Config();
   late SharedPreferences prefs;
 
   @override
@@ -35,14 +34,14 @@ class _ConfigurePageState extends State<ConfigurePage>
   }
 
   void loadSavedColors() {
-    config.semanticColors.forEach((option) {
+    for (var option in config.semanticColors) {
       final savedColor = prefs.getInt(option.name);
       if (savedColor != null) {
         setState(() {
           option.color = Color(savedColor);
         });
       }
-    });
+    }
   }
 
   void saveColorToPrefs(ColorOption option) {
@@ -54,11 +53,11 @@ class _ConfigurePageState extends State<ConfigurePage>
   }
 
   void revertToDefaultColors() {
-    config.semanticColors.forEach((option) {
+    for (var option in config.semanticColors) {
       setState(() {
         option.color = option.original;
       });
-    });
+    }
   }
 
   @override

@@ -131,7 +131,7 @@ class _Browser extends State<Browser> {
 
       await _controller.setBackgroundColor(Colors.transparent);
       await _controller.setPopupWindowPolicy(WebviewPopupWindowPolicy.deny);
-      await _controller.loadUrl('http://localhost/HomePage/homepage.html');
+      await _controller.loadUrl('http://localhost:5173');
 
       if (!mounted) return;
       setState(() {});

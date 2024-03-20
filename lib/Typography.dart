@@ -170,11 +170,11 @@ class _TypographyPageState extends State<TypographyPage> {
           children: <Widget>[
             Text(
               title,
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
             Text(
               subtitle,
-              style: TextStyle( fontSize: 16),
+              style: const TextStyle( fontSize: 16),
             ),
           ],
         ),

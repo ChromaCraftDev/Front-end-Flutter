@@ -1,5 +1,7 @@
+import 'package:chromacraft/ResetPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'theme_notifier.dart';
 import 'package:flutter/foundation.dart'
@@ -17,6 +19,9 @@ import 'Typography.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+
+  // Clear shared preferences
+  await clearSharedPreferences();
 
   try {
     await Supabase.initialize(
@@ -38,27 +43,35 @@ Future<void> main() async {
   );
 }
 
+Future<void> clearSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
-      builder: (context, themeNotifier, _) => MaterialApp(
-        debugShowCheckedModeBanner: false, // Remove Debug tag
-        theme: themeNotifier.currentTheme,
-        initialRoute: '/login',
-        routes: {
-          '/login': (context) => LoginPage(),
-          '/register': (context) => RegisterPage(),
-          '/config': (context) => const ConfigurePage(),
-          '/ai': (context) => const GenerateAI(),
-          '/browse': (context) => const Browser(),
-          '/profile': (context) => const ProfilePage(),
-          '/settings': (context) => const SettingsPage(),
-          '/typography': (context) => const TypographyPage(),
-        },
-      ),
+      builder: (context, themeNotifier, _) {        
+        return MaterialApp(
+          debugShowCheckedModeBanner: false, // Remove Debug tag
+          theme: themeNotifier.currentTheme,
+          initialRoute: '/login',
+          routes: {
+            '/login': (context) => LoginPage(),
+            '/register': (context) => const RegisterPage(),
+            '/config': (context) => const ConfigurePage(),
+            '/ai': (context) => const GenerateAI(),
+            '/browse': (context) => const Browser(),
+            '/profile': (context) => const ProfilePage(),
+            '/settings': (context) => const SettingsPage(),
+            '/typography': (context) => const TypographyPage(),
+            '/resetPassword': (context) => const ResetPassword(),
+          },
+        );
+      },
     );
   }
 }

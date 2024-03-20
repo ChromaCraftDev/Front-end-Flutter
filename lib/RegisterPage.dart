@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -21,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
   
   final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']); // Include 'profile' scope
 
@@ -31,16 +33,171 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isLoading = false;
   bool isButtonDisabled = false;
+  String loadingStatus = '';
+
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldMessenger(
+      key: _scaffoldKey,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Register'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 60.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 3,
+                            child: Image.asset(
+                              'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
+                              width: 600, // Adjust width as needed
+                              height: 600, // Adjust height as needed
+                            ),
+                          ),
+                          const SizedBox(width: 300),
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Center(
+                                    child: Text(
+                                      'REGISTER NOW',
+                                      style: TextStyle(fontSize: 50, fontFamily: 'Schyler'),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20.0),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    IconButton(
+                                      onPressed: () async {
+                                        await _handleGoogleSignIn();
+                                      },
+                                      icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
+                                    ),
+                                    const SizedBox(width: 20), // Add small space between icons
+                                    IconButton(
+                                      onPressed: () async {
+                                        await _handleFacebookSignIn();
+                                      },
+                                      icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
+                                    ),
+                                    const SizedBox(width: 20), // Add small space between icons
+                                    IconButton(
+                                      onPressed: () {
+                                        // TODO: Implement Apple login functionality
+                                      },
+                                      icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20.0), // Add space between "LOGIN" and text fields
+                                TextField(
+                                  controller: firstNameController,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'First Name',
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                TextField(
+                                  controller: lastNameController,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Last Name (Optional)',
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                TextField(
+                                  controller: emailController,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Email Address',
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                TextField(
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Password',
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                TextField(
+                                  controller: confirmPasswordController,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Confirm Password',
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                Center(
+                                  child: ElevatedButton(
+                                    onPressed: isLoading ? null : () => registerUser(),
+                                    child: const Text('Register'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: isLoading,
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(),
+                        const SizedBox(height: 20),
+                        Text(
+                          loadingStatus,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ]
+          )
+        ),
+      ),
+    );
+  }
 
   Future<void> registerUser() async {
     setState(() {
       isLoading = true;
+      loadingStatus = 'Please Wait! Validating Credentials!';
     });
 
     String firstName = firstNameController.text.trim();
     String lastName = lastNameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text;
+    String ImageID = 'https://drive.google.com/uc?export=download&id=1eJHO1ewFgmXIZRU358hD5oPi_GRGOGwb';
     String confirmPassword = confirmPasswordController.text;
 
     bool isFirstNameNotEmpty = firstName.isNotEmpty;
@@ -52,13 +209,19 @@ class _RegisterPageState extends State<RegisterPage> {
       _scaffoldKey.currentState!.showSnackBar(
         const SnackBar(content: Text('First Name cannot be empty!')),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
-    if (!isEmailValid) {
+    if (!isEmailValid) {    
       _scaffoldKey.currentState!.showSnackBar(
         const SnackBar(content: Text('Please enter a valid Email Address!')),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -67,14 +230,20 @@ class _RegisterPageState extends State<RegisterPage> {
         const SnackBar(
             content: Text('Please enter a password more than 6 characters!')),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
     if (password != confirmPassword) {
       _scaffoldKey.currentState!.showSnackBar(
         const SnackBar(
-            content: const Text("Passwords you entered don't match!")),
+            content: Text("Passwords you entered don't match!")),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -83,6 +252,9 @@ class _RegisterPageState extends State<RegisterPage> {
       _scaffoldKey.currentState!.showSnackBar(
         const SnackBar(content: Text('This email is already registered!')),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
     if (isFirstNameNotEmpty &&
@@ -90,24 +262,10 @@ class _RegisterPageState extends State<RegisterPage> {
         isPasswordValid &&
         password == confirmPassword) {
       try {
-        // Show loading dialog
-        showDialog(
-          context: context,
-          barrierDismissible: false, // prevent user from dismissing dialog
-          builder: (BuildContext context) {
-            return const AlertDialog(
-              title: Text('Registering'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: [
-                    Text('Please wait...'),
-                    CircularProgressIndicator(),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
+        
+      setState(() {
+        loadingStatus = 'Please Wait! Validating Credentials!';
+      });
 
         // Register user using Supabase Auth
         final response = await supabase.auth.signUp(
@@ -126,169 +284,33 @@ class _RegisterPageState extends State<RegisterPage> {
           'first_name': firstName,
           'last_name': lastName,
           'email': email,
+          'image_id': ImageID,
         }).execute();
 
-        Navigator.pop(context); // Close loading dialog
-
-        _scaffoldKey.currentState!.showSnackBar(
-          const SnackBar(
-            content: Text(
-                'Registration successful! Please check your email for a verification link to complete your account.'),
-          ),
-        );
-
-        // Wait before redirecting to the login page
-        await Future.delayed(const Duration(milliseconds: 650));
+        setState(() {
+          loadingStatus = 'Registration successful. Please check your email for the verification link...';
+        });
+        await Future.delayed(Duration(seconds: 4));
 
         // Redirect to the login page upon successful registration
-        Navigator.pushReplacementNamed(context, '/login'); // Replace the current page with the login page
+        Navigator.pushNamed(context, '/login'); // Replace the current page with the login page
 
         setState(() {
           isButtonDisabled = true;
         });
       } catch (e) {
-        Navigator.pop(context); // Close loading dialog
-        _scaffoldKey.currentState!.showSnackBar(
-          SnackBar(content: Text('Failed to register user: $e')),
-        );
+        setState(() {
+          loadingStatus = 'Registration Failed...';
+        });        
+        await Future.delayed(Duration(seconds: 4));
       } finally {
         setState(() {
           isLoading = false;
+          isButtonDisabled = false;
         });
       }
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaffoldMessenger(
-      key: _scaffoldKey,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Register'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 60.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: [
-                    Flexible(
-                      flex: 3,
-                      child: Image.asset(
-                        'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
-                        width: 600, // Adjust width as needed
-                        height: 600, // Adjust height as needed
-                      ),
-                    ),
-                    const SizedBox(width: 300),
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Center(
-                              child: const Text(
-                                'REGISTER NOW',
-                                style: TextStyle(fontSize: 50, fontFamily: 'Schyler'),
-                              ),
-                            ),
-                            const SizedBox(height: 20.0),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () async {
-                                  await _handleGoogleSignIn();
-                                },
-                                icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
-                              ),
-                              const SizedBox(width: 20), // Add small space between icons
-                              IconButton(
-                                onPressed: () async {
-                                   await _handleFacebookSignIn();
-                                },
-                                icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
-                              ),
-                              const SizedBox(width: 20), // Add small space between icons
-                              IconButton(
-                                onPressed: () {
-                                  // TODO: Implement Apple login functionality
-                                },
-                                icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20.0), // Add space between "LOGIN" and text fields
-                          TextField(
-                            controller: firstNameController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'First Name',
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-                          TextField(
-                            controller: lastNameController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Last Name (Optional)',
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-                          TextField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Email Address',
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-                          TextField(
-                            controller: passwordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Password',
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-                          TextField(
-                            controller: confirmPasswordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Confirm Password',
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
-                          Center(
-                            child: ElevatedButton(
-                              onPressed: isButtonDisabled
-                                  ? null
-                                  : () async {
-                                      await registerUser();
-                                    },
-                              child: const Text('Register'),
-                            ),
-                          ),
-                          
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> _handleGoogleSignIn() async {
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();

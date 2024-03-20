@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart'; // Add this import
 import 'engine/config.dart';
 import 'package:flutter/foundation.dart';
 
-class ColorOption {
-  final Color original;
-  Color color;
-  final String name;
-  final String description;
-
-  ColorOption(this.original, this.name, this.description) : color = original;
-
-  get presets => null;
-}
-
 class GenerateAI extends StatefulWidget {
-  const GenerateAI({Key? key}) : super(key: key);
+  const GenerateAI({super.key});
 
   @override
   _GenerateAIState createState() => _GenerateAIState();
@@ -41,8 +31,9 @@ class _GenerateAIState extends State<GenerateAI> {
     final List<String>? savedColors = _prefs.getStringList('paletteColors');
     if (savedColors != null) {
       setState(() {
-        paletteColors.clear();
-        paletteColors.addAll(savedColors.map((hexColor) => Color(int.parse(hexColor.substring(1, 7), radix: 16) | 0xFF000000)));
+        for (var i = 0; i < config.semanticColors.length; i++) {
+          config.semanticColors[i].color = colorFromHex(savedColors[i])!;
+        }
       });
     }
   }
@@ -60,8 +51,9 @@ class _GenerateAIState extends State<GenerateAI> {
     String response = await _aiService.chatGPTAPI(textPrompt);
     List<String> hexColors = _extractHexColors(response);
     setState(() {
-      paletteColors.clear();
-      paletteColors.addAll(hexColors.map((hexColor) => Color(int.parse(hexColor.substring(1, 7), radix: 16) | 0xFF000000)));
+      for (var i = 0; i < config.semanticColors.length; i++) {
+        config.semanticColors[i].color = colorFromHex(hexColors[i])!;
+      }
     });
     _updateConfigColors(hexColors);
     setState(() {
@@ -93,8 +85,8 @@ class _GenerateAIState extends State<GenerateAI> {
   }
 
   void _updateConfigColors(List<String> hexColors) {
-    for (int i = 0; i < hexColors.length && i < Config().semanticColors.length; i++) {
-      Config().semanticColors[i].color = Color(int.parse(hexColors[i].substring(1, 7), radix: 16) | 0xFF000000);
+    for (int i = 0; i < config.semanticColors.length; i++) {
+      config.semanticColors[i].color = colorFromHex(hexColors[i])!;
     }
     _saveColorsToPrefs(hexColors); // Save the colors to SharedPreferences
   }
@@ -102,23 +94,6 @@ class _GenerateAIState extends State<GenerateAI> {
   Future<void> _saveColorsToPrefs(List<String> hexColors) async {
     await _prefs.setStringList('paletteColors', hexColors);
   }
-
-  List<Color> paletteColors = [
-    for (var colorOption in Config().semanticColors) colorOption.original,
-  ];
-
-  final List<String> colorLabels = [
-    'Base',
-    'Shade',
-    'Container',
-    'Text',
-    'Subtle',
-    'Primary',
-    'Alternate',
-    'Error',
-    'Warning',
-    'Success',
-  ];
 
   Widget _buildGenerateButton() {
     if (_isLoading) {
@@ -144,8 +119,8 @@ class _GenerateAIState extends State<GenerateAI> {
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: const BoxDecoration(
-                  color: Color.fromARGB(200, 79, 55, 140)),
+              decoration:
+                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 'Images/logo2.PNG',
@@ -241,8 +216,8 @@ class _GenerateAIState extends State<GenerateAI> {
                           fontWeight: FontWeight.normal,
                           fontStyle: FontStyle.normal,
                           letterSpacing: 1.0,
-                          decoration: TextDecoration.underline, // Example: underline
-                          decorationColor: Colors.blue, // Example: underline color
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.blue,
                           decorationStyle: TextDecorationStyle.dashed,
                         ),
                       ),
@@ -258,19 +233,20 @@ class _GenerateAIState extends State<GenerateAI> {
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: paletteColors.length,
+                    itemCount: config.semanticColors.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                         margin: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
-                          color: paletteColors[index],
-                          borderRadius: BorderRadius.circular(8.0), // Add border radius
+                          color: config.semanticColors[index].color,
+                          borderRadius:
+                              BorderRadius.circular(8.0), // Add border radius
                         ),
                         width: 80, // Set width to control the size
                         height: 80, // Set height to match the width
                         child: Center(
                           child: Text(
-                            colorLabels[index],
+                            config.semanticColors[index].name,
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -307,8 +283,27 @@ class OpenAIService {
 
   Future<String> chatGPTAPI(String prompt) async {
     messages.add({
+      "role": "system",
+      "content": """
+You are 'ChromaCraft AI', an AI used for generating color schemes based on natural language prompts. 
+Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
+
+${config.semanticColors.map((it) => "- ${it.name}: ${it.description}").join("\n\n")}
+
+Keep in mind the laws of UI and design. Contrast is highly important for a pleasing theming appliation.
+Make sure you always have a contrast ratio of 4.5:1 as per the Web Content Accessibility Guidelines.
+If the user doesn't explicitly specify whether the theme is light or dark, make an assumption.
+
+The format expected of your reply should follow the templat below (without the backticks, just the content inside)
+```
+mode = dark|light
+${config.semanticColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
+```
+"""
+    });
+    messages.add({
       "role": "user",
-      "content": "$prompt you are used to generated color codes for a theming application so you have generate colour codes according to the given prompt above in HEX to below template, base-colour = [color in hex], Shade-color = [color in hex], Container-color = [color in hex], Text-color = [color in hex], Subtle-color = [color in hex], Primary-color = [color in hex], Alternate-color = [color in hex], Error-color = [color in hex], Warning-color = [color in hex], 'Success-color = [color in hex] "
+      "content": prompt,
     });
     try {
       final res = await http.post(
@@ -321,7 +316,7 @@ class OpenAIService {
         body: jsonEncode({
           "model": "gpt-3.5-turbo",
           "messages": messages,
-          "temperature": 0.7
+          "temperature": 0.5
         }),
       );
 

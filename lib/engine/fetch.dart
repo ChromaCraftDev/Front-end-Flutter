@@ -31,8 +31,8 @@ Future<List<TemplateMetadata>> fetchTemplatesList() async {
 
 Future<Directory> fetchTemplate(String name) async {
   final bytes =
-      offline ? await testTemplate : (await _get("foot.zip")).bodyBytes;
-  return await storeTemplate("foot", bytes);
+      offline ? await testTemplate : (await _get("$name.zip")).bodyBytes;
+  return await storeTemplate(name, bytes);
 }
 
 Future<bool> templateNeedsUpdate(

@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class ColorOption {
   final Color original;
@@ -12,8 +10,6 @@ class ColorOption {
   final String description;
 
   ColorOption(this.original, this.name, this.description) : color = original;
-
-  get presets => null;
 }
 
 class FontOption {

@@ -4,7 +4,7 @@ import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-
+import 'package:getwidget/getwidget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -34,7 +34,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool isLoading = false;
   bool isButtonDisabled = false;
   String loadingStatus = '';
-
+  bool _isObscure = true; // To track whether password is obscured or not
+  bool _isConfirmObscure = true; // To track whether confirm password is obscured or not
 
   @override
   Widget build(BuildContext context) {
@@ -76,73 +77,86 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 20.0),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    IconButton(
-                                      onPressed: () async {
-                                        await _handleGoogleSignIn();
-                                      },
-                                      icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
-                                    ),
-                                    const SizedBox(width: 20), // Add small space between icons
-                                    IconButton(
-                                      onPressed: () async {
-                                        await _handleFacebookSignIn();
-                                      },
-                                      icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
-                                    ),
-                                    const SizedBox(width: 20), // Add small space between icons
-                                    IconButton(
-                                      onPressed: () {
-                                        // TODO: Implement Apple login functionality
-                                      },
-                                      icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
-                                    ),
-                                  ],
-                                ),
+
+                                // Row(
+                                //   mainAxisSize: MainAxisSize.max,
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   crossAxisAlignment: CrossAxisAlignment.center,
+                                //   children: <Widget>[
+                                //     IconButton(
+                                //       onPressed: () async {
+                                //         await _handleGoogleSignIn();
+                                //       },
+                                //       icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
+                                //     ),
+                                //     const SizedBox(width: 20), // Add small space between icons
+                                //     IconButton(
+                                //       onPressed: () async {
+                                //         await _handleFacebookSignIn();
+                                //       },
+                                //       icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
+                                //     ),
+                                //     const SizedBox(width: 20), // Add small space between icons
+                                //     IconButton(
+                                //       onPressed: () {
+                                //         // TODO: Implement Apple login functionality
+                                //       },
+                                //       icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
+                                //     ),
+                                //   ],
+                                // ),
+
                                 const SizedBox(height: 20.0), // Add space between "LOGIN" and text fields
                                 TextField(
                                   controller: firstNameController,
                                   decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: 'First Name',
+                                    labelText: 'First Name',
                                   ),
                                 ),
                                 const SizedBox(height: 20.0),
                                 TextField(
                                   controller: lastNameController,
                                   decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Last Name (Optional)',
+                                    labelText: 'Last Name (Optional)',
                                   ),
                                 ),
                                 const SizedBox(height: 20.0),
                                 TextField(
                                   controller: emailController,
                                   decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Email Address',
+                                    labelText: 'Email Address',
                                   ),
                                 ),
                                 const SizedBox(height: 20.0),
                                 TextField(
                                   controller: passwordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Password',
+                                  obscureText: _isObscure, // Toggle this value to show/hide password
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isObscure = !_isObscure; // Toggle the value to show/hide password
+                                        });
+                                      },
+                                      icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on password visibility
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 20.0),
                                 TextField(
                                   controller: confirmPasswordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: 'Confirm Password',
+                                  obscureText: _isConfirmObscure, // Toggle this value to show/hide confirm password
+                                  decoration: InputDecoration(
+                                    labelText: 'Confirm Password',
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isConfirmObscure = !_isConfirmObscure; // Toggle the value to show/hide confirm password
+                                        });
+                                      },
+                                      icon: Icon(_isConfirmObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on confirm password visibility
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 20.0),
@@ -162,24 +176,28 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               Visibility(
-                visible: isLoading,
-                child: Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const CircularProgressIndicator(),
-                        const SizedBox(height: 20),
-                        Text(
-                          loadingStatus,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
+              visible: isLoading,
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'Images/loading.gif', // Replace 'assets/loading.gif' with the path to your custom GIF
+                        width: 200, // Adjust width and height as needed
+                        height: 200,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        loadingStatus,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
             ]
           )
         ),

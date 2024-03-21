@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart'; // Add this import
+import 'package:shared_preferences/shared_preferences.dart';
 import 'engine/config.dart';
 import 'package:flutter/foundation.dart';
 
@@ -95,18 +95,18 @@ class _GenerateAIState extends State<GenerateAI> {
     await _prefs.setStringList('paletteColors', hexColors);
   }
 
-  Widget _buildGenerateButton() {
-    if (_isLoading) {
-      return const CircularProgressIndicator(); // Show loading indicator when generating response
-    } else {
-      return ElevatedButton(
-        onPressed: () {
-          _generateResponse(_textEditingController.text);
-        },
-        child: const Text('Generate'),
-      );
-    }
+Widget _buildGenerateButton() {
+  if (_isLoading) {
+    return const CircularProgressIndicator(); // Show loading indicator when generating response
+  } else {
+    return ElevatedButton(
+      onPressed: _textEditingController.text.isEmpty ? null : () {
+        _generateResponse(_textEditingController.text);
+      },
+      child: const Text('Generate'),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -179,11 +179,6 @@ class _GenerateAIState extends State<GenerateAI> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.network(
-                      'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D'),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -193,8 +188,10 @@ class _GenerateAIState extends State<GenerateAI> {
                           controller: _textEditingController,
                           decoration: const InputDecoration(
                             labelText: 'Text prompt',
-                            border: OutlineInputBorder(),
                           ),
+                          onChanged: (String text) {
+                          setState(() {}); // Trigger a state update
+                          },
                           onSubmitted: (String text) {
                             _generateResponse(text);
                           },
@@ -228,49 +225,42 @@ class _GenerateAIState extends State<GenerateAI> {
             ),
           ),
           Expanded(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: config.semanticColors.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: const EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          color: config.semanticColors[index].color,
-                          borderRadius:
-                              BorderRadius.circular(8.0), // Add border radius
-                        ),
-                        width: 80, // Set width to control the size
-                        height: 80, // Set height to match the width
-                        child: Center(
-                          child: Text(
-                            config.semanticColors[index].name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+            child: Center(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 150, // Set the maximum width for grid tiles
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                ),
+                itemCount: config.semanticColors.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    width: 150, // Set the fixed width
+                    height: 150, // Set the fixed height
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500), // Adjust the duration as needed
+                      curve: Curves.decelerate, // Adjust the curve as needed
+                      margin: const EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        color: config.semanticColors[index].color,
+                        borderRadius: BorderRadius.circular(8.0), // Add border radius
+                      ),
+                      child: Center(
+                        child: Text(
+                          config.semanticColors[index].name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.topRight,
-          child: FloatingActionButton(
-            onPressed: () {},
-            child: const Text('Apply'),
-          ),
-        ),
       ),
     );
   }

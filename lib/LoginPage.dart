@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:getwidget/getwidget.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
   String loadingStatus = '';
+  bool _isObscure = true; // To track whether password is obscured or not
 
   @override
   Widget build(BuildContext context) {
@@ -67,32 +68,28 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 60.0), // Add space between "LOGIN" and text fields
                           Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
                             child: TextField(
                               controller: emailController,
                               decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Email Address',
-                                contentPadding: EdgeInsets.all(10.0),
+                                labelText: 'Email Adress',
                               ),
                             ),
                           ),
                           const SizedBox(height: 20.0),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
+                         Container(
                             child: TextField(
                               controller: passwordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Password',
-                                contentPadding: EdgeInsets.all(10.0),
+                              obscureText: _isObscure, // Toggle this value to show/hide password
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscure = !_isObscure; // Toggle the value to show/hide password
+                                    });
+                                  },
+                                  icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on password visibility
+                                ),
                               ),
                             ),
                           ),
@@ -162,34 +159,34 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           const SizedBox(height: 30.0),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () {
-                                  _signInWithGoogle();
-                                  // TODO: Implement Google login functionality
-                                },
-                                icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
-                              ),
-                              const SizedBox(width: 20), // Add small space between icons
-                              IconButton(
-                                onPressed: () {
-                                  // TODO: Implement Facebook login functionality
-                                },
-                                icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
-                              ),
-                              const SizedBox(width: 20), // Add small space between icons
-                              IconButton(
-                                onPressed: () {
-                                  // TODO: Implement Apple login functionality
-                                },
-                                icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   mainAxisSize: MainAxisSize.max,
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   crossAxisAlignment: CrossAxisAlignment.center,
+                          //   children: <Widget>[
+                          //     IconButton(
+                          //       onPressed: () {
+                          //         _signInWithGoogle();
+                          //         // TODO: Implement Google login functionality
+                          //       },
+                          //       icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
+                          //     ),
+                          //     const SizedBox(width: 20), // Add small space between icons
+                          //     IconButton(
+                          //       onPressed: () {
+                          //         // TODO: Implement Facebook login functionality
+                          //       },
+                          //       icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
+                          //     ),
+                          //     const SizedBox(width: 20), // Add small space between icons
+                          //     IconButton(
+                          //       onPressed: () {
+                          //         // TODO: Implement Apple login functionality
+                          //       },
+                          //       icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),
@@ -205,8 +202,12 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const CircularProgressIndicator(),
-                      const SizedBox(height: 20),
+                      Image.asset(
+                        'Images/loading.gif', // Replace 'assets/loading.gif' with the path to your custom GIF
+                        width: 200, // Adjust width and height as needed
+                        height: 200,
+                      ),
+                      const SizedBox(height: 2),
                       Text(
                         loadingStatus,
                         style: const TextStyle(color: Colors.white),
@@ -227,7 +228,6 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     loadingStatus = 'Validating credentials...';
   });
-
   final email = emailController.text;
   final password = passwordController.text;
 
@@ -244,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
       loadingStatus = 'Login successful. Redirecting to Home Page...';
       
     });
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
       // Save email to a text file
     _saveEmailToFile(email);
@@ -259,7 +259,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
       loadingStatus = 'Invalid email or password. Check your credentials and try again';
       });
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Invalid email or password. Check your Credentials and try again'),

@@ -213,13 +213,15 @@ class _ConfigurePageState extends State<ConfigurePage>
         ),
       ),
       body: Center(
-        child: Wrap(
-          runAlignment: WrapAlignment.center,
-          runSpacing: 20,
-          spacing: 10,
-          children: config.semanticColors
-              .map((option) => _buildButton(option))
-              .toList(growable: false),
+        child: Center(
+          child: Wrap(
+            runAlignment: WrapAlignment.center,
+            runSpacing: 20,
+            spacing: 10,
+            children: config.semanticColors
+                .map((option) => _buildButton(option))
+                .toList(growable: false),
+          ),
         ),
       ),
     );
@@ -303,26 +305,33 @@ class _ConfigurePageState extends State<ConfigurePage>
                           option.color = color;
                         });
                       },
-                      heading: Text(
-                        'Select color from wheel',
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
                       pickersEnabled: const <ColorPickerType, bool>{
                         ColorPickerType.wheel: true,
                         ColorPickerType.primary: false,
                         ColorPickerType.accent: false,
                         ColorPickerType.both: true,
                       },
-                      wheelWidth: 40,
-                      width: 40,
-                      height: 40,
-                      spacing: 2,
-                      runSpacing: 2,
-                      borderRadius: 1,
-                      wheelDiameter: 300,
-                      showColorCode: true,
+                      wheelWidth: 20,
+                      width: 50,
+                      height: 50,
+                      spacing: 0,
+                      runSpacing: 0,
+                      borderRadius: 5,
                       hasBorder: true,
+                      wheelHasBorder: true,
+                      wheelDiameter: 200,
+                      showColorName: true,
+                      showRecentColors: true,
+                      maxRecentColors: 5,
+                      recentColors: const <Color>[],
+                      showColorCode: true,
                       colorCodeHasColor: true,
+                      copyPasteBehavior: 
+                        const ColorPickerCopyPasteBehavior(
+                          copyFormat: ColorPickerCopyFormat.hexRRGGBB,
+                          secondaryMenu: true,
+                          secondaryOnDesktopLongOnDevice: true,
+                        )
                     ),
                   ),
                 ],

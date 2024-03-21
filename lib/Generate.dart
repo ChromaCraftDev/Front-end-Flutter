@@ -262,6 +262,16 @@ Widget _buildGenerateButton() {
           ),
         ],
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.topRight,
+          child: FloatingActionButton(
+            onPressed: () {},
+            child: const Text('Apply'),
+          ),
+        ),
+      ),
     );
   }
 }

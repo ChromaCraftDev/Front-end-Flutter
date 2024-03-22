@@ -195,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
 
-    if(newEmail == email){
+    if(email == newEmail){
       setState(() {
       loadingStatus = 'Login successful. Redirecting to Home Page...';
         
@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
 
     }else{
       setState(() {
-      loadingStatus = 'Login successful. Redirecting to Template Page...';
+      loadingStatus = 'Login successful. Redirecting to Browse Template Page...';
       });
       await Future.delayed(const Duration(seconds: 2));
 

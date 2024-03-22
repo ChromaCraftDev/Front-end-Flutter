@@ -1,5 +1,7 @@
 
+import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -39,6 +41,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
@@ -59,9 +65,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           Flexible(
                             flex: 3,
                             child: Image.asset(
-                              'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
-                              width: 600, // Adjust width as needed
-                              height: 600, // Adjust height as needed
+                              logoImagePath, // Use the determined logo image path
+                              width: 600,
+                              height: 600,
                             ),
                           ),
                           const SizedBox(width: 300),

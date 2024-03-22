@@ -1,6 +1,8 @@
+import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences package
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -159,6 +161,10 @@ Future<void> _getUserData() async {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -173,7 +179,7 @@ Future<void> _getUserData() async {
               ),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.PNG', // Replace with your image path
+                logoImagePath,
                 width: 300, // Specify width as needed
                 height: 300, // Specify height as needed
               ),

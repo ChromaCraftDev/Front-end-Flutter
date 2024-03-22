@@ -9,18 +9,14 @@ class SettingsContent extends StatefulWidget {
 }
 
 class _SettingsContentState extends State<SettingsContent> {
-  String _selectedTheme = '    System Default';
-
-  // Map to store theme preview images
-  final Map<String, String> _themePreviewImages = {
-    '    System Default': 'Images/logo3.png',
-    '    Dark': 'Images/logo.PNG',
-    '    Light': 'Images/logo2.PNG',
-  };
+  String _selectedTheme = '';
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -78,7 +74,7 @@ class _SettingsContentState extends State<SettingsContent> {
           Container(
             alignment: Alignment.center,
             child: Image.asset(
-              _themePreviewImages[_selectedTheme]!,
+              logoImagePath,
               width: 200,
               height: 200,
               fit: BoxFit.contain,

@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import "package:flex_color_picker/flex_color_picker.dart";
 import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -139,6 +141,10 @@ class _ConfigurePageState extends State<ConfigurePage>
 
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -175,7 +181,7 @@ class _ConfigurePageState extends State<ConfigurePage>
                   const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.PNG',
+                logoImagePath,
                 width: 1000,
                 height: 1000,
               ),

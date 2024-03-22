@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'theme_notifier.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -27,6 +29,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(1.0),
@@ -43,9 +49,9 @@ class _LoginPageState extends State<LoginPage> {
                     Flexible(
                       flex: 3,
                       child: Image.asset(
-                        'Images/logo2.PNG', // Replace 'assets/logo.png' with your actual image path
-                        width: 600, // Adjust width as needed
-                        height: 600, // Adjust height as needed
+                        logoImagePath, // Use the determined logo image path
+                        width: 600,
+                        height: 600,
                       ),
                     ),
                     const SizedBox(width: 300), // Add spacing between image and text boxes

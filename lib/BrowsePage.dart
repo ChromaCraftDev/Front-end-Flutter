@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:chromacraft/theme_notifier.dart';
+import 'package:flutter/foundation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -100,12 +103,18 @@ class _Browser extends State<Browser> {
         _selectedProfilePicture = user['image_id'] as String;
       });
     } catch (e) {
-      print('Error loading image ID from file: $e');
+      if (kDebugMode) {
+        print('Error loading image ID from file: $e');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -127,7 +136,7 @@ class _Browser extends State<Browser> {
               color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.PNG',
+                logoImagePath,
                 width: 1000, // Adjust width as needed
                 height: 1000, // Adjust height as needed
               ),

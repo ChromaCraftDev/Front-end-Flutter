@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:chromacraft/ConfigurePage.dart';
+import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -132,6 +134,10 @@ class _GenerateAIState extends State<GenerateAI> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -145,7 +151,7 @@ class _GenerateAIState extends State<GenerateAI> {
                   const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.PNG',
+                logoImagePath, // Use the determined logo image path
                 width: 1000, // Adjust width as needed
                 height: 1000, // Adjust height as needed
               ),

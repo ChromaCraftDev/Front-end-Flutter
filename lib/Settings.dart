@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:chromacraft/Setting.dart';
+import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -90,6 +92,10 @@ Future<void> _loadSelectedProfilePicture() async {
   }
   @override
   Widget build(BuildContext context) {
+    final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -111,7 +117,7 @@ Future<void> _loadSelectedProfilePicture() async {
               color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                'Images/logo2.PNG',
+                logoImagePath,
                 width: 1000, // Adjust width as needed
                 height: 1000, // Adjust height as needed
               ),

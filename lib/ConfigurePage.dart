@@ -145,62 +145,6 @@ class _ConfigurePageState extends State<ConfigurePage>
         toolbarHeight: 100.0,
         title: const Text('Colour Configure'),
         actions: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color.fromARGB(150, 79, 55, 140),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.palette),
-              onPressed: () {},
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white,
-                width: 2,
-              ),
-            ),
-            child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const TypographyPage(),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      const begin = Offset(1.0, 0.0);
-                      const end = Offset.zero;
-                      const curve = Curves.easeInOutQuart;
-
-                      var tween = Tween(begin: begin, end: end)
-                          .chain(CurveTween(curve: curve));
-                      var offsetAnimation = animation.drive(tween);
-
-                      return SlideTransition(
-                        position: offsetAnimation,
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                padding: MaterialStateProperty.all(EdgeInsets.zero),
-              ),
-              child: const Text(
-                'Tr',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: GFButton(

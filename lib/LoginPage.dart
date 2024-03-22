@@ -96,30 +96,6 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/resetPassword');
-                                  },
-                                  child: const Text(
-                                    'Forgot Password ?',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.blue, // Change font color here
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                           const SizedBox(height: 50.0),
                           ElevatedButton(
                             onPressed: isLoading ? null : () => _login(),

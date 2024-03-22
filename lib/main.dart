@@ -1,4 +1,3 @@
-import 'package:chromacraft/ResetPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,7 +67,6 @@ class MyApp extends StatelessWidget {
             '/profile': (context) => const ProfilePage(),
             '/settings': (context) => const SettingsPage(),
             '/typography': (context) => const TypographyPage(),
-            '/resetPassword': (context) => const ResetPassword(),
           },
         );
       },

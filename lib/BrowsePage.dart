@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'engine/fetch.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,51 +34,62 @@ class _Browser extends State<Browser> {
     return Scaffold(
       appBar: AppBar(toolbarHeight: 60.0, title: const Text('ChromaCraft')),
       body: !_loaded
-          ? const Text(
-              'Loading templates...',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
+          ? const Center(
+              child: Text(
+                'Loading templates...',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
+              ),
             )
-          : Column(
-              mainAxisSize: MainAxisSize.max,
-              children: _templates.map(_buildTemplateCard).toList(),
+          : Padding(
+              padding: const EdgeInsets.all(25),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: _templates.map(_buildTemplateCard).toList(),
+              ),
             ),
     );
   }
 
   Widget _buildTemplateCard(TemplateMetadata meta) {
-    return Card(
+    return IntrinsicWidth(
+        child: Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(image: NetworkImage(meta.preview.toString())),
-            Text(meta.name),
+            Text(
+              meta.name,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            Image(image: NetworkImage(meta.previewUrl), width: 500),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                const Text("Supported Platforms: "),
+                InkWell(
+                  child: const Text("Project Homepage"),
+                  onTap: () => launchUrl(meta.projectHomepage),
+                ),
                 Column(
-                  children: meta.platforms.map((it) => Text(it.name)).toList(),
-                )
+                  children: meta.platforms
+                      .map((it) => switch (it) {
+                            Platform.windows =>
+                              const FaIcon(FontAwesomeIcons.windows),
+                            Platform.macos =>
+                              const FaIcon(FontAwesomeIcons.apple),
+                            Platform.linux =>
+                              const FaIcon(FontAwesomeIcons.linux),
+                            Platform.invalid =>
+                              const FaIcon(FontAwesomeIcons.exclamation),
+                          })
+                      .toList(),
+                ),
               ],
-            ),
-            InkWell(
-              child: const Text("Project Homepage"),
-              onTap: () => launchUrl(meta.projectHomepage),
-            ),
-            FutureBuilder(
-              future: templateNeedsUpdate(meta.name, _templates),
-              builder: (_, it) => Text(
-                it.hasError
-                    ? "Update Error: ${it.error}"
-                    : (it.data! ? "Needs Update" : "Already up to date"),
-              ),
             ),
           ],
         ),
       ),
-    );
+    ));
   }
 }

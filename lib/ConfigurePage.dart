@@ -69,6 +69,8 @@ class _ConfigurePageState extends State<ConfigurePage>
       });
     }
   }
+
+  //----------------------------------------------------------------------------------------------------//
    Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -134,7 +136,7 @@ Future<void> _loadSelectedProfilePicture() async {
     }
   }
 
-
+//--------------------------------------------------------------------------------------------
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
@@ -228,7 +230,7 @@ Future<void> _loadSelectedProfilePicture() async {
           ),
         ],
       ),
-      drawer: Drawer(
+      drawer: GFDrawer(
         child: Column(
           children: <Widget>[
             DrawerHeader(
@@ -419,6 +421,7 @@ Future<void> _loadSelectedProfilePicture() async {
                       width: 50,
                       height: 50,
                       spacing: 0,
+                      enableTonalPalette: true,
                       runSpacing: 0,
                       borderRadius: 5,
                       hasBorder: true,
@@ -432,7 +435,6 @@ Future<void> _loadSelectedProfilePicture() async {
                       colorCodeHasColor: true,
                       copyPasteBehavior: 
                         const ColorPickerCopyPasteBehavior(
-                          copyFormat: ColorPickerCopyFormat.hexRRGGBB,
                           secondaryMenu: true,
                           secondaryOnDesktopLongOnDevice: true,
                         )

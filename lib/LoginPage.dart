@@ -159,34 +159,34 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           const SizedBox(height: 30.0),
-                          // Row(
-                          //   mainAxisSize: MainAxisSize.max,
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   crossAxisAlignment: CrossAxisAlignment.center,
-                          //   children: <Widget>[
-                          //     IconButton(
-                          //       onPressed: () {
-                          //         _signInWithGoogle();
-                          //         // TODO: Implement Google login functionality
-                          //       },
-                          //       icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
-                          //     ),
-                          //     const SizedBox(width: 20), // Add small space between icons
-                          //     IconButton(
-                          //       onPressed: () {
-                          //         // TODO: Implement Facebook login functionality
-                          //       },
-                          //       icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
-                          //     ),
-                          //     const SizedBox(width: 20), // Add small space between icons
-                          //     IconButton(
-                          //       onPressed: () {
-                          //         // TODO: Implement Apple login functionality
-                          //       },
-                          //       icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
-                          //     ),
-                          //   ],
-                          // ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: () {
+                                  _signInWithGoogle();
+                                  // TODO: Implement Google login functionality
+                                },
+                                icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
+                              ),
+                              const SizedBox(width: 20), // Add small space between icons
+                              IconButton(
+                                onPressed: () {
+                                  // TODO: Implement Facebook login functionality
+                                },
+                                icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
+                              ),
+                              const SizedBox(width: 20), // Add small space between icons
+                              IconButton(
+                                onPressed: () {
+                                  // TODO: Implement Apple login functionality
+                                },
+                                icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -204,8 +204,8 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Image.asset(
                         'Images/loading.gif', // Replace 'assets/loading.gif' with the path to your custom GIF
-                        width: 200, // Adjust width and height as needed
-                        height: 200,
+                        width: 150, // Adjust width and height as needed
+                        height: 150,
                       ),
                       const SizedBox(height: 2),
                       Text(

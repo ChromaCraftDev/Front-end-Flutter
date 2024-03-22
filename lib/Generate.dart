@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
@@ -124,7 +125,7 @@ Widget _buildGenerateButton() {
         toolbarHeight: 100.0,
         title: const Text('Generate Template'),
       ),
-      drawer: Drawer(
+      drawer: GFDrawer(
         child: Column(
           children: <Widget>[
             DrawerHeader(
@@ -302,7 +303,7 @@ Widget _buildGenerateButton() {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 30),
         child: Align(
           alignment: Alignment.topRight,
           child: FloatingActionButton(

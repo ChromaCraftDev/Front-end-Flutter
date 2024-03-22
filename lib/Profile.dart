@@ -1,10 +1,12 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences package
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:widget_circular_animator/widget_circular_animator.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -164,7 +166,7 @@ Future<void> _getUserData() async {
         toolbarHeight: 100.0,
         title: const Text('Profile'),
       ),
-      drawer:Drawer(
+      drawer:GFDrawer(
         child: Column(
           children: [
             DrawerHeader(
@@ -298,10 +300,12 @@ Future<void> _getUserData() async {
                   },
                 );
               },
+              child: WidgetCircularAnimator(
               child: CircleAvatar(
                 radius: 80,
                 backgroundImage: NetworkImage(_selectedProfilePicture),
               ),
+            ),
             ),
             const SizedBox(height: 20),
             Text(

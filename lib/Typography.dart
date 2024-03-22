@@ -1,5 +1,9 @@
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -142,31 +146,30 @@ Future<void> _loadSelectedProfilePicture() async {
             ),
           ),
           Padding(
-            padding:
-                const EdgeInsets.only(right: 16.0), // Add padding to the right
-            child: TextButton(
+            padding: const EdgeInsets.only(right: 16.0), // Add padding to the right
+            child: GFButton(
+              shape: GFButtonShape.pills,
               onPressed: () {
                 // Implement your apply button functionality here
                 if (kDebugMode) {
                   print('Apply button pressed');
                 }
-              },
+                },// Call _applyButtonPressed from ConfigurePage
               child: const Row(
                 children: [
-                  Icon(Icons.edit,
-                      color: Color.fromARGB(150, 79, 55, 140)), // Icon
-                  SizedBox(width: 15.0), // Add spacing between icon and text
+                  Icon(Icons.edit, color: Colors.white,),
+                  SizedBox(width: 10.0),
                   Text(
                     'Apply',
-                    style: TextStyle(color: Color.fromARGB(150, 79, 55, 140)),
-                  ), // Text
+                    style: TextStyle(fontSize: 15),
+                  ),
                 ],
               ),
             ),
           ),
         ],
       ),
-      drawer: Drawer(
+      drawer: GFDrawer(
         child: Column(
           children: <Widget>[
             DrawerHeader(
@@ -220,6 +223,7 @@ Future<void> _loadSelectedProfilePicture() async {
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                // backgroundColor: Colors.blue,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -293,13 +297,18 @@ Future<void> _loadSelectedProfilePicture() async {
         Container(
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-            color: Colors.grey[800],
             borderRadius: BorderRadius.circular(8.0),
           ),
-          child: Text(
-            'The quick brown fox jumps over the lazy dog',
-            style: style.copyWith(color: Colors.white, fontSize: 14),
-          ),
+          child: GFButton(
+            color: GFColors.DARK,
+            onPressed: () {
+              // Add your onPressed action here
+            },
+            child: Text(
+              'The quick brown fox jumps over the lazy dog',
+              style: style.copyWith(color: Colors.white, fontSize: 18),
+            ),
+          )
         ),
       ],
     );

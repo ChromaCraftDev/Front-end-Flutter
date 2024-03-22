@@ -61,6 +61,7 @@ dependencies:
   getwidget: ^4.0.0
   widget_circular_animator: ^1.0.0
   simple_ripple_animation: ^0.0.9
+  font_awesome_flutter: ^10.7.0
   
 dev_dependencies:
   flutter_test:

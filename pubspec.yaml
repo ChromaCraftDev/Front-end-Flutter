@@ -62,6 +62,8 @@ dependencies:
   getwidget: ^4.0.0
   widget_circular_animator: ^1.0.0
   simple_ripple_animation: ^0.0.9
+  webview_all: ^0.4.1
+  desktop_webview_window: ^0.2.3
   
 dev_dependencies:
   flutter_test:

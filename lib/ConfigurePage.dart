@@ -137,14 +137,6 @@ Future<void> _loadSelectedProfilePicture() async {
   }
 
 //--------------------------------------------------------------------------------------------
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      clearSharedPreferences();
-    } else if (state == AppLifecycleState.resumed) {
-      revertToDefaultColors();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

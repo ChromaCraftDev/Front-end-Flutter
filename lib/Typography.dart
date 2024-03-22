@@ -154,7 +154,7 @@ Future<void> _loadSelectedProfilePicture() async {
                 if (kDebugMode) {
                   print('Apply button pressed');
                 }
-                },// Call _applyButtonPressed from ConfigurePage
+                },// Call _applyButtonPressed from ConfigurePag
               child: const Row(
                 children: [
                   Icon(Icons.edit, color: Colors.white,),
@@ -295,10 +295,6 @@ Future<void> _loadSelectedProfilePicture() async {
           ],
         ),
         Container(
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
           child: GFButton(
             color: GFColors.DARK,
             onPressed: () {

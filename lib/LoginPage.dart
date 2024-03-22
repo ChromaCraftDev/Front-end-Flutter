@@ -88,7 +88,10 @@ class _LoginPageState extends State<LoginPage> {
                                       _isObscure = !_isObscure; // Toggle the value to show/hide password
                                     });
                                   },
-                                  icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on password visibility
+                                  icon: Opacity(
+                                    opacity: 0.5, // Set the opacity value here
+                                    child: Icon(_isObscure ? Icons.visibility_off : Icons.visibility,),
+                                  ),
                                 ),
                               ),
                             ),

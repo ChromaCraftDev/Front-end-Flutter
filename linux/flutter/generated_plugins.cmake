@@ -3,9 +3,11 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_webview_window
   gtk
   screen_retriever
   url_launcher_linux
+  webf
   window_manager
 )
 

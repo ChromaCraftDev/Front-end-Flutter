@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:chromacraft/ConfigurePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:getwidget/getwidget.dart';
@@ -307,7 +309,22 @@ Widget _buildGenerateButton() {
         child: Align(
           alignment: Alignment.topRight,
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return LoadingScreen();
+                  },
+                );
+                Timer(const Duration(seconds: 5), () {
+                  Navigator.pop(context); // Pop the loading screen dialog
+                  // Navigate to Configure page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ConfigurePage()),
+                  );
+              });
+            },
             child: const Text('Apply'),
           ),
         ),
@@ -441,5 +458,31 @@ ${config.semanticColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
     } catch (e) {
       return 'An unexpected error occurred: ${e.toString()}';
     }
+  }
+}
+
+class LoadingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Replace CircularProgressIndicator with Image widget
+            Image.asset(
+              'Images/loading.gif', // Path to your custom GIF
+              width: 50, // Adjust width as needed
+              height: 50, // Adjust height as needed
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Configuring colors from generated colors.\nPlease wait...',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

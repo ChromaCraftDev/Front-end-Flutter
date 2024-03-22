@@ -4,8 +4,12 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  desktop_webview_window
+  fullscreen_window
   screen_retriever
   url_launcher_windows
+  webf
+  webview_win_floating
   webview_windows
   window_manager
 )

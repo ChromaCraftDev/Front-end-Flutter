@@ -161,35 +161,6 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 30.0),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () {
-                                  _signInWithGoogle();
-                                  // TODO: Implement Google login functionality
-                                },
-                                icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
-                              ),
-                              const SizedBox(width: 20), // Add small space between icons
-                              IconButton(
-                                onPressed: () {
-                                  // TODO: Implement Facebook login functionality
-                                },
-                                icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
-                              ),
-                              const SizedBox(width: 20), // Add small space between icons
-                              IconButton(
-                                onPressed: () {
-                                  // TODO: Implement Apple login functionality
-                                },
-                                icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
@@ -279,47 +250,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 }
-Future<void> _signInWithGoogle() async {
-  final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  try {
-    // Start the Google Sign-In process
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
-    // Check if the user signed in successfully
-    if (googleUser != null) {
-      // Get the authentication token (idToken) from Google Sign-In
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String idToken = googleAuth.idToken ?? '';
-
-      // Authenticate with Supabase using the Google idToken
-      await _authenticateWithSupabase(idToken);
-    }
-  } catch (error) {
-    print(error); // Handle sign-in errors
-  }
-}
-
-Future<void> _authenticateWithSupabase(String idToken) async {
-  try {
-    final response = await Supabase.instance.client.auth.signInWithOAuth(
-      'google' as Provider ,
-        redirectTo: 'https://hgblhxdounljhdwemyoz.supabase.co/auth/v1/callback', // Replace with your redirect URL
-        //accessToken: idToken, // Pass the Google idToken as the accessToken
-    );
-
-    if (response != null) {
-      // Handle error
-      print('Error: ${response}');
-    } else {
-      // Login successful
-      print('Login successful');
-    }
-  } catch (error) {
-    // Handle error
-    print('Error: $error');
-  }
-}
 void _saveEmailToFile(String email) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/userData.txt');

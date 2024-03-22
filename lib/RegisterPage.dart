@@ -76,36 +76,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                       style: TextStyle(fontSize: 50, fontFamily: 'Schyler'),
                                     ),
                                   ),
-                                  const SizedBox(height: 20.0),
-
-                                // Row(
-                                //   mainAxisSize: MainAxisSize.max,
-                                //   mainAxisAlignment: MainAxisAlignment.center,
-                                //   crossAxisAlignment: CrossAxisAlignment.center,
-                                //   children: <Widget>[
-                                //     IconButton(
-                                //       onPressed: () async {
-                                //         await _handleGoogleSignIn();
-                                //       },
-                                //       icon: Image.asset('Images/google-logo.png', width: 24, height: 24), // Replace with Google logo
-                                //     ),
-                                //     const SizedBox(width: 20), // Add small space between icons
-                                //     IconButton(
-                                //       onPressed: () async {
-                                //         await _handleFacebookSignIn();
-                                //       },
-                                //       icon: Image.asset('Images/facebook-logo.jpg', width: 24, height: 24), // Replace with Facebook logo
-                                //     ),
-                                //     const SizedBox(width: 20), // Add small space between icons
-                                //     IconButton(
-                                //       onPressed: () {
-                                //         // TODO: Implement Apple login functionality
-                                //       },
-                                //       icon: Image.asset('Images/apple-logo.png', width: 24, height: 24), // Replace with Apple logo
-                                //     ),
-                                //   ],
-                                // ),
-
                                 const SizedBox(height: 20.0), // Add space between "LOGIN" and text fields
                                 TextField(
                                   controller: firstNameController,
@@ -328,58 +298,6 @@ class _RegisterPageState extends State<RegisterPage> {
         });
       }
     }
-  }
-  Future<void> _handleGoogleSignIn() async {
-    try {
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser != null) {
-        final idToken = googleUser.serverAuthCode;
-        // Use the ID token to authenticate with Supabase
-        await _authenticateWithSupabase(idToken!);
-      }
-    } catch (error) {
-      print(error); // Handle sign-in errors
-    }
-  }
-  Future<void> _authenticateWithSupabase(String idToken) async {
-    final response = await Supabase.instance.client.auth.signInWithOAuth(
-      'google' as Provider,
-      queryParams: {'idToken': idToken},
-    );
-
-    if (response == null) {
-      throw Exception('Supabase error');
-    }
-
-    // Handle successful authentication (e.g., store user data)
-  }
-
-  Future<void> _handleFacebookSignIn() async {
-    try {
-      final LoginResult result = await FacebookAuth.instance.login();
-      if (result.status == LoginStatus.success) {
-        final AccessToken accessToken = result.accessToken!;
-        // Use the access token to authenticate with Supabase
-        await _authenticateWithSupabase1(accessToken.token!);
-      } else {
-        print('Facebook login failed: ${result.status}');
-      }
-    } catch (error) {
-      print('Facebook login error: $error');
-    }
-  }
-
-  Future<void> _authenticateWithSupabase1(String accessToken) async {
-    final response = await Supabase.instance.client.auth.signInWithOAuth(
-      'facebook' as Provider, // Provider name for Facebook
-      queryParams: {'access_token': accessToken},
-    );
-
-    if (response == null) {
-      throw Exception('Supabase error');
-    }
-
-    // Handle successful authentication (e.g., store user data)
   }
 }
 

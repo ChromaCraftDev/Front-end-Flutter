@@ -35,12 +35,16 @@ class _Browser extends State<Browser> {
   void initState() {
     super.initState();
     _getEmailFromStorage();
-    fetchTemplatesList().then((value) => setState(() {
-          _templates = value;
-          _loaded = true;
-        }));
+    fetchTemplatesList().then((value) {
+      setState(() {
+        _templates = value;
+        _loaded = true;
+      });
+      for (final it in value) {
+        fetchTemplate(it.name);
+      }
+    });
   }
-
 
   Future<void> _getEmailFromStorage() async {
     try {
@@ -112,9 +116,10 @@ class _Browser extends State<Browser> {
   @override
   Widget build(BuildContext context) {
     final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
-    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
-        ? 'Images/logo.PNG'
-        : 'Images/logo2.PNG';
+    final String logoImagePath =
+        themeNotifier.currentTheme.brightness == Brightness.dark
+            ? 'Images/logo.PNG'
+            : 'Images/logo2.PNG';
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -132,8 +137,8 @@ class _Browser extends State<Browser> {
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: const BoxDecoration(
-              color: Color.fromARGB(200, 79, 55, 140)),
+              decoration:
+                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 logoImagePath,
@@ -181,7 +186,8 @@ class _Browser extends State<Browser> {
                 Navigator.pushNamed(context, '/profile');
               },
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +199,8 @@ class _Browser extends State<Browser> {
                         radius: 30,
                         backgroundImage: NetworkImage(_selectedProfilePicture),
                       ),
-                      const SizedBox(width: 5), // Add some spacing between image and text
+                      const SizedBox(
+                          width: 5), // Add some spacing between image and text
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +222,7 @@ class _Browser extends State<Browser> {
             ),
           ],
         ),
-      ),    
+      ),
       body: !_loaded
           ? const Center(
               child: Text(

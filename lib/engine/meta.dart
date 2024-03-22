@@ -1,13 +1,27 @@
+import 'package:flutter/material.dart';
+import 'dart:io' as io;
+
 enum Platform {
   windows,
   macos,
   linux,
   invalid;
 
-  static Platform fromString(String name) => values.firstWhere(
-        (element) => element.name == name,
-        orElse: () => Platform.invalid,
-      );
+  static Platform fromString(String name) {
+    return values.firstWhere(
+      (element) => element.name == name,
+      orElse: () => Platform.invalid,
+    );
+  }
+
+  static Platform current() {
+    return switch (io.Platform.operatingSystem) {
+      "windows" => Platform.windows,
+      "linux" => Platform.linux,
+      "macos" => Platform.macos,
+      _ => Platform.invalid
+    };
+  }
 }
 
 class TemplateMetadata {

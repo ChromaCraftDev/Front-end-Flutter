@@ -3,7 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'config.dart';
 
-final Map<String, Color Function(Color, Iterable<String>)> operations = {
+final Map<String, Color Function(Color, Iterable<String>)> _operations = {
   "smartLighten": (it, args) {
     final t = double.parse(args.first);
     final hsv = HSVColor.fromColor(it);
@@ -15,7 +15,7 @@ final Map<String, Color Function(Color, Iterable<String>)> operations = {
   },
 };
 
-String template(Config config, String input) {
+String compileTemplate(Config config, String input) {
   return input.replaceAllMapped(
     RegExp(r"\{\{\s*[c]\.(\w+)\s*(?:\|\s*(.*)\s*)?\}\}", caseSensitive: false),
     (match) {
@@ -27,7 +27,7 @@ String template(Config config, String input) {
           .groups(List.generate(match.groupCount - 2, (i) => i + 2))
           .map((it) {
         final tokens = it!.split(RegExp("\\s+"));
-        return (Color it) => operations[tokens[0]]!.call(it, tokens.skip(1));
+        return (Color it) => _operations[tokens[0]]!.call(it, tokens.skip(1));
       });
       var modified = Color(option.color.value);
       for (final op in ops) {

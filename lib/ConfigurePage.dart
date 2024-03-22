@@ -142,9 +142,10 @@ class _ConfigurePageState extends State<ConfigurePage>
   @override
   Widget build(BuildContext context) {
     final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
-    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
-        ? 'Images/logo.PNG'
-        : 'Images/logo2.PNG';
+    final String logoImagePath =
+        themeNotifier.currentTheme.brightness == Brightness.dark
+            ? 'Images/logo.PNG'
+            : 'Images/logo2.PNG';
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -427,14 +428,9 @@ class _ConfigurePageState extends State<ConfigurePage>
   }
 
   void _applyButtonPressed() async {
-    if (kDebugMode) {
-      print('Apply button pressed');
-    }
+    if (kDebugMode) print("Applying...");
     saveColorsToPrefs();
-    storage.apply(
-      config,
-      [await fetch.fetchTemplate("foot")],
-    ).listen((it) {
+    storage.installAllDownloaded(config).listen((it) {
       if (kDebugMode) print("Compiled file: ${it.path}");
     });
   }

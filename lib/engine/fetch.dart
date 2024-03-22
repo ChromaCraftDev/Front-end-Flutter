@@ -1,16 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 
 import 'storage.dart';
 import 'meta.dart';
 
 const domain = "chromacraftdev.github.io";
-const offline = false;
-final testTemplate = File(path.join("lib", "engine", "test.zip")).readAsBytes();
-final testJson = File(path.join("lib", "engine", "test.json")).readAsString();
 
 Future<http.Response> _get(String name) async {
   final response = await http.get(Uri.https(domain, "/templates/$name"));
@@ -22,7 +18,7 @@ Future<http.Response> _get(String name) async {
 }
 
 Future<List<TemplateMetadata>> fetchTemplatesList() async {
-  final json = offline ? await testJson : (await _get("templates.json")).body;
+  final json = (await _get("templates.json")).body;
   return (jsonDecode(json) as List<dynamic>)
       .map((it) => it as Map<String, dynamic>)
       .map(TemplateMetadata.fromJson)
@@ -30,8 +26,7 @@ Future<List<TemplateMetadata>> fetchTemplatesList() async {
 }
 
 Future<Directory> fetchTemplate(String name) async {
-  final bytes =
-      offline ? await testTemplate : (await _get("$name.zip")).bodyBytes;
+  final bytes = (await _get("$name.zip")).bodyBytes;
   return await storeTemplate(name, bytes);
 }
 
@@ -49,12 +44,4 @@ Future<bool> templateNeedsUpdate(
     return Future.error("Could not find template for $name locally.");
   }
   return local.version < remote.version;
-}
-
-main() async {
-  final list = await fetchTemplatesList();
-  print(list);
-  for (var TemplateMetadata(name: name) in list) {
-    print(await fetchTemplate(name));
-  }
 }

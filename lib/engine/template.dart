@@ -27,7 +27,6 @@ String template(Config config, String input) {
           .groups(List.generate(match.groupCount - 2, (i) => i + 2))
           .map((it) {
         final tokens = it!.split(RegExp("\\s+"));
-        print("'${tokens[0]}'");
         return (Color it) => operations[tokens[0]]!.call(it, tokens.skip(1));
       });
       var modified = Color(option.color.value);

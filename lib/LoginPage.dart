@@ -14,9 +14,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String newEmail = ' ';
   bool isLoading = false;
   String loadingStatus = '';
   bool _isObscure = true; // To track whether password is obscured or not
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getEmailFromStorage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
   final email = emailController.text;
   final password = passwordController.text;
 
+
   try {
     // Set status message for validating credentials
     setState(() {
@@ -187,21 +195,35 @@ class _LoginPageState extends State<LoginPage> {
 
     final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
 
-    // Set status message for successful login
-    setState(() {
+    if(newEmail == email){
+      setState(() {
       loadingStatus = 'Login successful. Redirecting to Home Page...';
-      
-    });
-    await Future.delayed(const Duration(seconds: 1));
+        
+      });
+      await Future.delayed(const Duration(seconds: 2));
 
-      // Save email to a text file
-    _saveEmailToFile(email);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Login successful'),
-      ),
-    );
-    Navigator.pushNamed(context, '/config');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login successful'),
+        ),
+      );
+      Navigator.pushNamed(context, '/browse');
+
+    }else{
+      setState(() {
+      loadingStatus = 'Login successful. Redirecting to Template Page...';
+      });
+      await Future.delayed(const Duration(seconds: 2));
+
+        // Save email to a text file
+      _saveEmailToFile(email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login successful'),
+        ),
+      );
+      Navigator.pushNamed(context, '/config');
+    }
     } catch (e) {
     if (e is AuthException) {
       setState(() {
@@ -225,10 +247,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+Future<void> _getEmailFromStorage() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/userData.txt');
+      newEmail = await file.readAsString();
+    } catch (e) {
+      print('Error reading email from file: $e');
+    }
+}
 
-void _saveEmailToFile(String email) async {
+
+Future <void> _saveEmailToFile(String email) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/userData.txt');
     await file.writeAsString(email);
   }
 }
+
+  

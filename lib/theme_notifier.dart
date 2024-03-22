@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 class ThemeNotifier extends ChangeNotifier {
-  ThemeData _currentTheme = ThemeData.light();
+  ThemeData _currentTheme = _getSystemDefaultTheme();
 
   ThemeData get currentTheme => _currentTheme;
 
@@ -11,11 +11,14 @@ class ThemeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSystemDefaultTheme() {
+  static ThemeData _getSystemDefaultTheme() {
     final Brightness brightness =
         WidgetsBinding.instance.window.platformBrightness;
-    _currentTheme =
-        brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
+    return brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
+  }
+
+  void setSystemDefaultTheme() {
+    _currentTheme = _getSystemDefaultTheme();
     notifyListeners();
   }
 }

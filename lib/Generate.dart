@@ -63,8 +63,12 @@ class _GenerateAIState extends State<GenerateAI> {
     String response = await _aiService.chatGPTAPI(textPrompt);
     List<String> hexColors = _extractHexColors(response);
     setState(() {
-      for (var i = 0; i < config.semanticColors.length; i++) {
+      for (int i = 0; i < config.semanticColors.length; i++) {
         config.semanticColors[i].color = colorFromHex(hexColors[i])!;
+      }
+      for (int i = 0; i < config.rainbowColors.length; i++) {
+        config.rainbowColors[i].color =
+            colorFromHex(hexColors[i + config.semanticColors.length])!;
       }
     });
     _updateConfigColors(hexColors);
@@ -100,6 +104,10 @@ class _GenerateAIState extends State<GenerateAI> {
     for (int i = 0; i < config.semanticColors.length; i++) {
       config.semanticColors[i].color = colorFromHex(hexColors[i])!;
     }
+    for (int i = 0; i < config.rainbowColors.length; i++) {
+      config.rainbowColors[i].color =
+          colorFromHex(hexColors[i + config.semanticColors.length])!;
+    }
     _saveColorsToPrefs(hexColors); // Save the colors to SharedPreferences
   }
 
@@ -107,18 +115,20 @@ class _GenerateAIState extends State<GenerateAI> {
     await _prefs.setStringList('paletteColors', hexColors);
   }
 
-Widget _buildGenerateButton() {
-  if (_isLoading) {
-    return const CircularProgressIndicator(); // Show loading indicator when generating response
-  } else {
-    return ElevatedButton(
-      onPressed: _textEditingController.text.isEmpty ? null : () {
-        _generateResponse(_textEditingController.text);
-      },
-      child: const Text('Generate'),
-    );
+  Widget _buildGenerateButton() {
+    if (_isLoading) {
+      return const CircularProgressIndicator(); // Show loading indicator when generating response
+    } else {
+      return ElevatedButton(
+        onPressed: _textEditingController.text.isEmpty
+            ? null
+            : () {
+                _generateResponse(_textEditingController.text);
+              },
+        child: const Text('Generate'),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +190,8 @@ Widget _buildGenerateButton() {
                 Navigator.pushNamed(context, '/profile');
               },
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -192,7 +203,8 @@ Widget _buildGenerateButton() {
                         radius: 30,
                         backgroundImage: NetworkImage(_selectedProfilePicture),
                       ),
-                      const SizedBox(width: 5), // Add some spacing between image and text
+                      const SizedBox(
+                          width: 5), // Add some spacing between image and text
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +244,7 @@ Widget _buildGenerateButton() {
                             labelText: 'Text prompt',
                           ),
                           onChanged: (String text) {
-                          setState(() {}); // Trigger a state update
+                            setState(() {}); // Trigger a state update
                           },
                           onSubmitted: (String text) {
                             _generateResponse(text);
@@ -270,26 +282,40 @@ Widget _buildGenerateButton() {
             child: Center(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 150, // Set the maximum width for grid tiles
+                  maxCrossAxisExtent:
+                      150, // Set the maximum width for grid tiles
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
                 ),
-                itemCount: config.semanticColors.length,
+                itemCount:
+                    config.semanticColors.length + config.rainbowColors.length,
                 itemBuilder: (BuildContext context, int index) {
                   return SizedBox(
                     width: 150, // Set the fixed width
                     height: 150, // Set the fixed height
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 500), // Adjust the duration as needed
+                      duration: const Duration(
+                          milliseconds: 500), // Adjust the duration as needed
                       curve: Curves.decelerate, // Adjust the curve as needed
                       margin: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
-                        color: config.semanticColors[index].color,
-                        borderRadius: BorderRadius.circular(8.0), // Add border radius
+                        color: index < config.semanticColors.length
+                            ? config.semanticColors[index].color
+                            : config
+                                .rainbowColors[
+                                    index - config.semanticColors.length]
+                                .color,
+                        borderRadius:
+                            BorderRadius.circular(8.0), // Add border radius
                       ),
                       child: Center(
                         child: Text(
-                          config.semanticColors[index].name,
+                          index < config.semanticColors.length
+                              ? config.semanticColors[index].name
+                              : config
+                                  .rainbowColors[
+                                      index - config.semanticColors.length]
+                                  .name,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -310,19 +336,20 @@ Widget _buildGenerateButton() {
           alignment: Alignment.topRight,
           child: FloatingActionButton(
             onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return LoadingScreen();
-                  },
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return LoadingScreen();
+                },
+              );
+              Timer(const Duration(seconds: 5), () {
+                Navigator.pop(context); // Pop the loading screen dialog
+                // Navigate to Configure page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ConfigurePage()),
                 );
-                Timer(const Duration(seconds: 5), () {
-                  Navigator.pop(context); // Pop the loading screen dialog
-                  // Navigate to Configure page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ConfigurePage()),
-                  );
               });
             },
             child: const Text('Apply'),
@@ -331,6 +358,7 @@ Widget _buildGenerateButton() {
       ),
     );
   }
+
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -346,31 +374,32 @@ Widget _buildGenerateButton() {
     }
   }
 
-Future<void> _getUserData() async {
-  try {
-    final response = await Supabase.instance.client
-        .from('users')
-        .select('first_name , last_name')
-        .eq('email',email);
+  Future<void> _getUserData() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('users')
+          .select('first_name , last_name')
+          .eq('email', email);
 
-    if (response != null && response.isNotEmpty) {
-      final user = response[0];
-      setState(() {
-        _firstName = user['first_name'] as String;
-        if (user['last_name'] as String == null) {
-          _lastName = " ";
-        }else{
-          _lastName = user ['last_name'] as String;
-        }
-      });
-    } else {
-      print('No user data found for this email: $email');
+      if (response != null && response.isNotEmpty) {
+        final user = response[0];
+        setState(() {
+          _firstName = user['first_name'] as String;
+          if (user['last_name'] as String == null) {
+            _lastName = " ";
+          } else {
+            _lastName = user['last_name'] as String;
+          }
+        });
+      } else {
+        print('No user data found for this email: $email');
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
     }
-  } catch (e) {
-    print('Error fetching user data: $e');
   }
-}
-Future<void> _loadSelectedProfilePicture() async {
+
+  Future<void> _loadSelectedProfilePicture() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedProfilePicture = prefs.getString('selectedProfilePicture');
     if (savedProfilePicture != null) {
@@ -382,14 +411,13 @@ Future<void> _loadSelectedProfilePicture() async {
     // Load image ID from text file
     try {
       final response = await Supabase.instance.client
-        .from('users')
-        .select('image_id')
-        .eq('email',email);
+          .from('users')
+          .select('image_id')
+          .eq('email', email);
 
-        final user = response[0];
+      final user = response[0];
       setState(() {
-          _selectedProfilePicture = user['image_id'] as String;
-
+        _selectedProfilePicture = user['image_id'] as String;
       });
     } catch (e) {
       print('Error loading image ID from file: $e');
@@ -397,30 +425,33 @@ Future<void> _loadSelectedProfilePicture() async {
   }
 }
 
-
 class OpenAIService {
-  final List<Map<String, String>> messages = [];
   static const apiUri = 'https://api.openai.com/v1/chat/completions';
   static const apiKey = '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';
 
   Future<String> chatGPTAPI(String prompt) async {
+    final List<Map<String, String>> messages = [];
     messages.add({
       "role": "system",
       "content": """
 You are 'ChromaCraft AI', an AI used for generating color schemes based on natural language prompts. 
 Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
 
+Semantic Colors:
 ${config.semanticColors.map((it) => "- ${it.name}: ${it.description}").join("\n\n")}
+
+Rainbow Colors:
+${config.rainbowColors.map((it) => "- ${it.name}").join("\n\n")}
 
 Keep in mind the laws of UI and design. Contrast is highly important for a pleasing theming appliation.
 Make sure you always have a contrast ratio of 4.5:1 as per the Web Content Accessibility Guidelines.
 If the user doesn't explicitly specify whether the theme is light or dark, make an assumption.
 
-The format expected of your reply should follow the templat below (without the backticks, just the content inside)
-```
+The format expected of your reply should follow the template below
+
 mode = dark|light
 ${config.semanticColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
-```
+${config.rainbowColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
 """
     });
     messages.add({

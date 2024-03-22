@@ -6,7 +6,7 @@ String template(Config config, String input) {
   return input.replaceAllMapped(
     RegExp(r"\{\{\s*[c]\.(\w+)\s*(\|.*)?\}\}", caseSensitive: false),
     (match) {
-      final option = config.semanticColors
+      final option = (config.semanticColors + config.rainbowColors)
           .where((it) => it.name == match.group(1)!)
           .firstOrNull;
       return option != null

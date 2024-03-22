@@ -14,6 +14,7 @@ class TemplateMetadata {
   final String name;
   final int version;
   final Uri projectHomepage;
+  final Uri preview;
   final List<Platform> platforms;
   final InstallerConfig install;
 
@@ -23,7 +24,8 @@ class TemplateMetadata {
     this.projectHomepage,
     this.platforms,
     this.install,
-  );
+  ) : preview = Uri.https(
+            "chromacraftdev.github.io", "/templates/previews/$name.webp");
 
   static TemplateMetadata fromJson(Map<String, dynamic> parsed) {
     return TemplateMetadata(

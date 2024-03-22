@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'theme_notifier.dart';
+
 class SettingsContent extends StatefulWidget {
   @override
   _SettingsContentState createState() => _SettingsContentState();
@@ -51,11 +56,8 @@ class _SettingsContentState extends State<SettingsContent> {
                       }
                     });
                   },
-                  items: <String>[
-                    '    System Default',
-                    '    Dark',
-                    '    Light'
-                  ].map<DropdownMenuItem<String>>((String value) {
+                  items: <String>['    System Default', '    Dark', '    Light']
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Center(
@@ -70,7 +72,8 @@ class _SettingsContentState extends State<SettingsContent> {
               ),
             ],
           ),
-          const SizedBox(height: 20), // Add some space between dropdown and preview image
+          const SizedBox(
+              height: 20), // Add some space between dropdown and preview image
           // Display preview image based on selected theme
           Container(
             alignment: Alignment.center,
@@ -85,7 +88,7 @@ class _SettingsContentState extends State<SettingsContent> {
           const SizedBox(height: 10),
           Text(
             'Profile',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),

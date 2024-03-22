@@ -49,7 +49,7 @@ class _Browser extends State<Browser> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image(image: NetworkImage(meta.preview.toString())),
+            Image(image: NetworkImage(meta.previewUrl.toString())),
             Text(meta.name),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

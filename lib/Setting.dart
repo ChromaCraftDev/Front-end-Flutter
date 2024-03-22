@@ -1,8 +1,15 @@
+<<<<<<< Updated upstream
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'theme_notifier.dart';
 
+=======
+import 'package:chromacraft/theme_notifier.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+>>>>>>> Stashed changes
 class SettingsContent extends StatefulWidget {
   @override
   _SettingsContentState createState() => _SettingsContentState();

@@ -39,6 +39,9 @@ class _ResetPasswordState extends State<ResetPassword> {
           content: Text('Please enter a valid Email Address!'),
         ),
       );
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
@@ -64,18 +67,20 @@ class _ResetPasswordState extends State<ResetPassword> {
 
       // Update user's password in Supabase Authentication
       await supabase.auth.resetPasswordForEmail(email);
-      await supabase.auth.updateUser(UserAttributes(password: newPassword));
 
-      Navigator.pop(context); // Close loading dialog
+      // Close loading dialog
+      Navigator.pop(context);
 
       _scaffoldKey.currentState!.showSnackBar(
         const SnackBar(
           content: Text(
-              'Your password has been successfully reset. You can now log in with your new password.'),
+              'Password reset email sent successfully. Please check your email to proceed.'),
         ),
       );
     } catch (e) {
-      Navigator.pop(context); // Close loading dialog
+      // Close loading dialog
+      Navigator.pop(context);
+
       _scaffoldKey.currentState!.showSnackBar(
         SnackBar(content: Text('Failed to reset password: $e')),
       );
@@ -105,15 +110,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Email Address',
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: newPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'New Password',
                 ),
               ),
               const SizedBox(height: 20.0),

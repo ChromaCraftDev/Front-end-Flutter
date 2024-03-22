@@ -191,7 +191,6 @@ class _ConfigurePageState extends State<ConfigurePage>
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.transparent),
                 padding: MaterialStateProperty.all(EdgeInsets.zero),
-                shape: MaterialStateProperty.all(const CircleBorder()),
               ),
               child: const Text(
                 'Tr',

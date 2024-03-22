@@ -305,6 +305,15 @@ Future<void> _getUserData() async {
               ),
             ),
             ),
+            Positioned(
+              bottom: -50,
+              right: 0,
+              child: IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                },
+              ),
+            ),
             const SizedBox(height: 20),
             Text(
               '$_firstName $_lastName',

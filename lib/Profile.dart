@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';

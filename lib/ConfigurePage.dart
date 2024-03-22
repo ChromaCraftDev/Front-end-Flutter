@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import "package:flex_color_picker/flex_color_picker.dart";
 import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -13,7 +12,6 @@ import 'Typography.dart';
 import 'engine/config.dart';
 import 'engine/fetch.dart' as fetch;
 import 'engine/storage.dart' as storage;
-import 'theme_notifier.dart';
 
 class ConfigurePage extends StatefulWidget {
   const ConfigurePage({Key? key}) : super(key: key);
@@ -34,7 +32,7 @@ class _ConfigurePageState extends State<ConfigurePage>
   void initState() {
     super.initState();
     initializeSharedPreferences();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _getEmailFromStorage();
   }
 
@@ -97,6 +95,7 @@ Future<void> _getUserData() async {
       final user = response[0];
       setState(() {
         _firstName = user['first_name'] as String;
+        // ignore: unnecessary_null_comparison
         if (user['last_name'] as String == null) {
           _lastName = " ";
         }else{
@@ -485,7 +484,7 @@ Future<void> _loadSelectedProfilePicture() async {
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }

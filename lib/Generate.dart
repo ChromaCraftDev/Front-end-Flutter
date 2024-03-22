@@ -477,7 +477,7 @@ class LoadingScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              'Configuring colors from generated colors.\nPlease wait...',
+              'Please be patient as we configure the colors from the generated color palette.',
               textAlign: TextAlign.center,
             ),
           ],

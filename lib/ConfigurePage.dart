@@ -9,8 +9,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import 'Typography.dart';
 import 'engine/config.dart';
 import 'engine/fetch.dart' as fetch;
 import 'engine/storage.dart' as storage;

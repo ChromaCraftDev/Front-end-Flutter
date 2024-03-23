@@ -118,30 +118,32 @@ class _GenerateAIState extends State<GenerateAI> {
   }
 
   Widget _buildGenerateButton() {
-  if (_isLoading) {
-    return Image.asset(
-      'Images/loading.gif', // Path to your GIF
-      width: 30, // Adjust width as needed
-      height: 30, // Adjust height as needed
-    );
-  } else {
-    return GFButton(
-      onPressed: _textEditingController.text.isEmpty
-          ? null
-          : () {
-              _generateResponse(_textEditingController.text);
-            },
-      child: const Text('Generate'),
-    );
+    if (_isLoading) {
+      return Image.asset(
+        'Images/loading.gif', // Path to your GIF
+        width: 30, // Adjust width as needed
+        height: 30, // Adjust height as needed
+      );
+    } else {
+      return GFButton(
+        onPressed: _textEditingController.text.isEmpty
+            ? null
+            : () {
+                _generateResponse(_textEditingController.text);
+              },
+        child: const Text('Generate'),
+      );
+    }
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
-    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
-        ? 'Images/logo.PNG'
-        : 'Images/logo2.PNG';
+    final String logoImagePath =
+        themeNotifier.currentTheme.brightness == Brightness.dark
+            ? 'Images/logo.PNG'
+            : 'Images/logo2.PNG';
 
     bool _isGenerateButtonPressed = false;
     return Scaffold(
@@ -245,39 +247,44 @@ class _GenerateAIState extends State<GenerateAI> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-               Padding(
-                padding: const EdgeInsets.only(top:8.0, left: 20, right:20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      """Welcome to ChromaCraft AI, your color scheme assistant! Please provide a brief description of the colors you'd like to see, including any preferences or themes. ChromaCraft will then create a personalized palette just for you, guaranteeing a cohesive and visually pleasing design experience.""",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        """
+Welcome to ChromaCraft AI, your color scheme assistant!
+Please provide a brief description of the colors you'd like to see, including any preferences or themes.
+ChromaCraft will then create a personalized palette just for you, guaranteeing a cohesive and visually pleasing design experience.
+""",
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    ),
-                    const SizedBox(height: 8.0), // Add some space between the text and the TextField
-                    TextField(
-                      controller: _textEditingController,
-                      decoration: const InputDecoration(
-                        labelText: 'Text prompt',
+                      const SizedBox(
+                          height:
+                              8.0), // Add some space between the text and the TextField
+                      TextField(
+                        controller: _textEditingController,
+                        decoration: const InputDecoration(
+                          labelText: 'Text prompt',
+                        ),
+                        onChanged: (String text) {
+                          setState(() {}); // Trigger a state update
+                        },
+                        onSubmitted: (String text) {
+                          _generateResponse(text);
+                        },
+                        maxLines: null,
                       ),
-                      onChanged: (String text) {
-                        setState(() {}); // Trigger a state update
-                      },
-                      onSubmitted: (String text) {
-                        _generateResponse(text);
-                      },
-                    ),
-                    _buildGenerateButton(), // Call the function to display the button or loading indicator
-                  ],
+                      _buildGenerateButton(), // Call the function to display the button or loading indicator
+
+                    ],
+                  ),
                 ),
-              ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(left:50, top:20),
+                      padding: const EdgeInsets.only(left: 50, top: 20),
                       child: Text(
                         _response,
                         style: const TextStyle(
@@ -415,7 +422,6 @@ class _GenerateAIState extends State<GenerateAI> {
       print('Error fetching user data: $e');
     }
   }
-  
 
   Future<void> _loadSelectedProfilePicture() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -452,7 +458,7 @@ class OpenAIService {
     messages.add({
       "role": "system",
       "content": """
-You are 'ChromaCraft AI', an AI used for generating color schemes based on natural language prompts. 
+You are 'ChromaCraft AI', an AI used for generating color schemes based on natural language prompts.
 Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
 
 Semantic Colors:

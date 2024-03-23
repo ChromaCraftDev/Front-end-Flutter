@@ -213,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
           content: Text('Login successful'),
         ),
       );
-      Navigator.pushNamed(context, '/browse');
+      Navigator.pushNamed(context, '/config');
 
     }else{
       setState(() {
@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
           content: Text('Login successful'),
         ),
       );
-      Navigator.pushNamed(context, '/config');
+      Navigator.pushNamed(context, '/browse');
     }
     } catch (e) {
     if (e is AuthException) {

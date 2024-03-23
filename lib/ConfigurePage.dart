@@ -429,7 +429,8 @@ class _ConfigurePageState extends State<ConfigurePage>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
+                GFButton(
+                  color: GFColors.DANGER,
                   onPressed: () {
                     setState(() {
                       option.color = option.original;
@@ -438,17 +439,18 @@ class _ConfigurePageState extends State<ConfigurePage>
                   },
                   child: const Text(
                     'Revert',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
-                TextButton(
+                GFButton(
+                  color: GFColors.SUCCESS,
                   onPressed: () {
                     saveColorsToPrefs();
                     Navigator.of(context).pop();
                   },
                   child: const Text(
                     'Apply',
-                    style: TextStyle(color: Colors.green),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ],

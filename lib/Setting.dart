@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'theme_notifier.dart';
 
 class SettingsContent extends StatefulWidget {
+  const SettingsContent({super.key});
+
   @override
   _SettingsContentState createState() => _SettingsContentState();
 }
@@ -79,12 +81,6 @@ class _SettingsContentState extends State<SettingsContent> {
               height: 200,
               fit: BoxFit.contain,
             ),
-          ),
-          const Divider(), // Title bar after theme setting
-          const SizedBox(height: 10),
-          Text(
-            'Profile',
-            style: Theme.of(context).textTheme.titleLarge,
           ),
         ],
       ),

@@ -322,7 +322,7 @@ Future<void> _getUserData() async {
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
+            GFButton(
               onPressed: _logout,
               child: const Text('Logout'),
             ),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'storage.dart';
 import 'meta.dart';
+import 'util.dart';
 
 const domain = "chromacraftdev.github.io";
 
@@ -25,7 +26,9 @@ Future<List<TemplateMetadata>> fetchTemplatesList() async {
       .toList(growable: false);
 }
 
-Future<Directory> fetchTemplate(String name) async {
+Future<Directory> downloadOrUpdateTemplate(String name) async {
+  deleteIndiscriminately(await templateDirectory + name);
+  deleteIndiscriminately(await compiledDirectory + name);
   final bytes = (await _get("$name.zip")).bodyBytes;
   return await unpackTemplate(name, bytes);
 }

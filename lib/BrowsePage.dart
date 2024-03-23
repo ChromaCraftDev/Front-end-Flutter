@@ -259,13 +259,13 @@ class _Browser extends State<Browser> {
               TemplateStat.remoteNotFound => const Icon(Icons.error),
               TemplateStat.notFound => IconButton(
                   icon: const Icon(Icons.download),
-                  onPressed: () =>
-                      fetchTemplate(meta.name).then((_) => setState(() => ())),
+                  onPressed: () => downloadOrUpdateTemplate(meta.name)
+                      .then((_) => setState(() => ())),
                 ),
               TemplateStat.needsUpdate => IconButton(
                   icon: const Icon(Icons.update),
-                  onPressed: () =>
-                      fetchTemplate(meta.name).then((_) => setState(() => ())),
+                  onPressed: () => downloadOrUpdateTemplate(meta.name)
+                      .then((_) => setState(() => ())),
                 ),
               TemplateStat.ok => IconButton(
                   icon: const Icon(Icons.delete),

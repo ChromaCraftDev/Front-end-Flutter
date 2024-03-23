@@ -34,8 +34,8 @@ Future<bool> pathExists(String path) async =>
 
 /// The same as `Directory.delete(recurisve: true)`.
 /// Abuses the fact that it deletes EVERYTHING when in recursive mode, directory or not.
-Future<Future<FileSystemEntity>> deleteIndiscriminately(String path) async =>
-    Directory(path).delete(recursive: true);
+Future<FileSystemEntity?> deleteIndiscriminately(String path) async =>
+    await pathExists(path) ? Directory(path).delete(recursive: true) : null;
 
 Stream<File> recurseFiles(String path) async* {
   yield* switch (await FileSystemEntity.type(path, followLinks: false)) {

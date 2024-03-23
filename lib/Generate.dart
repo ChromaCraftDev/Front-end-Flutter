@@ -134,7 +134,6 @@ class _GenerateAIState extends State<GenerateAI> {
         child: const Text('Generate'),
       );
     }
-    }
   }
 
   @override

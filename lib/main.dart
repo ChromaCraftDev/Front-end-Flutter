@@ -13,7 +13,7 @@ import 'ConfigurePage.dart';
 import 'Generate.dart';
 import 'Profile.dart';
 import 'Settings.dart';
-import 'Typography.dart';
+//import 'Typography.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
             '/browse': (context) => const Browser(),
             '/profile': (context) => const ProfilePage(),
             '/settings': (context) => const SettingsPage(),
-            '/typography': (context) => const TypographyPage(),
+            //'/typography': (context) => const TypographyPage(),
           },
         );
       },

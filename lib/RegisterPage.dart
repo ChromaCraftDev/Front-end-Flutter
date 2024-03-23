@@ -2,11 +2,7 @@
 import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:getwidget/getwidget.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -24,9 +20,6 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-
-  
-  final googleSignIn = GoogleSignIn(scopes: ['email', 'profile']); // Include 'profile' scope
 
   final supabase = SupabaseClient(
     'https://hgblhxdounljhdwemyoz.supabase.co',

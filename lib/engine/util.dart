@@ -15,6 +15,8 @@ String mapEnv(String value) {
   );
 }
 
+List<String> tokenize(String input) => input.split(RegExp(r"\s+"));
+
 // ====  FILES ====
 
 extension AppendPath on Directory {

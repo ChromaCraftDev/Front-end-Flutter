@@ -27,7 +27,7 @@ Future<List<TemplateMetadata>> fetchTemplatesList() async {
 
 Future<Directory> fetchTemplate(String name) async {
   final bytes = (await _get("$name.zip")).bodyBytes;
-  return await storeTemplate(name, bytes);
+  return await unpackTemplate(name, bytes);
 }
 
 enum TemplateStat {
@@ -45,7 +45,7 @@ Future<TemplateStat> statTemplate(
   } catch (_) {
     return TemplateStat.remoteNotFound;
   }
-  final local = await getStoredTemplateMetadata(name);
+  final local = await getLocalTemplateMetadata(name);
   if (local == null) {
     return TemplateStat.notFound;
   }

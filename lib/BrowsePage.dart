@@ -281,7 +281,7 @@ class _Browser extends State<Browser> {
                                 ),
                               TemplateStat.ok => IconButton(
                                   icon: const Icon(Icons.delete),
-                                  onPressed: () => removeTemplate(meta.name)
+                                  onPressed: () => uninstallTemplate(meta.name)
                                       .then((_) => setState(() => ())),
                                 ),
                             }),

@@ -1,11 +1,19 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 
 // ==== FUNCTIONAL ====
 
 T identity<T>(T input) => input;
+
+// ==== STRINGS ====
+
+String mapEnv(String value) {
+  return value.replaceAllMapped(
+    RegExp(r"\$\{(\s*[^\}]+\s*)\}"),
+    (match) => Platform.environment[match.group(1)!] ?? "",
+  );
+}
 
 // ====  FILES ====
 

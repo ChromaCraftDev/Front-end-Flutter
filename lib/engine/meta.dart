@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:io' as io;
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'util.dart';
 
 enum Platform {
   windows,
@@ -81,7 +82,7 @@ class InstallerConfig {
     return InstallerConfig(
       parsed['src'],
       (parsed['destination'] as Map<String, dynamic>).map((key, value) {
-        return MapEntry(Platform.fromString(key), value as String);
+        return MapEntry(Platform.fromString(key), mapEnv(value as String));
       }),
     );
   }

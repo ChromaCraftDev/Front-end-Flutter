@@ -372,6 +372,7 @@ class _ConfigurePageState extends State<ConfigurePage>
 
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Pick a Color'),
@@ -460,6 +461,51 @@ class _ConfigurePageState extends State<ConfigurePage>
 
   void _applyButtonPressed() async {
     if (kDebugMode) print("Applying...");
+
+    // Show loading overlay
+   // Show loading overlay
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            // Main content of the screen
+            Positioned.fill(
+              child: Scaffold(
+                backgroundColor: Colors.transparent, // Make scaffold transparent
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'Images/loading.gif', // Replace 'loading_image.png' with your image asset path
+                        width: 100, // Adjust width as needed
+                        height: 100, // Adjust height as needed
+                      ),
+                      const SizedBox(height: 10), // Add spacing between image and text
+                      const Text(
+                        'Loading...',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+
+    // Simulate delay
+    await Future.delayed(const Duration(seconds: 3));
+
+    // Hide loading overlay
+    Navigator.of(context, rootNavigator: true).pop();
+
     saveColorsToPrefs();
     storage.installAllDownloaded(config).listen((it) {
       if (kDebugMode) print("Compiled file: ${it.path}");

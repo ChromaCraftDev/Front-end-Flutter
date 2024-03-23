@@ -121,7 +121,7 @@ class _GenerateAIState extends State<GenerateAI> {
     if (_isLoading) {
       return const CircularProgressIndicator(); // Show loading indicator when generating response
     } else {
-      return ElevatedButton(
+      return GFButton(
         onPressed: _textEditingController.text.isEmpty
             ? null
             : () {
@@ -138,6 +138,8 @@ class _GenerateAIState extends State<GenerateAI> {
     final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
         ? 'Images/logo.PNG'
         : 'Images/logo2.PNG';
+
+    bool _isGenerateButtonPressed = false;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -264,18 +266,14 @@ class _GenerateAIState extends State<GenerateAI> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(left:50, top:20),
                       child: Text(
                         _response,
                         style: const TextStyle(
                           fontSize: 16.0,
-                          color: Colors.black,
                           fontWeight: FontWeight.normal,
                           fontStyle: FontStyle.normal,
                           letterSpacing: 1.0,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.blue,
-                          decorationStyle: TextDecorationStyle.dashed,
                         ),
                       ),
                     ),
@@ -289,7 +287,7 @@ class _GenerateAIState extends State<GenerateAI> {
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent:
-                      150, // Set the maximum width for grid tiles
+                      200, // Set the maximum width for grid tiles
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
                 ),
@@ -337,10 +335,10 @@ class _GenerateAIState extends State<GenerateAI> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30),
+        padding: const EdgeInsets.only(top: 25),
         child: Align(
           alignment: Alignment.topRight,
-          child: FloatingActionButton(
+          child: GFButton(
             onPressed: () {
               showDialog(
                 context: context,
@@ -354,11 +352,13 @@ class _GenerateAIState extends State<GenerateAI> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ConfigurePage()),
+                    builder: (context) => const ConfigurePage(),
+                  ),
                 );
               });
             },
-            child: const Text('Apply'),
+            icon: const Icon(Icons.check), // Icon added here
+            text: "Apply", // Text added here
           ),
         ),
       ),
@@ -404,6 +404,7 @@ class _GenerateAIState extends State<GenerateAI> {
       print('Error fetching user data: $e');
     }
   }
+  
 
   Future<void> _loadSelectedProfilePicture() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -9,7 +9,7 @@ class SettingsContent extends StatefulWidget {
 }
 
 class _SettingsContentState extends State<SettingsContent> {
-  String _selectedTheme = '';
+  String _selectedTheme = '    System Default';
 
   @override
   Widget build(BuildContext context) {

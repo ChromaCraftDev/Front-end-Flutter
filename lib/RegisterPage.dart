@@ -72,79 +72,85 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(width: 300),
                           Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Center(
-                                    child: Text(
-                                      'REGISTER NOW',
-                                      style: TextStyle(fontSize: 50, fontFamily: 'Schyler'),
-                                    ),
-                                  ),
-                                const SizedBox(height: 20.0), // Add space between "LOGIN" and text fields
-                                TextField(
-                                  controller: firstNameController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'First Name',
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Center(
+                                child: Text(
+                                  'REGISTER NOW',
+                                  style: TextStyle(fontSize: 50, fontFamily: 'Schyler'),
+                                ),
+                              ),
+                              const SizedBox(height: 20.0), // Add space between "LOGIN" and text fields
+                              TextField(
+                                controller: firstNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'First Name',
+                                  prefixIcon: Icon(Icons.person), // Add icon for first name
+                                ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              TextField(
+                                controller: lastNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Last Name (Optional)',
+                                  prefixIcon: Icon(Icons.person_outlined), // Add icon for last name
+                                ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              TextField(
+                                controller: emailController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email Address',
+                                  prefixIcon: Icon(Icons.email), // Add icon for email
+                                ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              TextField(
+                                controller: passwordController,
+                                obscureText: _isObscure, // Toggle this value to show/hide password
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  prefixIcon: const Icon(Icons.lock), // Add icon for password
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isObscure = !_isObscure; // Toggle the value to show/hide password
+                                      });
+                                    },
+                                    icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on password visibility
                                   ),
                                 ),
-                                const SizedBox(height: 20.0),
-                                TextField(
-                                  controller: lastNameController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Last Name (Optional)',
+                              ),
+                              const SizedBox(height: 20.0),
+                              TextField(
+                                controller: confirmPasswordController,
+                                obscureText: _isConfirmObscure, // Toggle this value to show/hide confirm password
+                                decoration: InputDecoration(
+                                  labelText: 'Confirm Password',
+                                  prefixIcon: const Icon(Icons.lock), // Add icon for confirm password
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isConfirmObscure = !_isConfirmObscure; // Toggle the value to show/hide confirm password
+                                      });
+                                    },
+                                    icon: Icon(_isConfirmObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on confirm password visibility
                                   ),
                                 ),
-                                const SizedBox(height: 20.0),
-                                TextField(
-                                  controller: emailController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Email Address',
-                                  ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: isLoading ? null : () => registerUser(),
+                                  child: const Text('Register'),
                                 ),
-                                const SizedBox(height: 20.0),
-                                TextField(
-                                  controller: passwordController,
-                                  obscureText: _isObscure, // Toggle this value to show/hide password
-                                  decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _isObscure = !_isObscure; // Toggle the value to show/hide password
-                                        });
-                                      },
-                                      icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on password visibility
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20.0),
-                                TextField(
-                                  controller: confirmPasswordController,
-                                  obscureText: _isConfirmObscure, // Toggle this value to show/hide confirm password
-                                  decoration: InputDecoration(
-                                    labelText: 'Confirm Password',
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _isConfirmObscure = !_isConfirmObscure; // Toggle the value to show/hide confirm password
-                                        });
-                                      },
-                                      icon: Icon(_isConfirmObscure ? Icons.visibility_off : Icons.visibility), // Toggle icon based on confirm password visibility
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20.0),
-                                Center(
-                                  child: ElevatedButton(
-                                    onPressed: isLoading ? null : () => registerUser(),
-                                    child: const Text('Register'),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
+                        ),
+
                         ],
                       ),
                     ],
@@ -284,7 +290,7 @@ class _RegisterPageState extends State<RegisterPage> {
         setState(() {
           loadingStatus = 'Registration successful. Please check your email for the verification link...';
         });
-        await Future.delayed(Duration(seconds: 4));
+        await Future.delayed(const Duration(seconds: 4));
 
         // Redirect to the login page upon successful registration
         Navigator.pushNamed(context, '/login'); // Replace the current page with the login page
@@ -296,7 +302,7 @@ class _RegisterPageState extends State<RegisterPage> {
         setState(() {
           loadingStatus = 'Registration Failed...';
         });        
-        await Future.delayed(Duration(seconds: 4));
+        await Future.delayed(const Duration(seconds: 4));
       } finally {
         setState(() {
           isLoading = false;

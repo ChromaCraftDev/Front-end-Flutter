@@ -22,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _isObscure = true; // To track whether password is obscured or not
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getEmailFromStorage();
   }
@@ -78,31 +77,29 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           const SizedBox(height: 60.0), // Add space between "LOGIN" and text fields
-                          Container(
-                            child: TextField(
-                              controller: emailController,
-                              decoration: const InputDecoration(
-                                labelText: 'Email Adress',
-                              ),
+                          TextField(
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email Address',
+                              prefixIcon: Icon(Icons.email), // Add email icon
                             ),
                           ),
                           const SizedBox(height: 20.0),
-                         Container(
-                            child: TextField(
-                              controller: passwordController,
-                              obscureText: _isObscure, // Toggle this value to show/hide password
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscure = !_isObscure; // Toggle the value to show/hide password
-                                    });
-                                  },
-                                  icon: Opacity(
-                                    opacity: 0.5, // Set the opacity value here
-                                    child: Icon(_isObscure ? Icons.visibility_off : Icons.visibility,),
-                                  ),
+                          TextField(
+                            controller: passwordController,
+                            obscureText: _isObscure, // Toggle this value to show/hide password
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: const Icon(Icons.key), // Add password icon
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure; // Toggle the value to show/hide password
+                                  });
+                                },
+                                icon: Opacity(
+                                  opacity: 0.5, // Set the opacity value here
+                                  child: Icon(_isObscure ? Icons.visibility_off : Icons.visibility,),
                                 ),
                               ),
                             ),
@@ -114,11 +111,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           //------Dev only-----------------
                           ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/config');
-                              },
-                              child: const Text('Developer only'),
-                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/config');
+                            },
+                            child: const Text('Developer only'),
+                          ),
                           const SizedBox(height: 30.0),
                           Row(
                             mainAxisSize: MainAxisSize.max,
@@ -151,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
+
                   ],
                 ),
               ),

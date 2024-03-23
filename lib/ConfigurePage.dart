@@ -142,10 +142,16 @@ class _ConfigurePageState extends State<ConfigurePage>
   @override
   Widget build(BuildContext context) {
     final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
-    final String logoImagePath =
-        themeNotifier.currentTheme.brightness == Brightness.dark
-            ? 'Images/logo.PNG'
-            : 'Images/logo2.PNG';
+    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
+        ? 'Images/logo.PNG'
+        : 'Images/logo2.PNG';
+
+    List<ColorOption> first10Colors = config.semanticColors.sublist(0, 10);
+    List<ColorOption> last7Colors = config.rainbowColors.sublist(config.rainbowColors.length - 7);
+
+    List<Widget> first10ColorButtons = first10Colors.map((option) => _buildButton(option)).toList();
+    List<Widget> last7ColorButtons = last7Colors.map((option) => _buildButton(option)).toList();
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -155,7 +161,6 @@ class _ConfigurePageState extends State<ConfigurePage>
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: GFButton(
-              shape: GFButtonShape.pills,
               onPressed: _applyButtonPressed,
               child: const Row(
                 children: [
@@ -265,17 +270,50 @@ class _ConfigurePageState extends State<ConfigurePage>
         ),
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Wrap(
-            runAlignment: WrapAlignment.center,
-            runSpacing: 20,
-            spacing: 10,
-            children: (config.semanticColors + config.rainbowColors)
-                .map((option) => _buildButton(option))
-                .toList(growable: false),
-          ),
+      child: Center(
+        child: Column(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  child: Text(
+                    'Semantic Colors',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Wrap(
+                  runAlignment: WrapAlignment.center,
+                  runSpacing: 20,
+                  spacing: 10,
+                  children: first10ColorButtons,
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  child: Text(
+                    'Rainbow Colors',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Wrap(
+                  runAlignment: WrapAlignment.center,
+                  runSpacing: 20,
+                  spacing: 10,
+                  children: last7ColorButtons,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
+    ),
     );
   }
 

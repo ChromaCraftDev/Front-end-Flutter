@@ -204,6 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
     bool isEmailValid = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
     bool isPasswordValid = password.length >= 6;
     final isUserAvailable = await supabase.from('users').select().eq('email', email).execute();
+    bool isEmailContainsCapitals = RegExp(r'[A-Z]').hasMatch(email);
 
     if (!isFirstNameNotEmpty) {
       _scaffoldKey.currentState!.showSnackBar(
@@ -224,6 +225,26 @@ class _RegisterPageState extends State<RegisterPage> {
       });
       return;
     }
+
+    if(isEmailContainsCapitals){
+       _scaffoldKey.currentState!.showSnackBar(
+        const SnackBar(content: Text('Email Address cannot contain capital letters!')),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+    if (isUserAvailable.data != null && isUserAvailable.data.isNotEmpty) {
+      // User already exists
+      _scaffoldKey.currentState!.showSnackBar(
+        const SnackBar(content: Text('This email is already registered!')),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }    
 
     if (!isPasswordValid) {
       _scaffoldKey.currentState!.showSnackBar(
@@ -247,20 +268,11 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    if (isUserAvailable.data != null && isUserAvailable.data.isNotEmpty) {
-      // User already exists
-      _scaffoldKey.currentState!.showSnackBar(
-        const SnackBar(content: Text('This email is already registered!')),
-      );
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
+
     if (isFirstNameNotEmpty &&
         isEmailValid &&
         isPasswordValid &&
-        password == confirmPassword) {
+        password == confirmPassword && !isEmailContainsCapitals) {
       try {
         
       setState(() {

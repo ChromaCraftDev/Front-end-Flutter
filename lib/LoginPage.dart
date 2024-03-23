@@ -190,64 +190,74 @@ class _LoginPageState extends State<LoginPage> {
   final email = emailController.text;
   final password = passwordController.text;
 
-
-  try {
-    // Set status message for validating credentials
+  if(email.contains(RegExp(r'[A-Z]'))){
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Email cannot contains capital letters...'),
+      ),
+    );
     setState(() {
-      loadingStatus = 'Validating credentials...';
+        isLoading = false;
     });
-
-    final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
-
-    if(email == newEmail){
+  }else{
+    try {
+      // Set status message for validating credentials
       setState(() {
-      loadingStatus = 'Login successful. Redirecting to Home Page...';
-        
+        loadingStatus = 'Validating credentials...';
       });
-      await Future.delayed(const Duration(seconds: 2));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login successful'),
-        ),
-      );
-      Navigator.pushNamed(context, '/config');
+      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
 
-    }else{
+      if(email == newEmail){
+        setState(() {
+        loadingStatus = 'Login successful. Redirecting to Home Page...';
+          
+        });
+        await Future.delayed(const Duration(seconds: 2));
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login successful'),
+          ),
+        );
+        Navigator.pushNamed(context, '/config');
+
+      }else{
+        setState(() {
+        loadingStatus = 'Login successful. Redirecting to Browse Template Page...';
+        });
+        await Future.delayed(const Duration(seconds: 2));
+
+          // Save email to a text file
+        _saveEmailToFile(email);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login successful'),
+          ),
+        );
+        Navigator.pushNamed(context, '/browse');
+      }
+      } catch (e) {
+      if (e is AuthException) {
+        setState(() {
+        loadingStatus = 'Invalid email or password. Check your credentials and try again';
+        });
+        await Future.delayed(const Duration(seconds: 2));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid email or password. Check your Credentials and try again'),
+          ),
+        );
+      }else{
+        setState(() {
+        loadingStatus = 'An error occured !';
+        });
+      }
+    } finally {
       setState(() {
-      loadingStatus = 'Login successful. Redirecting to Browse Template Page...';
+        isLoading = false;
       });
-      await Future.delayed(const Duration(seconds: 2));
-
-        // Save email to a text file
-      _saveEmailToFile(email);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login successful'),
-        ),
-      );
-      Navigator.pushNamed(context, '/browse');
     }
-    } catch (e) {
-    if (e is AuthException) {
-      setState(() {
-      loadingStatus = 'Invalid email or password. Check your credentials and try again';
-      });
-      await Future.delayed(const Duration(seconds: 2));
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid email or password. Check your Credentials and try again'),
-        ),
-      );
-    }else{
-      setState(() {
-      loadingStatus = 'An error occured !';
-      });
-    }
-  } finally {
-    setState(() {
-      isLoading = false;
-    });
   }
 }
 

@@ -8,7 +8,7 @@ final Map<String, Color Function(Color, Iterable<String>)> _operations = {
   "smartLighten": (it, args) {
     final t = double.parse(args.first);
     final hsv = HSVColor.fromColor(it);
-    if (ThemeData.estimateBrightnessForColor(it) == Brightness.dark) {
+    if (hsv.value <= .5) {
       return hsv.withValue(hsv.value + t).toColor();
     } else {
       return hsv.withValue(hsv.value - t).toColor();

@@ -1,10 +1,15 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+import 'storage.dart';
+import 'util.dart';
 
 class ColorOption {
-  final Color original;
+  Color original;
   Color color;
   final String name;
   final String? description;
@@ -18,12 +23,15 @@ class FontOption {
   FontOption(this.fontName);
 }
 
+final _configFile = cacheDirectory.then((it) => File(it + "config.json"));
+
 final config = Config();
 
 extension _OptionMap on List<ColorOption> {
   Map<String, ColorOption> _optionMap() => {for (final it in this) it.name: it};
 }
 
+@JsonSerializable()
 class Config {
   final semanticColors = [
     ColorOption(

@@ -89,13 +89,6 @@ Stream<File> compileAndInstall(Config config, Directory template) async* {
   final installPath = userHome + meta.install.dest[Platform.current()]!;
   final backupPath = await backupDirectory + meta.name;
 
-  if (await pathExists(compilePath)) {
-    if (kDebugMode) {
-      print("Cached compile found for '${meta.name}'. Short-circuting.");
-    }
-    return;
-  }
-
   final compiled = copyFiles(
     from: sourcePath,
     to: compilePath,

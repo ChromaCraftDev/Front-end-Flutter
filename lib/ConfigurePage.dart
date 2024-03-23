@@ -31,35 +31,8 @@ class _ConfigurePageState extends State<ConfigurePage>
   @override
   void initState() {
     super.initState();
-    initializeSharedPreferences();
     WidgetsBinding.instance.addObserver(this);
     _getEmailFromStorage();
-  }
-
-  void initializeSharedPreferences() async {
-    prefs = await SharedPreferences.getInstance();
-    loadColorsFromPrefs();
-  }
-
-  void loadColorsFromPrefs() {
-    for (var option in config.semanticColors + config.rainbowColors) {
-      final savedColor = prefs.getInt(option.name);
-      if (savedColor != null) {
-        setState(() {
-          option.color = Color(savedColor);
-        });
-      }
-    }
-  }
-
-  void saveColorsToPrefs() {
-    for (var option in config.semanticColors + config.rainbowColors) {
-      prefs.setInt(option.name, option.color.value);
-    }
-  }
-
-  void clearSharedPreferences() async {
-    await prefs.clear();
   }
 
   void revertToDefaultColors() {
@@ -445,7 +418,6 @@ class _ConfigurePageState extends State<ConfigurePage>
                 GFButton(
                   color: GFColors.SUCCESS,
                   onPressed: () {
-                    saveColorsToPrefs();
                     Navigator.of(context).pop();
                   },
                   child: const Text(
@@ -465,7 +437,6 @@ class _ConfigurePageState extends State<ConfigurePage>
     if (kDebugMode) print("Applying...");
 
     // Show loading overlay
-   // Show loading overlay
     showDialog(
       context: context,
       barrierDismissible: false, // Prevent dismissing by tapping outside
@@ -476,7 +447,8 @@ class _ConfigurePageState extends State<ConfigurePage>
             // Main content of the screen
             Positioned.fill(
               child: Scaffold(
-                backgroundColor: Colors.transparent, // Make scaffold transparent
+                backgroundColor:
+                    Colors.transparent, // Make scaffold transparent
                 body: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -486,7 +458,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                         width: 100, // Adjust width as needed
                         height: 100, // Adjust height as needed
                       ),
-                      const SizedBox(height: 10), // Add spacing between image and text
+                      const SizedBox(
+                          height: 10), // Add spacing between image and text
                       const Text(
                         'Loading...',
                         style: TextStyle(color: Colors.white, fontSize: 20),
@@ -501,14 +474,12 @@ class _ConfigurePageState extends State<ConfigurePage>
       },
     );
 
-
     // Simulate delay
     await Future.delayed(const Duration(seconds: 3));
 
     // Hide loading overlay
     Navigator.of(context, rootNavigator: true).pop();
 
-    saveColorsToPrefs();
     storage.installAllDownloaded(config).listen((it) {
       if (kDebugMode) print("Compiled file: ${it.path}");
     });

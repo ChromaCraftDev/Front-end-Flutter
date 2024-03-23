@@ -31,25 +31,12 @@ class _GenerateAIState extends State<GenerateAI> {
   String email = '';
   String _firstName = '';
   String _lastName = '';
-  String _selectedProfilePicture = ' ';
+  String _selectedProfilePicture = '';
 
   @override
   void initState() {
     super.initState();
-    _loadSavedColors(); // Load saved colors when the widget initializes
     _getEmailFromStorage();
-  }
-
-  Future<void> _loadSavedColors() async {
-    _prefs = await SharedPreferences.getInstance();
-    final List<String>? savedColors = _prefs.getStringList('paletteColors');
-    if (savedColors != null) {
-      setState(() {
-        for (var i = 0; i < config.semanticColors.length; i++) {
-          config.semanticColors[i].color = colorFromHex(savedColors[i])!;
-        }
-      });
-    }
   }
 
   @override
@@ -110,11 +97,6 @@ class _GenerateAIState extends State<GenerateAI> {
       config.rainbowColors[i].color =
           colorFromHex(hexColors[i + config.semanticColors.length])!;
     }
-    _saveColorsToPrefs(hexColors); // Save the colors to SharedPreferences
-  }
-
-  Future<void> _saveColorsToPrefs(List<String> hexColors) async {
-    await _prefs.setStringList('paletteColors', hexColors);
   }
 
   Widget _buildGenerateButton() {
@@ -276,7 +258,6 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
                         maxLines: null,
                       ),
                       _buildGenerateButton(), // Call the function to display the button or loading indicator
-
                     ],
                   ),
                 ),
@@ -461,10 +442,10 @@ You are 'ChromaCraft AI', an AI used for generating color schemes based on natur
 Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
 
 Semantic Colors:
-${config.semanticColors.map((it) => "- ${it.name}: ${it.description}").join("\n\n")}
+${config.semanticColors.map((it) => "- ${it.name}: ${it.description?.replaceAll("\n", "")}").join("\n")}
 
 Rainbow Colors:
-${config.rainbowColors.map((it) => "- ${it.name}").join("\n\n")}
+${config.rainbowColors.map((it) => "- ${it.name}").join("\n")}
 
 Keep in mind the laws of UI and design. Contrast is highly important for a pleasing theming appliation.
 Make sure you always have a contrast ratio of 4.5:1 as per the Web Content Accessibility Guidelines.

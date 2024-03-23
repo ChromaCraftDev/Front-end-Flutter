@@ -17,7 +17,7 @@ final Map<String, Color Function(Color, Iterable<String>)> _operations = {
 
 String compileTemplate(Config config, String input) {
   return input.replaceAllMapped(
-    RegExp(r"\{\{\s*[c]\.(\w+)\s*(?:\|\s*(.*)\s*)?\}\}", caseSensitive: false),
+    RegExp(r"\{\{\s*(\w+)\s*(?:\|\s*(.*)\s*)?\}\}", caseSensitive: false),
     (match) {
       final option = (config.semanticColors + config.rainbowColors)
           .where((it) => it.name == match.group(1)!)

@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/userData.txt');
+      final file = File('${directory.path}/auth/userData.txt');
       final savedEmail = await file.readAsString();
       setState(() {
         email = savedEmail;

@@ -254,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
 Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/userData.txt');
+      final file = File('${directory.path}/auth/userData.txt');
       newEmail = await file.readAsString();
     } catch (e) {
       print('Error reading email from file: $e');
@@ -264,7 +264,7 @@ Future<void> _getEmailFromStorage() async {
 
 Future <void> _saveEmailToFile(String email) async {
     final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/userData.txt');
+    final file = File('${directory.path}/auth/userData.txt');
     await file.writeAsString(email);
   }
 }

@@ -118,19 +118,23 @@ class _GenerateAIState extends State<GenerateAI> {
   }
 
   Widget _buildGenerateButton() {
-    if (_isLoading) {
-      return const CircularProgressIndicator(); // Show loading indicator when generating response
-    } else {
-      return GFButton(
-        onPressed: _textEditingController.text.isEmpty
-            ? null
-            : () {
-                _generateResponse(_textEditingController.text);
-              },
-        child: const Text('Generate'),
-      );
-    }
+  if (_isLoading) {
+    return Image.asset(
+      'Images/loading.gif', // Path to your GIF
+      width: 30, // Adjust width as needed
+      height: 30, // Adjust height as needed
+    );
+  } else {
+    return GFButton(
+      onPressed: _textEditingController.text.isEmpty
+          ? null
+          : () {
+              _generateResponse(_textEditingController.text);
+            },
+      child: const Text('Generate'),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -241,28 +245,35 @@ class _GenerateAIState extends State<GenerateAI> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          controller: _textEditingController,
-                          decoration: const InputDecoration(
-                            labelText: 'Text prompt',
-                          ),
-                          onChanged: (String text) {
-                            setState(() {}); // Trigger a state update
-                          },
-                          onSubmitted: (String text) {
-                            _generateResponse(text);
-                          },
-                        ),
+               Padding(
+                padding: const EdgeInsets.only(top:8.0, left: 20, right:20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      """Welcome to ChromaCraft AI, your color scheme assistant! Please provide a brief description of the colors you'd like to see, including any preferences or themes. ChromaCraft will then create a personalized palette just for you, guaranteeing a cohesive and visually pleasing design experience.""",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
                       ),
-                      _buildGenerateButton(), // Call the function to display the button or loading indicator
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 8.0), // Add some space between the text and the TextField
+                    TextField(
+                      controller: _textEditingController,
+                      decoration: const InputDecoration(
+                        labelText: 'Text prompt',
+                      ),
+                      onChanged: (String text) {
+                        setState(() {}); // Trigger a state update
+                      },
+                      onSubmitted: (String text) {
+                        _generateResponse(text);
+                      },
+                    ),
+                    _buildGenerateButton(), // Call the function to display the button or loading indicator
+                  ],
                 ),
+              ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -343,7 +354,7 @@ class _GenerateAIState extends State<GenerateAI> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return LoadingScreen();
+                  return const LoadingScreen();
                 },
               );
               Timer(const Duration(seconds: 5), () {
@@ -368,7 +379,7 @@ class _GenerateAIState extends State<GenerateAI> {
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/userData.txt');
+      final file = File('${directory.path}/auth/userData.txt');
       final savedEmail = await file.readAsString();
       setState(() {
         email = savedEmail;
@@ -500,6 +511,8 @@ ${config.rainbowColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
 }
 
 class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

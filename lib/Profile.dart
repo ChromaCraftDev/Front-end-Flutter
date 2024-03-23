@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/userData.txt');
+      final file = File('${directory.path}/auth/userData.txt');
       final savedEmail = await file.readAsString();
       setState(() {
         email = savedEmail;
@@ -100,7 +100,7 @@ Future<void> _getUserData() async {
   Future<void> _logout() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/userData.txt');
+      final file = File('${directory.path}/auth/userData.txt');
       await file.delete();
       // Navigate to login page
       Navigator.pushNamed(context, '/login');
@@ -310,15 +310,6 @@ Future<void> _getUserData() async {
                 backgroundImage: NetworkImage(_selectedProfilePicture),
               ),
             ),
-            ),
-            Positioned(
-              bottom: -50,
-              right: 0,
-              child: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                },
-              ),
             ),
             const SizedBox(height: 20),
             Text(

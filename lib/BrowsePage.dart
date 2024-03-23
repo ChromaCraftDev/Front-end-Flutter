@@ -227,26 +227,54 @@ class _Browser extends State<Browser> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(25),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: !_loaded
-              ? Text(
-                  'Loading templates...',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                )
-              : Wrap(
-                  runSpacing: 20,
-                  spacing: 20,
-                  children: _templates!.map(_buildTemplateCard).toList(),
-                ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: !_loaded
+                ? Text(
+                    'Loading templates...',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  )
+                : Wrap(
+                    runSpacing: 20,
+                    spacing: 20,
+                    children: _templates!.map(_buildTemplateCard).toList(),
+                  ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildTemplateCard(TemplateMetadata meta) {
+    final action = FutureBuilder(
+        future: statTemplate(meta.name, _templates!),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          } else {
+            return switch (snapshot.data!) {
+              TemplateStat.remoteNotFound => const Icon(Icons.error),
+              TemplateStat.notFound => IconButton(
+                  icon: const Icon(Icons.download),
+                  onPressed: () =>
+                      fetchTemplate(meta.name).then((_) => setState(() => ())),
+                ),
+              TemplateStat.needsUpdate => IconButton(
+                  icon: const Icon(Icons.update),
+                  onPressed: () =>
+                      fetchTemplate(meta.name).then((_) => setState(() => ())),
+                ),
+              TemplateStat.ok => IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => uninstallTemplate(meta.name)
+                      .then((_) => setState(() => ())),
+                ),
+            };
+          }
+        });
     return IntrinsicWidth(
       child: Card(
         child: Padding(
@@ -257,35 +285,15 @@ class _Browser extends State<Browser> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    meta.name,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  FutureBuilder(
-                      future: statTemplate(meta.name, _templates!),
-                      builder: (context, snapshot) => !snapshot.hasData
-                          ? const CircularProgressIndicator()
-                          : switch (snapshot.data!) {
-                              TemplateStat.remoteNotFound =>
-                                const Icon(Icons.error),
-                              TemplateStat.notFound => IconButton(
-                                  icon: const Icon(Icons.download),
-                                  onPressed: () => fetchTemplate(meta.name)
-                                      .then((_) => setState(() => ())),
-                                ),
-                              TemplateStat.needsUpdate => IconButton(
-                                  icon: const Icon(Icons.update),
-                                  onPressed: () => fetchTemplate(meta.name)
-                                      .then((_) => setState(() => ())),
-                                ),
-                              TemplateStat.ok => IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => uninstallTemplate(meta.name)
-                                      .then((_) => setState(() => ())),
-                                ),
-                            }),
-                ],
+                children: <Widget>[
+                      Text(
+                        meta.name,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                    ] +
+                    (meta.platforms.contains(Platform.current())
+                        ? [action]
+                        : []),
               ),
               const SizedBox(height: 20),
               Image.network(meta.previewUrl, width: 500),

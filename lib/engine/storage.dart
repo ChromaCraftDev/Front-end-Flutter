@@ -55,6 +55,10 @@ Future<void> uninstallTemplate(String name) async {
   final meta = await getLocalTemplateMetadata(name);
   if (meta == null) throw Exception("Template '$name' doesn't exist locally.");
 
+  if (!meta.platforms.contains(Platform.current())) {
+    throw "Unsupported platform!";
+  }
+
   final template = await templateDirectory + name;
   final compilePath = await compiledDirectory + meta.name;
   final installPath = userHome + meta.install.dest[Platform.current()]!;
@@ -78,8 +82,7 @@ Stream<File> compileAndInstall(Config config, Directory template) async* {
       jsonDecode(await File(template + "meta.json").readAsString()));
 
   if (!meta.platforms.contains(Platform.current())) {
-    yield* Stream.error("Unsupported platform!");
-    return;
+    throw "Unsupported platform!";
   }
 
   final sourcePath = template + meta.install.src;
@@ -115,7 +118,7 @@ Stream<File> installAllDownloaded(Config config) async* {
       }
       yield* compileAndInstall(config, template);
     } else {
-      yield* Stream.error("Invalid item found in templates directory: $name");
+      throw "Invalid item found in templates directory: $name";
     }
   }
 }

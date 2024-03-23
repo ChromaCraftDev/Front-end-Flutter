@@ -344,7 +344,8 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
                   return const LoadingScreen();
                 },
               );
-              Timer(const Duration(seconds: 5), () {
+              Timer(const Duration(seconds: 2), () {
+                saveConfig();
                 Navigator.pop(context); // Pop the loading screen dialog
                 // Navigate to Configure page
                 Navigator.push(

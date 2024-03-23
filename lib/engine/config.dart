@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
@@ -15,6 +16,22 @@ class ColorOption {
   final String? description;
 
   ColorOption(this.original, this.name, {this.description}) : color = original;
+
+  static Map<String, dynamic> toJson(ColorOption it) {
+    return {
+      "color": it.color.value,
+      "name": it.name,
+      "description": it.description
+    };
+  }
+
+  static ColorOption fromJson(Map<String, dynamic> json) {
+    return ColorOption(
+      Color(json["color"] as int),
+      json["name"],
+      description: json["description"],
+    );
+  }
 }
 
 class FontOption {
@@ -23,17 +40,13 @@ class FontOption {
   FontOption(this.fontName);
 }
 
-final _configFile = cacheDirectory.then((it) => File(it + "config.json"));
-
-final config = Config();
-
 extension _OptionMap on List<ColorOption> {
   Map<String, ColorOption> _optionMap() => {for (final it in this) it.name: it};
 }
 
 @JsonSerializable()
 class Config {
-  final semanticColors = [
+  var _semanticColors = [
     ColorOption(
       const Color(0xFF1E1E2E),
       'base',
@@ -88,7 +101,8 @@ class Config {
       description: 'Used to indicate success.',
     ),
   ];
-  final rainbowColors = [
+  List<ColorOption> get semanticColors => _semanticColors;
+  var _rainbowColors = [
     ColorOption(const Color(0xFFF38BA8), 'red'),
     ColorOption(const Color(0xFFFAB387), 'orange'),
     ColorOption(const Color(0xFFF9E2AF), 'yellow'),
@@ -97,4 +111,28 @@ class Config {
     ColorOption(const Color(0xFF89B4FA), 'blue'),
     ColorOption(const Color(0xFFCBA6F7), 'purple'),
   ];
+  List<ColorOption> get rainbowColors => _rainbowColors;
+}
+
+final config = Config();
+final _configFile = cacheDirectory.then((it) => File(it + "config.json"));
+
+Future<void> saveConfig() async {
+  final json = {
+    "semantic": config.semanticColors.map(ColorOption.toJson).toList(),
+    "rainbow": config.rainbowColors.map(ColorOption.toJson).toList(),
+  };
+  await (await _configFile).writeAsString(jsonEncode(json));
+}
+
+Future<void> loadConfig() async {
+  if (!await (await _configFile).exists()) return;
+  final json = jsonDecode(await (await _configFile).readAsString())
+      as Map<String, dynamic>;
+  config._semanticColors = (json["semantic"] as List<dynamic>)
+      .map((it) => ColorOption.fromJson(it as Map<String, dynamic>))
+      .toList(growable: false);
+  config._rainbowColors = (json["rainbow"] as List<dynamic>)
+      .map((it) => ColorOption.fromJson(it as Map<String, dynamic>))
+      .toList(growable: false);
 }

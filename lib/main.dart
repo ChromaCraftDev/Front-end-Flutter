@@ -1,3 +1,4 @@
+import 'package:chromacraft/engine/config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +22,7 @@ Future<void> main() async {
 
   // Clear shared preferences
   await clearSharedPreferences();
-
+  await loadConfig();
   try {
     await Supabase.initialize(
       url: 'https://hgblhxdounljhdwemyoz.supabase.co',
@@ -49,11 +50,11 @@ Future<void> clearSharedPreferences() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
-      builder: (context, themeNotifier, _) {        
+      builder: (context, themeNotifier, _) {
         return MaterialApp(
           debugShowCheckedModeBanner: false, // Remove Debug tag
           theme: themeNotifier.currentTheme,

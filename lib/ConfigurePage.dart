@@ -435,6 +435,7 @@ class _ConfigurePageState extends State<ConfigurePage>
 
   void _applyButtonPressed() async {
     if (kDebugMode) print("Applying...");
+    saveConfig();
 
     // Show loading overlay
     showDialog(
@@ -475,7 +476,7 @@ class _ConfigurePageState extends State<ConfigurePage>
     );
 
     // Simulate delay
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
 
     // Hide loading overlay
     Navigator.of(context, rootNavigator: true).pop();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 enum Platform {
   windows,
   macos,
@@ -20,6 +22,15 @@ enum Platform {
       "linux" => Platform.linux,
       "macos" => Platform.macos,
       _ => Platform.invalid
+    };
+  }
+
+  static FaIcon icon(Platform it) {
+    return switch (it) {
+      Platform.windows => const FaIcon(FontAwesomeIcons.windows),
+      Platform.macos => const FaIcon(FontAwesomeIcons.apple),
+      Platform.linux => const FaIcon(FontAwesomeIcons.linux),
+      Platform.invalid => const FaIcon(FontAwesomeIcons.exclamation),
     };
   }
 }

@@ -30,18 +30,28 @@ Future<Directory> fetchTemplate(String name) async {
   return await storeTemplate(name, bytes);
 }
 
-Future<bool> templateNeedsUpdate(
+enum TemplateStat {
+  remoteNotFound,
+  notFound,
+  needsUpdate,
+  ok,
+}
+
+Future<TemplateStat> statTemplate(
     String name, List<TemplateMetadata> list) async {
   final TemplateMetadata remote;
   try {
     remote = list.singleWhere((it) => it.name == name);
   } catch (_) {
-    return Future.error(
-        "Could not find template for $name in server ($domain).");
+    return TemplateStat.remoteNotFound;
   }
   final local = await getStoredTemplateMetadata(name);
   if (local == null) {
-    return Future.error("Could not find template for $name locally.");
+    return TemplateStat.notFound;
   }
-  return local.version < remote.version;
+  if (local.version < remote.version) {
+    return TemplateStat.needsUpdate;
+  }
+
+  return TemplateStat.ok;
 }

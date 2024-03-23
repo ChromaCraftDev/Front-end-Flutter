@@ -142,15 +142,10 @@ class _ConfigurePageState extends State<ConfigurePage>
   @override
   Widget build(BuildContext context) {
     final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
-    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
-        ? 'Images/logo.PNG'
-        : 'Images/logo2.PNG';
-
-    List<ColorOption> first10Colors = config.semanticColors.sublist(0, 10);
-    List<ColorOption> last7Colors = config.rainbowColors.sublist(config.rainbowColors.length - 7);
-
-    List<Widget> first10ColorButtons = first10Colors.map((option) => _buildButton(option)).toList();
-    List<Widget> last7ColorButtons = last7Colors.map((option) => _buildButton(option)).toList();
+    final String logoImagePath =
+        themeNotifier.currentTheme.brightness == Brightness.dark
+            ? 'Images/logo.PNG'
+            : 'Images/logo2.PNG';
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -270,54 +265,54 @@ class _ConfigurePageState extends State<ConfigurePage>
         ),
       ),
       body: SingleChildScrollView(
-      child: Center(
-        child: Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  child: Text(
-                    'Semantic Colors',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        child: Center(
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      'Semantic Colors',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
                   ),
-                ),
-                Wrap(
-                  runAlignment: WrapAlignment.center,
-                  runSpacing: 20,
-                  spacing: 10,
-                  children: first10ColorButtons,
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                  child: Text(
-                    'Rainbow Colors',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Wrap(
+                    runAlignment: WrapAlignment.center,
+                    runSpacing: 20,
+                    spacing: 10,
+                    children: config.semanticColors.map(_buildOption).toList(),
                   ),
-                ),
-                Wrap(
-                  runAlignment: WrapAlignment.center,
-                  runSpacing: 20,
-                  spacing: 10,
-                  children: last7ColorButtons,
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 30),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      'Rainbow Colors',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
+                  ),
+                  Wrap(
+                    runAlignment: WrapAlignment.center,
+                    runSpacing: 20,
+                    spacing: 10,
+                    children: config.rainbowColors.map(_buildOption).toList(),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 
-  Widget _buildButton(ColorOption option) {
+  Widget _buildOption(ColorOption option) {
     return GestureDetector(
       onTap: () {
         _showColorPickerDialog(option);

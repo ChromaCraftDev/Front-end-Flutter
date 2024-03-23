@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:chromacraft/engine/storage.dart';
 import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/foundation.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +24,7 @@ class Browser extends StatefulWidget {
 }
 
 class _Browser extends State<Browser> {
-  late final List<TemplateMetadata> _templates;
+  List<TemplateMetadata>? _templates;
   var _loaded = false;
   String email = '';
   String _firstName = '';
@@ -35,14 +35,18 @@ class _Browser extends State<Browser> {
   void initState() {
     super.initState();
     _getEmailFromStorage();
+    reloadTemplates();
+  }
+
+  void reloadTemplates() {
+    setState(() {
+      _loaded = false;
+    });
     fetchTemplatesList().then((value) {
       setState(() {
         _templates = value;
         _loaded = true;
       });
-      for (final it in value) {
-        fetchTemplate(it.name);
-      }
     });
   }
 
@@ -57,7 +61,7 @@ class _Browser extends State<Browser> {
       _getUserData();
       _loadSelectedProfilePicture();
     } catch (e) {
-      print('Error reading email from file: $e');
+      if (kDebugMode) print('Error reading email from file: $e');
     }
   }
 
@@ -72,17 +76,13 @@ class _Browser extends State<Browser> {
         final user = response[0];
         setState(() {
           _firstName = user['first_name'] as String;
-          if (user['last_name'] as String == null) {
-            _lastName = " ";
-          } else {
-            _lastName = user['last_name'] as String;
-          }
+          _lastName = user['last_name'] as String;
         });
       } else {
-        print('No user data found for this email: $email');
+        if (kDebugMode) print('No user data found for this email: $email');
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      if (kDebugMode) print('Error fetching user data: $e');
     }
   }
 
@@ -107,9 +107,7 @@ class _Browser extends State<Browser> {
         _selectedProfilePicture = user['image_id'] as String;
       });
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading image ID from file: $e');
-      }
+      if (kDebugMode) print('Error loading image ID from file: $e');
     }
   }
 
@@ -132,6 +130,12 @@ class _Browser extends State<Browser> {
             },
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: reloadTemplates,
+          )
+        ],
       ),
       drawer: Drawer(
         child: Column(
@@ -223,63 +227,83 @@ class _Browser extends State<Browser> {
           ],
         ),
       ),
-      body: !_loaded
-          ? const Center(
-              child: Text(
-                'Loading templates...',
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900),
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(25),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: _templates.map(_buildTemplateCard).toList(),
-              ),
-            ),
+      body: Padding(
+        padding: const EdgeInsets.all(25),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: !_loaded
+              ? Text(
+                  'Loading templates...',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                )
+              : Wrap(
+                  runSpacing: 20,
+                  spacing: 20,
+                  children: _templates!.map(_buildTemplateCard).toList(),
+                ),
+        ),
+      ),
     );
   }
 
   Widget _buildTemplateCard(TemplateMetadata meta) {
     return IntrinsicWidth(
-        child: Card(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              meta.name,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            Image(image: NetworkImage(meta.previewUrl), width: 500),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  child: const Text("Project Homepage"),
-                  onTap: () => launchUrl(meta.projectHomepage),
-                ),
-                Column(
-                  children: meta.platforms
-                      .map((it) => switch (it) {
-                            Platform.windows =>
-                              const FaIcon(FontAwesomeIcons.windows),
-                            Platform.macos =>
-                              const FaIcon(FontAwesomeIcons.apple),
-                            Platform.linux =>
-                              const FaIcon(FontAwesomeIcons.linux),
-                            Platform.invalid =>
-                              const FaIcon(FontAwesomeIcons.exclamation),
-                          })
-                      .toList(),
-                ),
-              ],
-            ),
-          ],
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    meta.name,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  FutureBuilder(
+                      future: statTemplate(meta.name, _templates!),
+                      builder: (context, snapshot) => !snapshot.hasData
+                          ? const CircularProgressIndicator()
+                          : switch (snapshot.data!) {
+                              TemplateStat.remoteNotFound =>
+                                const Icon(Icons.error),
+                              TemplateStat.notFound => IconButton(
+                                  icon: const Icon(Icons.download),
+                                  onPressed: () => fetchTemplate(meta.name)
+                                      .then((_) => setState(() => ())),
+                                ),
+                              TemplateStat.needsUpdate => IconButton(
+                                  icon: const Icon(Icons.update),
+                                  onPressed: () => fetchTemplate(meta.name)
+                                      .then((_) => setState(() => ())),
+                                ),
+                              TemplateStat.ok => IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => removeTemplate(meta.name)
+                                      .then((_) => setState(() => ())),
+                                ),
+                            }),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Image.network(meta.previewUrl, width: 500),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    child: const Text("Project Homepage"),
+                    onPressed: () => launchUrl(meta.projectHomepage),
+                  ),
+                  Row(children: meta.platforms.map(Platform.icon).toList()),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

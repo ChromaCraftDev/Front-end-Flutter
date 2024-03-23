@@ -270,38 +270,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
-  flutter_facebook_auth:
-    dependency: "direct main"
-    description:
-      name: flutter_facebook_auth
-      sha256: "779215296119c156975d4f596a7434a1fa35c0ef304f2ead3c17c1546499c6c5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.7"
-  flutter_facebook_auth_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_facebook_auth_platform_interface
-      sha256: "06b27d024cff8093e0ed6f8067d43f9451610ca23845d1ad5ddf12f7e43904e3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.7.1"
-  flutter_facebook_auth_web:
-    dependency: transitive
-    description:
-      name: flutter_facebook_auth_web
-      sha256: "7845becbe9631400caa9a86557382431cef72e5530f2b809cfbc69587c0d119d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.6.0+2"
-  flutter_hsvcolor_picker:
-    dependency: "direct main"
-    description:
-      name: flutter_hsvcolor_picker
-      sha256: ea5868dbb1c840ef502bbf60168b26e18eab13a3a2b07bfef0c59a64e7fedc2c
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   flutter_lints:
     dependency: "direct main"
     description:
@@ -360,62 +328,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  google_generative_ai:
-    dependency: "direct main"
-    description:
-      name: google_generative_ai
-      sha256: b2d3f7277a85e3e6be4c4392c59e73ea211b5b6c8bb21c24c71fd411a2d1822e
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.2"
-  google_identity_services_web:
-    dependency: transitive
-    description:
-      name: google_identity_services_web
-      sha256: "9482364c9f8b7bd36902572ebc3a7c2b5c8ee57a9c93e6eb5099c1a9ec5265d8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1+1"
-  google_sign_in:
-    dependency: "direct main"
-    description:
-      name: google_sign_in
-      sha256: "0b8787cb9c1a68ad398e8010e8c8766bfa33556d2ab97c439fb4137756d7308f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.2.1"
-  google_sign_in_android:
-    dependency: transitive
-    description:
-      name: google_sign_in_android
-      sha256: bfd42c81c30c6faba16e0f62968d5505a87504aaa672b3155ee931461abb0a49
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.21"
-  google_sign_in_ios:
-    dependency: transitive
-    description:
-      name: google_sign_in_ios
-      sha256: a7d653803468d30b82ceb47ea00fe86d23c56e63eb2e5c2248bb68e9df203217
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.7.4"
-  google_sign_in_platform_interface:
-    dependency: transitive
-    description:
-      name: google_sign_in_platform_interface
-      sha256: "1f6e5787d7a120cc0359ddf315c92309069171306242e181c09472d1b00a2971"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.4.5"
-  google_sign_in_web:
-    dependency: "direct main"
-    description:
-      name: google_sign_in_web
-      sha256: fc0f14ed45ea616a6cfb4d1c7534c2221b7092cc4f29a709f0c3053cc3e821bd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.12.4"
   gotrue:
     dependency: transitive
     description:
@@ -488,22 +400,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  hyper_lint:
-    dependency: transitive
-    description:
-      name: hyper_lint
-      sha256: "6d214b6e6e38d15f087ed9b67d461d026c9cdebb64c7a46cf1fb80350e536d33"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
-  iglu_color_picker_flutter:
-    dependency: "direct main"
-    description:
-      name: iglu_color_picker_flutter
-      sha256: e758b87c018a1f04c8c3ebf15a2d7a6fbb765f304368a2b0a068a121817506f8
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   io:
     dependency: transitive
     description:
@@ -776,14 +672,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
-  screen_retriever:
-    dependency: transitive
-    description:
-      name: screen_retriever
-      sha256: "6ee02c8a1158e6dae7ca430da79436e3b1c9563c8cf02f524af997c201ac2b90"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.9"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -880,14 +768,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
-  simple_ripple_animation:
-    dependency: "direct main"
-    description:
-      name: simple_ripple_animation
-      sha256: d654c4a4a4a61ec8cf52b7b06dcf1bcb311c98e0a1a98534c6355aca2a73b6fd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.9"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -958,7 +838,7 @@ packages:
     source: hosted
     version: "1.2.0"
   supabase:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: supabase
       sha256: "1434bb9375f88f51802dadf7b99568117c434f6a9af7f8a55e5be94c8b4da7c9"
@@ -1157,14 +1037,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.0"
-  window_manager:
-    dependency: "direct main"
-    description:
-      name: window_manager
-      sha256: b3c895bdf936c77b83c5254bec2e6b3f066710c1f89c38b20b8acc382b525494
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.8"
   xdg_directories:
     dependency: transitive
     description:

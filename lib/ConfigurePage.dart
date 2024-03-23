@@ -10,11 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'engine/config.dart';
-import 'engine/fetch.dart' as fetch;
+//import 'engine/fetch.dart' as fetch;
 import 'engine/storage.dart' as storage;
 
 class ConfigurePage extends StatefulWidget {
-  const ConfigurePage({Key? key}) : super(key: key);
+  const ConfigurePage({super.key});
 
   @override
   _ConfigurePageState createState() => _ConfigurePageState();

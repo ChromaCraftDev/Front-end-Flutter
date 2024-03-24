@@ -13,7 +13,10 @@
       pkgs = import nixpkgs {inherit system;};
     in {
       devShells.default = pkgs.mkShell {
-        packages = [pkgs.flutter];
+        packages = [
+          pkgs.flutter
+          # (pkgs.writeShellScriptBin "google-chrome" "${pkgs.firefox}/bin/firefox")
+        ];
       };
     });
 }

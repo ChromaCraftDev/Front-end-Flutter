@@ -23,6 +23,20 @@ extension AppendPath on Directory {
   String operator +(String other) => path.join(this.path, other);
 }
 
+extension AppendLine on File {
+  Future<File> appendLine(String line) async =>
+      writeAsString(line + Platform.lineTerminator,
+          mode: FileMode.writeOnlyAppend);
+
+  Future<bool> hasLine(String line) async =>
+      (await readAsLines()).contains(line);
+
+  Future<File> removeLine(String line) async =>
+      writeAsString((await readAsLines())
+          .where((it) => it != line)
+          .join(Platform.lineTerminator));
+}
+
 // Not sure how reliable this is, but I'm not about to add another library to do just this.
 Directory get userHome => Directory(
     Platform.environment['HOME'] ?? Platform.environment['USERPROFILE']!);

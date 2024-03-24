@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 import 'storage.dart';
 import 'util.dart';
@@ -44,7 +43,6 @@ extension _OptionMap on List<ColorOption> {
   Map<String, ColorOption> _optionMap() => {for (final it in this) it.name: it};
 }
 
-@JsonSerializable()
 class Config {
   var _semanticColors = [
     ColorOption(

@@ -436,6 +436,9 @@ class _ConfigurePageState extends State<ConfigurePage>
   void _applyButtonPressed() async {
     if (kDebugMode) print("Applying...");
     saveConfig();
+    storage.installAllDownloaded(config).listen((it) {
+      if (kDebugMode) print("Compiled file: ${it.path}");
+    });
 
     // Show loading overlay
     showDialog(
@@ -480,10 +483,6 @@ class _ConfigurePageState extends State<ConfigurePage>
 
     // Hide loading overlay
     Navigator.of(context, rootNavigator: true).pop();
-
-    storage.installAllDownloaded(config).listen((it) {
-      if (kDebugMode) print("Compiled file: ${it.path}");
-    });
   }
 
   @override

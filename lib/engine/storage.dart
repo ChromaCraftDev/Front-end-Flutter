@@ -26,6 +26,9 @@ final compiledDirectory = cacheDirectory
 final backupDirectory = cacheDirectory
     .then((it) => Directory(it + "backup").create(recursive: true));
 
+final installedFile =
+    cacheDirectory.then((it) => File(it + "installed").create(recursive: true));
+
 Future<TemplateMetadata?> getLocalTemplateMetadata(String name) async {
   final template = Directory(await templateDirectory + name);
   final file = File(template + "meta.json");
@@ -48,7 +51,7 @@ Future<Directory> unpackTemplate(String name, Uint8List zip) async {
 }
 
 /// In order, this function:
-/// 1. Restores any backed up files
+/// 1. If installed, restores any backed up files then removes installed entry.
 /// 2. Deletes compiled files
 /// 3. Deletes downloaded template
 Future<void> uninstallTemplate(String name) async {
@@ -64,10 +67,10 @@ Future<void> uninstallTemplate(String name) async {
   final installPath = userHome + meta.install.dest[Platform.current()]!;
   final backupPath = await backupDirectory + meta.name;
 
-  if (await pathExists(backupPath)) {
+  if (await (await installedFile).hasLine(installPath)) {
     movePath(from: backupPath, to: installPath, force: ForceMode.deleteFirst);
+    await (await installedFile).removeLine(installPath);
   }
-
   deleteIndiscriminately(compilePath);
   deleteIndiscriminately(template);
 }
@@ -76,6 +79,7 @@ Future<void> uninstallTemplate(String name) async {
 /// 1. Compiles the files
 /// 2. Backs up any files that would've been overriden during installation.
 /// 3. Copies all that is compiled to the install directory.
+/// 4. Register the name in the installed list.
 Stream<File> compileAndInstall(Config config, Directory template) async* {
   final meta = TemplateMetadata.fromJson(
       jsonDecode(await File(template + "meta.json").readAsString()));
@@ -103,6 +107,8 @@ Stream<File> compileAndInstall(Config config, Directory template) async* {
     from: compilePath,
     to: installPath,
   );
+
+  await (await installedFile).appendLine(installPath);
 
   yield* installed;
 }

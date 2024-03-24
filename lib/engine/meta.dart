@@ -74,13 +74,15 @@ class TemplateMetadata {
 
 class InstallerConfig {
   final String src;
+  final bool zip;
   final Map<Platform, String> dest;
 
-  InstallerConfig(this.src, this.dest);
+  InstallerConfig(this.src, this.zip, this.dest);
 
   static InstallerConfig fromJson(Map<String, dynamic> parsed) {
     return InstallerConfig(
       parsed['src'],
+      parsed['zip'] ?? false,
       (parsed['destination'] as Map<String, dynamic>).map((key, value) {
         return MapEntry(Platform.fromString(key), mapEnv(value as String));
       }),

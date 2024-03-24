@@ -296,7 +296,14 @@ class _Browser extends State<Browser> {
                         : []),
               ),
               const SizedBox(height: 20),
-              SizedBox(
+              Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(10),
                   width: 500,
                   child: Image.network(
                     meta.previewUrl,

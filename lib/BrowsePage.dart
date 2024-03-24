@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'engine/meta.dart';
+import 'engine/util.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -318,7 +319,6 @@ class _Browser extends State<Browser> {
           if (snapshot.data == null) return const SizedBox.shrink();
           final controller = TextEditingController.fromValue(
               TextEditingValue(text: snapshot.data!));
-
           return Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Row(
@@ -329,10 +329,21 @@ class _Browser extends State<Browser> {
                   icon: const Icon(Icons.save),
                   label: const Text("Save"),
                   onPressed: () {
-                    setTemplateInstallPath(meta.name, controller.value.text)
-                        .then((it) => {
-                              context.findAncestorStateOfType()!.setState(() {})
-                            });
+                    final prev = snapshot.data!;
+                    final path = mapEnv(controller.value.text);
+                    setTemplateInstallPath(meta.name, path).then(
+                      (it) =>
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                        it
+                            ? FileSystemEntity.typeSync(path,
+                                        followLinks: false) !=
+                                    FileSystemEntityType.notFound
+                                ? "${meta.name} theme moved from $prev to $path."
+                                : "${meta.name} theme will be installed to $path."
+                            : "Error: $path already exists!",
+                      ))),
+                    );
                   },
                 ),
               ],

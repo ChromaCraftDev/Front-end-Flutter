@@ -116,7 +116,8 @@ class _GenerateAIState extends State<GenerateAI> {
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(color: config.semantic.primary.color),
+              decoration:
+                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 logoImagePath, // Use the determined logo image path

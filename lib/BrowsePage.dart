@@ -296,12 +296,25 @@ class _Browser extends State<Browser> {
                         : []),
               ),
               const SizedBox(height: 20),
-              Image.network(
-                meta.previewUrl,
-                width: 500,
-                errorBuilder: (_, __, ___) =>
-                    const Text("Preview image not available."),
-              ),
+              SizedBox(
+                  width: 500,
+                  child: Image.network(
+                    meta.previewUrl,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Text("Preview image not available."),
+                  )),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

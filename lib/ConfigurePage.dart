@@ -35,14 +35,6 @@ class _ConfigurePageState extends State<ConfigurePage>
     _getEmailFromStorage();
   }
 
-  void revertToDefaultColors() {
-    for (var option in config.semanticColors + config.rainbowColors) {
-      setState(() {
-        option.color = option.original;
-      });
-    }
-  }
-
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -253,7 +245,7 @@ class _ConfigurePageState extends State<ConfigurePage>
                     runAlignment: WrapAlignment.center,
                     runSpacing: 20,
                     spacing: 10,
-                    children: config.semanticColors.map(_buildOption).toList(),
+                    children: config.semantic.map(_buildOption).toList(),
                   ),
                 ],
               ),
@@ -272,7 +264,7 @@ class _ConfigurePageState extends State<ConfigurePage>
                     runAlignment: WrapAlignment.center,
                     runSpacing: 20,
                     spacing: 10,
-                    children: config.rainbowColors.map(_buildOption).toList(),
+                    children: config.rainbow.map(_buildOption).toList(),
                   ),
                 ],
               ),
@@ -406,8 +398,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                   color: GFColors.DANGER,
                   onPressed: () {
                     setState(() {
-                      option.color = option.original;
-                      pickerColor = option.original;
+                      option.revert();
+                      pickerColor = option.color;
                     });
                   },
                   child: const Text(

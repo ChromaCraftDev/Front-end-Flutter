@@ -20,9 +20,8 @@ String compileTemplate(Config config, String input) {
   return input.replaceAllMapped(
     RegExp(r"\{\{\s*(\w+)\s*(.*)}\}", caseSensitive: false),
     (match) {
-      final option = (config.semanticColors + config.rainbowColors)
-          .where((it) => it.name == match.group(1)!)
-          .firstOrNull;
+      final optionName = match.group(1)!;
+      final option = config.semantic[optionName] ?? config.rainbow[optionName];
       if (option == null) return "invalid";
       final ops = match
           .group(2)!

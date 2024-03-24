@@ -100,12 +100,6 @@ Future<void> compileAndInstall(Config config, Directory template) async {
     transform: (it) => compileTemplate(config, it),
   );
 
-  print("""
-  sourcePath = $sourcePath
-  compilePath = $compilePath
-  installPath = $installPath
-  backupPath = $backupPath
-  """);
   if (!await (await installedFile).hasLine(installPath)) {
     await movePath(from: installPath, to: backupPath); // backup
     await (await installedFile).appendLine(installPath);

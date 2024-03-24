@@ -316,9 +316,11 @@ class _Browser extends State<Browser> {
     final locationConfig = FutureBuilder(
         future: getTemplateInstallPath(meta.name),
         builder: (context, snapshot) {
-          if (snapshot.data == null) return const SizedBox.shrink();
+          final installPath = snapshot.data ??
+              meta.install.dest[Platform.current()] ??
+              "This platform is not supported by default";
           final controller = TextEditingController.fromValue(
-              TextEditingValue(text: snapshot.data!));
+              TextEditingValue(text: installPath));
           return Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Row(
@@ -329,9 +331,10 @@ class _Browser extends State<Browser> {
                   icon: const Icon(Icons.save),
                   label: const Text("Save"),
                   onPressed: () {
-                    final prev = snapshot.data!;
+                    final prev = mapEnv(installPath);
                     final path = mapEnv(controller.value.text);
-                    setTemplateInstallPath(meta.name, path).then(
+                    setTemplateInstallPath(meta.name, controller.value.text)
+                        .then(
                       (it) =>
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(

@@ -122,7 +122,7 @@ Stream<File> copyFiles({
 }) async* {
   yield* files.asyncMap((it) async {
     final pathPart = path.relative(it.absolute.path, from: path.absolute(from));
-    final dest = path.join(to, pathPart);
+    final dest = path.normalize(path.join(to, pathPart));
     await Directory(path.dirname(dest)).create(recursive: true);
     final out = transform(await it.readAsString());
     return File(dest).writeAsString(out);

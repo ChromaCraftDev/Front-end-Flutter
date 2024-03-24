@@ -100,7 +100,17 @@ Future<void> compileAndInstall(Config config, Directory template) async {
     transform: (it) => compileTemplate(config, it),
   );
 
-  await movePath(from: installPath, to: backupPath); // backup
+  print("""
+  sourcePath = $sourcePath
+  compilePath = $compilePath
+  installPath = $installPath
+  backupPath = $backupPath
+  """);
+  if (!await (await installedFile).hasLine(installPath)) {
+    await movePath(from: installPath, to: backupPath); // backup
+    await (await installedFile).appendLine(installPath);
+  }
+  deleteIndiscriminately(installPath);
 
   final Future<void> installed;
   if (meta.install.zip) {
@@ -116,8 +126,6 @@ Future<void> compileAndInstall(Config config, Directory template) async {
       to: installPath,
     ).join().then((_) {});
   }
-
-  await (await installedFile).appendLine(installPath);
 
   return installed;
 }

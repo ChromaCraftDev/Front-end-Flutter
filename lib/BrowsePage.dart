@@ -296,7 +296,12 @@ class _Browser extends State<Browser> {
                         : []),
               ),
               const SizedBox(height: 20),
-              Image.network(meta.previewUrl, width: 500),
+              Image.network(
+                meta.previewUrl,
+                width: 500,
+                errorBuilder: (_, __, ___) =>
+                    const Text("Preview image not available."),
+              ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

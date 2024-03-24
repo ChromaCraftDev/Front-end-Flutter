@@ -178,31 +178,36 @@ class Config {
     );
   }
 
-  Map<String, OptionCategory> toMap() {
+  Map<String, OptionCategory> get asMap {
     return {
       'semantic': semantic,
       'rainbow': rainbow,
     };
   }
 
-  void revert() => toMap().forEach((_, it) => it.revert());
+  Map<String, ColorOption> get optionMap {
+    return asMap.values.fold({}, (acc, x) {
+      acc.addAll(x.toMap());
+      return acc;
+    });
+  }
+
+  void revert() => asMap.forEach((_, it) => it.revert());
 
   Map<String, dynamic> toJSON() {
-    return toMap().map((key, value) => MapEntry(key, value.toJSON()));
+    return asMap.map((key, value) => MapEntry(key, value.toJSON()));
   }
 }
 
-var _config = Config();
-Config get config => _config;
-
+var config = Config();
 final _configFile = cacheDirectory.then((it) => File(it + "color_config.json"));
 
 Future<void> saveConfig() async {
-  await (await _configFile).writeAsString(jsonEncode(_config.toJSON()));
+  await (await _configFile).writeAsString(jsonEncode(config.toJSON()));
 }
 
 Future<void> loadConfig() async {
   if (!await (await _configFile).exists()) return;
-  _config = Config.fromJSON(jsonDecode(await (await _configFile).readAsString())
+  config = Config.fromJSON(jsonDecode(await (await _configFile).readAsString())
       as Map<String, dynamic>);
 }

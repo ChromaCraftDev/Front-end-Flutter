@@ -21,7 +21,7 @@ String compileTemplate(Config config, String input) {
     RegExp(r"\{\{\s*(\w+)\s*(.*)}\}", caseSensitive: false),
     (match) {
       final optionName = match.group(1)!;
-      final option = config.semantic[optionName] ?? config.rainbow[optionName];
+      final option = config.optionMap[optionName];
       if (option == null) return "invalid";
       final ops = match
           .group(2)!

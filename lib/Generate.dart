@@ -26,7 +26,6 @@ class _GenerateAIState extends State<GenerateAI> {
   final TextEditingController _textEditingController = TextEditingController();
   String _response = '';
   final OpenAIService _aiService = OpenAIService();
-  late SharedPreferences _prefs; // SharedPreferences instance
   bool _isLoading = false; // Loading indicator variable
   String email = '';
   String _firstName = '';
@@ -50,35 +49,29 @@ class _GenerateAIState extends State<GenerateAI> {
       _isLoading = true; // Set loading to true when generating response
     });
     String response = await _aiService.chatGPTAPI(textPrompt);
-    List<String> hexColors = _extractHexColors(response);
-    setState(() {
-      for (int i = 0; i < config.semantic.length; i++) {
-        config.semantic[i].color = colorFromHex(hexColors[i])!;
-      }
-      for (int i = 0; i < config.rainbow.length; i++) {
-        config.rainbow[i].color =
-            colorFromHex(hexColors[i + config.semantic.length])!;
-      }
-    });
-    _updateConfigColors(hexColors);
+    _parseAndLoadResponse(response);
     setState(() {
       _response = response;
       _isLoading = false; // Set loading to false when response is received
     });
   }
 
-  List<String> _extractHexColors(String response) {
-    return hexColors;
-  }
-
-  void _updateConfigColors(List<String> hexColors) {
-    for (int i = 0; i < config.semantic.length; i++) {
-      config.semantic[i].color = colorFromHex(hexColors[i])!;
-    }
-    for (int i = 0; i < config.rainbow.length; i++) {
-      config.rainbow[i].color =
-          colorFromHex(hexColors[i + config.semantic.length])!;
-    }
+  void _parseAndLoadResponse(String response) {
+    setState(() {
+      response
+          .split("\n")
+          .map((it) => it.trim())
+          .where((it) => it.isNotEmpty && it.contains("="))
+          .map((it) {
+        final sides = it.split("=");
+        return (sides[0].trim(), colorFromHex(sides[1].trim()));
+      }).forEach((it) {
+        if (config.optionMap.containsKey(it.$1)) {
+          final prev = config.optionMap[it.$1]!;
+          prev.color = it.$2 ?? prev.color;
+        }
+      });
+    });
   }
 
   Widget _buildGenerateButton() {
@@ -108,7 +101,6 @@ class _GenerateAIState extends State<GenerateAI> {
             ? 'Images/logo.PNG'
             : 'Images/logo2.PNG';
 
-    bool _isGenerateButtonPressed = false;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100.0,
@@ -204,111 +196,7 @@ class _GenerateAIState extends State<GenerateAI> {
           ],
         ),
       ),
-      body: Row(
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 20, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        """
-Welcome to ChromaCraft AI, your color scheme assistant!
-Please provide a brief description of the colors you'd like to see, including any preferences or themes.
-ChromaCraft will then create a personalized palette just for you, guaranteeing a cohesive and visually pleasing design experience.
-""",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(
-                          height:
-                              8.0), // Add some space between the text and the TextField
-                      TextField(
-                        controller: _textEditingController,
-                        decoration: const InputDecoration(
-                          labelText: 'Text prompt',
-                        ),
-                        onChanged: (String text) {
-                          setState(() {}); // Trigger a state update
-                        },
-                        onSubmitted: (String text) {
-                          _generateResponse(text);
-                        },
-                        maxLines: null,
-                      ),
-                      _buildGenerateButton(), // Call the function to display the button or loading indicator
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 50, top: 20),
-                      child: Text(
-                        _response,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          fontStyle: FontStyle.normal,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent:
-                      200, // Set the maximum width for grid tiles
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                ),
-                itemCount: config.semantic.length + config.rainbow.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    width: 150, // Set the fixed width
-                    height: 150, // Set the fixed height
-                    child: AnimatedContainer(
-                      duration: const Duration(
-                          milliseconds: 500), // Adjust the duration as needed
-                      curve: Curves.decelerate, // Adjust the curve as needed
-                      margin: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                        color: index < config.semantic.length
-                            ? config.semantic[index].color
-                            : config
-                                .rainbow[index - config.semantic.length].color,
-                        borderRadius:
-                            BorderRadius.circular(8.0), // Add border radius
-                      ),
-                      child: Center(
-                        child: Text(
-                          index < config.semantic.length
-                              ? config.semantic[index].name
-                              : config
-                                  .rainbow[index - config.semantic.length].name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: body(context),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 25),
         child: Align(
@@ -341,6 +229,109 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
     );
   }
 
+  Row body(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 20, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      """
+Welcome to ChromaCraft AI, your color scheme assistant!
+Please provide a brief description of the colors you'd like to see, including any preferences or themes.
+ChromaCraft will then create a personalized palette just for you, guaranteeing a cohesive and visually pleasing design experience.
+""",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(
+                        height:
+                            8.0), // Add some space between the text and the TextField
+                    TextField(
+                      controller: _textEditingController,
+                      decoration: const InputDecoration(
+                        labelText: 'Text prompt',
+                      ),
+                      onChanged: (String text) {
+                        setState(() {}); // Trigger a state update
+                      },
+                      onSubmitted: (String text) {
+                        _generateResponse(text);
+                      },
+                      maxLines: null,
+                    ),
+                    _buildGenerateButton(), // Call the function to display the button or loading indicator
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50, top: 20),
+                    child: Text(
+                      _response,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.normal,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200, // Set the maximum width for grid tiles
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 10.0,
+              ),
+              itemCount: config.optionMap.length,
+              itemBuilder: (BuildContext context, int index) {
+                return SizedBox(
+                  width: 150, // Set the fixed width
+                  height: 150, // Set the fixed height
+                  child: AnimatedContainer(
+                    duration: const Duration(
+                        milliseconds: 500), // Adjust the duration as needed
+                    curve: Curves.decelerate, // Adjust the curve as needed
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: config.optionMap.values
+                          .toList(growable: false)[index]
+                          .color,
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Add border radius
+                    ),
+                    child: Center(
+                      child: Text(
+                        config.optionMap.keys.toList(growable: false)[index],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -367,11 +358,7 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
         final user = response[0];
         setState(() {
           _firstName = user['first_name'] as String;
-          if (user['last_name'] as String == null) {
-            _lastName = " ";
-          } else {
-            _lastName = user['last_name'] as String;
-          }
+          _lastName = user['last_name'] as String;
         });
       } else {
         print('No user data found for this email: $email');
@@ -416,24 +403,27 @@ class OpenAIService {
     messages.add({
       "role": "system",
       "content": """
-You are 'ChromaCraft AI', an AI used for generating color schemes based on natural language prompts.
+You are 'ChromaCraft AI', an AI used for generating readable color schemes based on natural language prompts.
 Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
 
 Semantic Colors:
-${config.semantic.map((it) => "- ${it.name}: ${it.description?.replaceAll("\n", "")}").join("\n")}
+${config.semantic.toMap().map((name, option) {
+                return MapEntry(name,
+                    "- $name: ${option.description?.replaceAll("\n", "")}");
+              }).values.join("\n")}
 
 Rainbow Colors:
-${config.rainbow.map((it) => "- ${it.name}").join("\n")}
+${config.rainbow.toMap().keys.map((it) => "- $it").join("\n")}
 
 Keep in mind the laws of UI and design. Contrast is highly important for a pleasing theming appliation.
 Make sure you always have a contrast ratio of 4.5:1 as per the Web Content Accessibility Guidelines.
 If the user doesn't explicitly specify whether the theme is light or dark, make an assumption.
+Readability will be your number one concern!
 
 The format expected of your reply should follow the template below
 
 mode = dark|light
-${config.semantic.map((it) => "${it.name} = #XXXXXX").join("\n")}
-${config.rainbow.map((it) => "${it.name} = #XXXXXX").join("\n")}
+${config.optionMap.keys.map((it) => "$it = #XXXXXX").join("\n")}
 """
     });
     messages.add({

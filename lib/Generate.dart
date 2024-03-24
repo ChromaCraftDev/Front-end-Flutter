@@ -112,7 +112,6 @@ class _GenerateAIState extends State<GenerateAI> {
         title: const Text('Generate Template'),
       ),
       drawer: GFDrawer(
-        color: config.semantic.shade.color,
         child: Column(
           children: <Widget>[
             DrawerHeader(
@@ -130,35 +129,27 @@ class _GenerateAIState extends State<GenerateAI> {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
-                    textColor: config.semantic.text.color,
-                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.settings),
-                    title: const Text('Configure Colors'),
+                    title: const Text('Configure'),
                     onTap: () {
                       Navigator.pushNamed(context, '/config');
                     },
                   ),
                   ListTile(
-                    textColor: config.semantic.text.color,
-                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.web),
-                    title: const Text('Browse Templates'),
+                    title: const Text('Browse Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/browse');
                     },
                   ),
                   ListTile(
-                    textColor: config.semantic.text.color,
-                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.create),
-                    title: const Text('Generate Colors'),
+                    title: const Text('Generate Template'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
                   ListTile(
-                    textColor: config.semantic.text.color,
-                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
@@ -173,8 +164,6 @@ class _GenerateAIState extends State<GenerateAI> {
                 Navigator.pushNamed(context, '/profile');
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: config.semantic.base.color,
-                foregroundColor: config.semantic.text.color,
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),

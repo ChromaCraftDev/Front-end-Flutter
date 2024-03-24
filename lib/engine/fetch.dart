@@ -53,7 +53,7 @@ Future<TemplateStat> statTemplate(
     return TemplateStat.notFound;
   }
   // users can manually set negative versions to say 'do not update'
-  if (0 < local.version && local.version < remote.version) {
+  if (0 <= local.version && local.version < remote.version) {
     return TemplateStat.needsUpdate;
   }
 

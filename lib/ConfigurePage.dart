@@ -442,9 +442,7 @@ class _ConfigurePageState extends State<ConfigurePage>
   void _applyButtonPressed() async {
     if (kDebugMode) print("Installing...");
     saveConfig();
-    storage.installAllDownloaded(config).listen((_) {
-      if (kDebugMode) print("Installed!");
-    });
+    storage.installAllDownloaded(config);
 
     // Show loading overlay
     showDialog(

@@ -84,7 +84,7 @@ class InstallerConfig {
       parsed['src'],
       parsed['zip'] ?? false,
       (parsed['destination'] as Map<String, dynamic>).map((key, value) {
-        return MapEntry(Platform.fromString(key), mapEnv(value as String));
+        return MapEntry(Platform.fromString(key), value as String);
       }),
     );
   }

@@ -38,8 +38,8 @@ Future<bool> setTemplateInstallPath(String name, String newPath) async {
     final oldPath = json[name]?['path'] as String?;
     final installed = json[name]?['installed'] ?? false;
     if (oldPath != null && installed) {
-      if (await pathExists(newPath)) return false;
-      movePath(from: oldPath, to: newPath);
+      if (await pathExists(mapEnv(newPath))) return false;
+      movePath(from: mapEnv(oldPath), to: mapEnv(newPath));
     }
     json[name] = {'installed': installed, 'path': newPath};
   } else {
@@ -119,14 +119,15 @@ Future<void> uninstallTemplate(String name) async {
 
   final template = await templateDirectory + name;
   final compilePath = await compiledDirectory + meta.name;
-  final installPath = await getTemplateInstallPath(name) ??
+  final installPath = await getTemplateInstallPath(meta.name) ??
       meta.install.dest[Platform.current()];
   if (installPath == null) throw "Unspported platform!";
+  final mappedInstallPath = mapEnv(installPath);
   final backupPath = await backupDirectory + meta.name;
 
   if (await getTemplateInstalled(name)) {
     await movePath(
-        from: backupPath, to: installPath, force: ForceMode.deleteFirst);
+        from: backupPath, to: mappedInstallPath, force: ForceMode.deleteFirst);
     await setTemplateInstalled(name, false);
   }
   await deleteIndiscriminately(compilePath);
@@ -181,21 +182,21 @@ Future<void> compileAndInstall(Config config, Directory template) async {
       files: compiled,
       from: compilePath,
       to: mappedInstallPath,
-    ).join().then((_) {});
+    ).join();
   }
 
   return installed;
 }
 
 /// A helper function for usage in the UI
-Stream<void> installAllDownloaded(Config config) async* {
+Future<void> installAllDownloaded(Config config) async {
   await for (final template in (await templateDirectory).list()) {
     final name = path.basename(template.path);
     if (template is Directory) {
       if (kDebugMode) {
         print("Found template '$name'. Trying to compile...");
       }
-      yield compileAndInstall(config, template);
+      await compileAndInstall(config, template);
     } else {
       throw "Invalid item found in templates directory: $name";
     }

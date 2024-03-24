@@ -61,11 +61,7 @@ class _ConfigurePageState extends State<ConfigurePage>
         final user = response[0];
         setState(() {
           _firstName = user['first_name'] as String;
-          if (user['last_name'] as String == null) {
-            _lastName = " ";
-          } else {
-            _lastName = user['last_name'] as String;
-          }
+          _lastName = user['last_name'] as String;
         });
       } else {
         if (kDebugMode) {
@@ -117,26 +113,25 @@ class _ConfigurePageState extends State<ConfigurePage>
             : 'Images/logo2.PNG';
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: config.semantic.base.color,
       appBar: AppBar(
+        backgroundColor: config.semantic.base.color,
+        foregroundColor: config.semantic.text.color,
         toolbarHeight: 100.0,
         title: const Text('Colour Configure'),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: GFButton(
+              color: config.semantic.primary.color,
+              textStyle:
+                  TextStyle(fontSize: 15, color: config.semantic.base.color),
               onPressed: _applyButtonPressed,
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: 10.0),
-                  Text(
-                    'Apply',
-                    style: TextStyle(fontSize: 15),
-                  ),
+                  Icon(Icons.edit, color: config.semantic.base.color),
+                  const SizedBox(width: 10.0),
+                  const Text('Apply'),
                 ],
               ),
             ),
@@ -144,16 +139,16 @@ class _ConfigurePageState extends State<ConfigurePage>
         ],
       ),
       drawer: GFDrawer(
+        color: config.semantic.shade.color,
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration:
-                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
+              decoration: BoxDecoration(color: config.semantic.primary.color),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
-                logoImagePath,
-                width: 1000,
-                height: 1000,
+                logoImagePath, // Use the determined logo image path
+                width: 1000, // Adjust width as needed
+                height: 1000, // Adjust height as needed
               ),
             ),
             Expanded(
@@ -161,27 +156,35 @@ class _ConfigurePageState extends State<ConfigurePage>
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.settings),
-                    title: const Text('Configure'),
+                    title: const Text('Configure Colors'),
                     onTap: () {
                       Navigator.pushNamed(context, '/config');
                     },
                   ),
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.web),
-                    title: const Text('Browse Template'),
+                    title: const Text('Browse Templates'),
                     onTap: () {
                       Navigator.pushNamed(context, '/browse');
                     },
                   ),
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.create),
-                    title: const Text('Generate Template'),
+                    title: const Text('Generate Colors'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
@@ -196,6 +199,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                 Navigator.pushNamed(context, '/profile');
               },
               style: ElevatedButton.styleFrom(
+                backgroundColor: config.semantic.base.color,
+                foregroundColor: config.semantic.text.color,
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),
@@ -299,7 +304,7 @@ class _ConfigurePageState extends State<ConfigurePage>
           child: Container(
             width: 550,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(200, 0, 0, 0),
+              color: config.semantic.container.color,
               borderRadius: BorderRadius.circular(10),
             ),
             padding: const EdgeInsets.all(15),

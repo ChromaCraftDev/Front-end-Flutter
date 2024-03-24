@@ -83,6 +83,8 @@ class _GenerateAIState extends State<GenerateAI> {
       );
     } else {
       return GFButton(
+        color: config.semantic.primary.color,
+        textColor: config.semantic.base.color,
         onPressed: _textEditingController.text.isEmpty
             ? null
             : () {
@@ -102,16 +104,19 @@ class _GenerateAIState extends State<GenerateAI> {
             : 'Images/logo2.PNG';
 
     return Scaffold(
+      backgroundColor: config.semantic.base.color,
       appBar: AppBar(
+        backgroundColor: config.semantic.base.color,
+        foregroundColor: config.semantic.text.color,
         toolbarHeight: 100.0,
         title: const Text('Generate Template'),
       ),
       drawer: GFDrawer(
+        color: config.semantic.shade.color,
         child: Column(
           children: <Widget>[
             DrawerHeader(
-              decoration:
-                  const BoxDecoration(color: Color.fromARGB(200, 79, 55, 140)),
+              decoration: BoxDecoration(color: config.semantic.primary.color),
               padding: const EdgeInsets.all(40.0),
               child: Image.asset(
                 logoImagePath, // Use the determined logo image path
@@ -124,27 +129,35 @@ class _GenerateAIState extends State<GenerateAI> {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.settings),
-                    title: const Text('Configure'),
+                    title: const Text('Configure Colors'),
                     onTap: () {
                       Navigator.pushNamed(context, '/config');
                     },
                   ),
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.web),
-                    title: const Text('Browse Template'),
+                    title: const Text('Browse Templates'),
                     onTap: () {
                       Navigator.pushNamed(context, '/browse');
                     },
                   ),
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.create),
-                    title: const Text('Generate Template'),
+                    title: const Text('Generate Colors'),
                     onTap: () {
                       Navigator.pushNamed(context, '/ai');
                     },
                   ),
                   ListTile(
+                    textColor: config.semantic.text.color,
+                    iconColor: config.semantic.text.color,
                     leading: const Icon(Icons.settings),
                     title: const Text('Settings'),
                     onTap: () {
@@ -159,6 +172,8 @@ class _GenerateAIState extends State<GenerateAI> {
                 Navigator.pushNamed(context, '/profile');
               },
               style: ElevatedButton.styleFrom(
+                backgroundColor: config.semantic.base.color,
+                foregroundColor: config.semantic.text.color,
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               ),
@@ -202,6 +217,8 @@ class _GenerateAIState extends State<GenerateAI> {
         child: Align(
           alignment: Alignment.topRight,
           child: GFButton(
+            color: config.semantic.primary.color,
+            textColor: config.semantic.base.color,
             onPressed: () {
               showDialog(
                 context: context,
@@ -221,7 +238,8 @@ class _GenerateAIState extends State<GenerateAI> {
                 );
               });
             },
-            icon: const Icon(Icons.check), // Icon added here
+            icon: Icon(Icons.check,
+                color: config.semantic.base.color), // Icon added here
             text: "Apply", // Text added here
           ),
         ),
@@ -470,6 +488,7 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: config.semantic.base.color,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -481,9 +500,10 @@ class LoadingScreen extends StatelessWidget {
               height: 50, // Adjust height as needed
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Please be patient as we configure the colors from the generated color palette.',
               textAlign: TextAlign.center,
+              style: TextStyle(color: config.semantic.text.color),
             ),
           ],
         ),

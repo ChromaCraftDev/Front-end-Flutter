@@ -76,10 +76,14 @@ class _ConfigurePageState extends State<ConfigurePage>
           }
         });
       } else {
-        print('No user data found for this email: $email');
+        if (kDebugMode) {
+          print('No user data found for this email: $email');
+        }
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      if (kDebugMode) {
+        print('Error fetching user data: $e');
+      }
     }
   }
 
@@ -104,7 +108,9 @@ class _ConfigurePageState extends State<ConfigurePage>
         _selectedProfilePicture = user['image_id'] as String;
       });
     } catch (e) {
-      print('Error loading image ID from file: $e');
+      if (kDebugMode) {
+        print('Error loading image ID from file: $e');
+      }
     }
   }
 
@@ -465,7 +471,7 @@ class _ConfigurePageState extends State<ConfigurePage>
                       const SizedBox(
                           height: 10), // Add spacing between image and text
                       const Text(
-                        'Loading...',
+                        'Please wait while your custom theme template is applying.',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ],

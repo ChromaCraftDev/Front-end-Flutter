@@ -52,12 +52,12 @@ class _GenerateAIState extends State<GenerateAI> {
     String response = await _aiService.chatGPTAPI(textPrompt);
     List<String> hexColors = _extractHexColors(response);
     setState(() {
-      for (int i = 0; i < config.semanticColors.length; i++) {
-        config.semanticColors[i].color = colorFromHex(hexColors[i])!;
+      for (int i = 0; i < config.semantic.length; i++) {
+        config.semantic[i].color = colorFromHex(hexColors[i])!;
       }
-      for (int i = 0; i < config.rainbowColors.length; i++) {
-        config.rainbowColors[i].color =
-            colorFromHex(hexColors[i + config.semanticColors.length])!;
+      for (int i = 0; i < config.rainbow.length; i++) {
+        config.rainbow[i].color =
+            colorFromHex(hexColors[i + config.semantic.length])!;
       }
     });
     _updateConfigColors(hexColors);
@@ -68,34 +68,16 @@ class _GenerateAIState extends State<GenerateAI> {
   }
 
   List<String> _extractHexColors(String response) {
-    List<String> hexColors = [];
-    RegExp regExp = RegExp(r'#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b');
-    Iterable<Match> matches = regExp.allMatches(response);
-    for (Match match in matches) {
-      String? hexColor = match.group(0);
-      if (hexColor != null) {
-        hexColors.add(hexColor);
-      } else {
-        if (kDebugMode) {
-          print("Failed to extract hex color from match: $match");
-        }
-      }
-    }
-    if (hexColors.isEmpty) {
-      if (kDebugMode) {
-        print("No hex colors found in response: $response");
-      }
-    }
     return hexColors;
   }
 
   void _updateConfigColors(List<String> hexColors) {
-    for (int i = 0; i < config.semanticColors.length; i++) {
-      config.semanticColors[i].color = colorFromHex(hexColors[i])!;
+    for (int i = 0; i < config.semantic.length; i++) {
+      config.semantic[i].color = colorFromHex(hexColors[i])!;
     }
-    for (int i = 0; i < config.rainbowColors.length; i++) {
-      config.rainbowColors[i].color =
-          colorFromHex(hexColors[i + config.semanticColors.length])!;
+    for (int i = 0; i < config.rainbow.length; i++) {
+      config.rainbow[i].color =
+          colorFromHex(hexColors[i + config.semantic.length])!;
     }
   }
 
@@ -289,8 +271,7 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
                 ),
-                itemCount:
-                    config.semanticColors.length + config.rainbowColors.length,
+                itemCount: config.semantic.length + config.rainbow.length,
                 itemBuilder: (BuildContext context, int index) {
                   return SizedBox(
                     width: 150, // Set the fixed width
@@ -301,23 +282,19 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
                       curve: Curves.decelerate, // Adjust the curve as needed
                       margin: const EdgeInsets.all(4.0),
                       decoration: BoxDecoration(
-                        color: index < config.semanticColors.length
-                            ? config.semanticColors[index].color
+                        color: index < config.semantic.length
+                            ? config.semantic[index].color
                             : config
-                                .rainbowColors[
-                                    index - config.semanticColors.length]
-                                .color,
+                                .rainbow[index - config.semantic.length].color,
                         borderRadius:
                             BorderRadius.circular(8.0), // Add border radius
                       ),
                       child: Center(
                         child: Text(
-                          index < config.semanticColors.length
-                              ? config.semanticColors[index].name
+                          index < config.semantic.length
+                              ? config.semantic[index].name
                               : config
-                                  .rainbowColors[
-                                      index - config.semanticColors.length]
-                                  .name,
+                                  .rainbow[index - config.semantic.length].name,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -443,10 +420,10 @@ You are 'ChromaCraft AI', an AI used for generating color schemes based on natur
 Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
 
 Semantic Colors:
-${config.semanticColors.map((it) => "- ${it.name}: ${it.description?.replaceAll("\n", "")}").join("\n")}
+${config.semantic.map((it) => "- ${it.name}: ${it.description?.replaceAll("\n", "")}").join("\n")}
 
 Rainbow Colors:
-${config.rainbowColors.map((it) => "- ${it.name}").join("\n")}
+${config.rainbow.map((it) => "- ${it.name}").join("\n")}
 
 Keep in mind the laws of UI and design. Contrast is highly important for a pleasing theming appliation.
 Make sure you always have a contrast ratio of 4.5:1 as per the Web Content Accessibility Guidelines.
@@ -455,8 +432,8 @@ If the user doesn't explicitly specify whether the theme is light or dark, make 
 The format expected of your reply should follow the template below
 
 mode = dark|light
-${config.semanticColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
-${config.rainbowColors.map((it) => "${it.name} = #XXXXXX").join("\n")}
+${config.semantic.map((it) => "${it.name} = #XXXXXX").join("\n")}
+${config.rainbow.map((it) => "${it.name} = #XXXXXX").join("\n")}
 """
     });
     messages.add({

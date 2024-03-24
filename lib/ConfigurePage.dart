@@ -35,14 +35,6 @@ class _ConfigurePageState extends State<ConfigurePage>
     _getEmailFromStorage();
   }
 
-  void revertToDefaultColors() {
-    for (var option in config.semanticColors + config.rainbowColors) {
-      setState(() {
-        option.color = option.original;
-      });
-    }
-  }
-
   Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -259,7 +251,11 @@ class _ConfigurePageState extends State<ConfigurePage>
                     runAlignment: WrapAlignment.center,
                     runSpacing: 20,
                     spacing: 10,
-                    children: config.semanticColors.map(_buildOption).toList(),
+                    children: config.semantic
+                        .toMap()
+                        .map(_buildOption)
+                        .values
+                        .toList(),
                   ),
                 ],
               ),
@@ -278,7 +274,11 @@ class _ConfigurePageState extends State<ConfigurePage>
                     runAlignment: WrapAlignment.center,
                     runSpacing: 20,
                     spacing: 10,
-                    children: config.rainbowColors.map(_buildOption).toList(),
+                    children: config.rainbow
+                        .toMap()
+                        .map(_buildOption)
+                        .values
+                        .toList(),
                   ),
                 ],
               ),
@@ -289,61 +289,63 @@ class _ConfigurePageState extends State<ConfigurePage>
     );
   }
 
-  Widget _buildOption(ColorOption option) {
-    return GestureDetector(
-      onTap: () {
-        _showColorPickerDialog(option);
-      },
-      child: Container(
-        width: 550,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(200, 0, 0, 0),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+  MapEntry<String, Widget> _buildOption(String name, ColorOption option) {
+    return MapEntry(
+        name,
+        GestureDetector(
+          onTap: () {
+            _showColorPickerDialog(option);
+          },
+          child: Container(
+            width: 550,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(200, 0, 0, 0),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                    Text(
-                      option.name,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
-                      softWrap: true,
-                    ),
-                  ] +
-                  (option.description == null
-                      ? []
-                      : [
-                          Text(
-                            option.description!,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
-                          )
-                        ]),
-            ),
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: option.color,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: const Color.fromARGB(50, 255, 255, 255),
-                  width: 3,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                        Text(
+                          name,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                          softWrap: true,
+                        ),
+                      ] +
+                      (option.description == null
+                          ? []
+                          : [
+                              Text(
+                                option.description!,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 12),
+                              )
+                            ]),
                 ),
-              ),
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: option.color,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: const Color.fromARGB(50, 255, 255, 255),
+                      width: 3,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
   void _showColorPickerDialog(ColorOption option) {
@@ -412,8 +414,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                   color: GFColors.DANGER,
                   onPressed: () {
                     setState(() {
-                      option.color = option.original;
-                      pickerColor = option.original;
+                      option.revert();
+                      pickerColor = option.color;
                     });
                   },
                   child: const Text(

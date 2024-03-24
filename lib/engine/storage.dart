@@ -121,13 +121,14 @@ Future<void> uninstallTemplate(String name) async {
   final compilePath = await compiledDirectory + meta.name;
   final installPath = await getTemplateInstallPath(meta.name) ??
       meta.install.dest[Platform.current()];
-  if (installPath == null) throw "Unspported platform!";
-  final mappedInstallPath = mapEnv(installPath);
   final backupPath = await backupDirectory + meta.name;
 
-  if (await getTemplateInstalled(name)) {
+  if (installPath != null && await getTemplateInstalled(name)) {
     await movePath(
-        from: backupPath, to: mappedInstallPath, force: ForceMode.deleteFirst);
+      from: backupPath,
+      to: mapEnv(installPath),
+      force: ForceMode.deleteFirst,
+    );
     await setTemplateInstalled(name, false);
   }
   await deleteIndiscriminately(compilePath);

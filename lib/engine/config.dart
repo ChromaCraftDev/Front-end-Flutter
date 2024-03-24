@@ -113,7 +113,8 @@ class Config {
 }
 
 final config = Config();
-final _configFile = cacheDirectory.then((it) => File(it + "config.json"));
+
+final _configFile = cacheDirectory.then((it) => File(it + "color_config.json"));
 
 Future<void> saveConfig() async {
   final json = {

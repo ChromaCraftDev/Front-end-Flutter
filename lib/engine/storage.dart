@@ -26,15 +26,74 @@ final compiledDirectory = cacheDirectory
 final backupDirectory = cacheDirectory
     .then((it) => Directory(it + "backup").create(recursive: true));
 
-final installedFile =
-    cacheDirectory.then((it) => File(it + "installed").create(recursive: true));
+final _templateConfigFile =
+    cacheDirectory.then((it) => File(it + "template_config.json"));
+
+Future<bool> setTemplateInstallPath(String name, String newPath) async {
+  final file = await _templateConfigFile;
+  final Map<String, dynamic> json;
+  if (await file.exists()) {
+    final str = await file.readAsString();
+    json = jsonDecode(str) as Map<String, dynamic>;
+    final oldPath = json[name]?['path'] as String?;
+    final installed = json[name]?['installed'] ?? false;
+    if (oldPath != null && installed) {
+      if (await pathExists(newPath)) return false;
+      movePath(from: oldPath, to: newPath);
+    }
+    json[name] = {'installed': installed, 'path': newPath};
+  } else {
+    json = {
+      name: {'installed': false, 'path': newPath}
+    };
+  }
+  await file.writeAsString(jsonEncode(json), flush: true);
+  return true;
+}
+
+Future<String?> getTemplateInstallPath(String name) async {
+  final file = await _templateConfigFile;
+  if (await file.exists()) {
+    final str = await file.readAsString();
+    final json = jsonDecode(str) as Map<String, dynamic>;
+    return json[name]?['path'];
+  } else {
+    return null;
+  }
+}
+
+Future<void> setTemplateInstalled(String name, bool installed) async {
+  final file = await _templateConfigFile;
+  final Map<String, dynamic> json;
+  if (await file.exists()) {
+    final str = await file.readAsString();
+    json = jsonDecode(str) as Map<String, dynamic>;
+    json[name] = {'installed': installed, 'path': json[name]?['path']};
+  } else {
+    json = {
+      name: {'installed': installed, 'path': null}
+    };
+  }
+  await file.writeAsString(jsonEncode(json), flush: true);
+}
+
+Future<bool> getTemplateInstalled(String name) async {
+  final file = await _templateConfigFile;
+  if (await file.exists()) {
+    final str = await file.readAsString();
+    final json = jsonDecode(str) as Map<String, dynamic>;
+    return json[name]?['installed'] ?? false;
+  } else {
+    return false;
+  }
+}
 
 Future<TemplateMetadata?> getLocalTemplateMetadata(String name) async {
   final template = Directory(await templateDirectory + name);
   final file = File(template + "meta.json");
   if (await file.exists()) {
-    var decoded = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-    decoded.putIfAbsent("name", () => name);
+    final decoded =
+        jsonDecode(await file.readAsString()) as Map<String, dynamic>;
     return TemplateMetadata.fromJson(decoded);
   } else {
     return null;
@@ -58,21 +117,20 @@ Future<void> uninstallTemplate(String name) async {
   final meta = await getLocalTemplateMetadata(name);
   if (meta == null) throw Exception("Template '$name' doesn't exist locally.");
 
-  if (!meta.platforms.contains(Platform.current())) {
-    throw "Unsupported platform!";
-  }
-
   final template = await templateDirectory + name;
   final compilePath = await compiledDirectory + meta.name;
-  final installPath = userHome + meta.install.dest[Platform.current()]!;
+  final installPath = await getTemplateInstallPath(name) ??
+      meta.install.dest[Platform.current()];
+  if (installPath == null) throw "Unspported platform!";
   final backupPath = await backupDirectory + meta.name;
 
-  if (await (await installedFile).hasLine(installPath)) {
-    movePath(from: backupPath, to: installPath, force: ForceMode.deleteFirst);
-    await (await installedFile).removeLine(installPath);
+  if (await getTemplateInstalled(name)) {
+    await movePath(
+        from: backupPath, to: installPath, force: ForceMode.deleteFirst);
+    await setTemplateInstalled(name, false);
   }
-  deleteIndiscriminately(compilePath);
-  deleteIndiscriminately(template);
+  await deleteIndiscriminately(compilePath);
+  await deleteIndiscriminately(template);
 }
 
 /// In order, this function:
@@ -90,7 +148,10 @@ Future<void> compileAndInstall(Config config, Directory template) async {
 
   final sourcePath = template + meta.install.src;
   final compilePath = await compiledDirectory + meta.name;
-  final installPath = userHome + meta.install.dest[Platform.current()]!;
+  final installPath = await getTemplateInstallPath(meta.name) ??
+      meta.install.dest[Platform.current()];
+  if (installPath == null) throw "Unspported platform!";
+  final mappedInstallPath = mapEnv(installPath);
   final backupPath = await backupDirectory + meta.name;
 
   final compiled = copyFiles(
@@ -100,30 +161,26 @@ Future<void> compileAndInstall(Config config, Directory template) async {
     transform: (it) => compileTemplate(config, it),
   );
 
-  print("""
-  sourcePath = $sourcePath
-  compilePath = $compilePath
-  installPath = $installPath
-  backupPath = $backupPath
-  """);
-  if (!await (await installedFile).hasLine(installPath)) {
-    await movePath(from: installPath, to: backupPath); // backup
-    await (await installedFile).appendLine(installPath);
+  if (!await getTemplateInstalled(meta.name)) {
+    await movePath(from: mappedInstallPath, to: backupPath); // backup
   }
-  deleteIndiscriminately(installPath);
+
+  // order matters, i think
+  await setTemplateInstallPath(meta.name, installPath);
+  await setTemplateInstalled(meta.name, true);
 
   final Future<void> installed;
   if (meta.install.zip) {
     await compiled.join();
     installed = ZipFileEncoder().zipDirectoryAsync(
       Directory(compilePath),
-      filename: installPath,
+      filename: mappedInstallPath,
     );
   } else {
     installed = copyFiles(
       files: compiled,
       from: compilePath,
-      to: installPath,
+      to: mappedInstallPath,
     ).join().then((_) {});
   }
 

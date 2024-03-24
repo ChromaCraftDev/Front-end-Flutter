@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:chromacraft/engine/storage.dart';
 import 'package:chromacraft/theme_notifier.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -253,7 +255,7 @@ class _Browser extends State<Browser> {
         future: statTemplate(meta.name, _templates!),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else {
             return switch (snapshot.data!) {
               TemplateStat.remoteNotFound => const Icon(Icons.error),
@@ -275,7 +277,70 @@ class _Browser extends State<Browser> {
             };
           }
         });
-    return IntrinsicWidth(
+    final previewImage = Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(10),
+        child: Image.network(
+          meta.previewUrl,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) =>
+              const Text("Preview image not available."),
+        ));
+    final infoSection = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        OutlinedButton(
+          child: const Text("Project Homepage"),
+          onPressed: () => launchUrl(meta.projectHomepage),
+        ),
+        Row(children: meta.platforms.map(Platform.icon).toList()),
+      ],
+    );
+    final locationConfig = FutureBuilder(
+        future: getTemplateInstallPath(meta.name),
+        builder: (context, snapshot) {
+          if (snapshot.data == null) return const SizedBox.shrink();
+          final controller = TextEditingController.fromValue(
+              TextEditingValue(text: snapshot.data!));
+
+          return Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              children: [
+                Expanded(child: TextField(controller: controller)),
+                const SizedBox(width: 10),
+                FilledButton.tonalIcon(
+                  icon: const Icon(Icons.save),
+                  label: const Text("Save"),
+                  onPressed: () {
+                    setTemplateInstallPath(meta.name, controller.value.text)
+                        .then((it) => {
+                              context.findAncestorStateOfType()!.setState(() {})
+                            });
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+    return SizedBox(
+      width: 600,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -296,43 +361,10 @@ class _Browser extends State<Browser> {
                         : []),
               ),
               const SizedBox(height: 20),
-              Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  width: 500,
-                  child: Image.network(
-                    meta.previewUrl,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Text("Preview image not available."),
-                  )),
+              previewImage,
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlinedButton(
-                    child: const Text("Project Homepage"),
-                    onPressed: () => launchUrl(meta.projectHomepage),
-                  ),
-                  Row(children: meta.platforms.map(Platform.icon).toList()),
-                ],
-              ),
+              infoSection,
+              locationConfig,
             ],
           ),
         ),

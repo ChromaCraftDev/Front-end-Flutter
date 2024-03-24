@@ -52,7 +52,6 @@ dependencies:
   chat_gpt_sdk: ^2.0.2
   getwidget: ^4.0.0
   widget_circular_animator: ^1.0.0
-  font_awesome_flutter: ^10.7.0
   
 dev_dependencies:
   flutter_test:

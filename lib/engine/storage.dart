@@ -143,10 +143,6 @@ Future<void> compileAndInstall(Config config, Directory template) async {
   final meta = TemplateMetadata.fromJson(
       jsonDecode(await File(template + "meta.json").readAsString()));
 
-  if (!meta.platforms.contains(Platform.current())) {
-    throw "Unsupported platform!";
-  }
-
   final sourcePath = template + meta.install.src;
   final compilePath = await compiledDirectory + meta.name;
   final installPath = await getTemplateInstallPath(meta.name) ??

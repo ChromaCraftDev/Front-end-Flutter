@@ -1,9 +1,5 @@
 import 'dart:io' as io;
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'util.dart';
-
 enum Platform {
   windows,
   macos,
@@ -25,15 +21,6 @@ enum Platform {
       _ => Platform.invalid
     };
   }
-
-  static FaIcon icon(Platform it) {
-    return switch (it) {
-      Platform.windows => const FaIcon(FontAwesomeIcons.windows),
-      Platform.macos => const FaIcon(FontAwesomeIcons.apple),
-      Platform.linux => const FaIcon(FontAwesomeIcons.linux),
-      Platform.invalid => const FaIcon(FontAwesomeIcons.exclamation),
-    };
-  }
 }
 
 class TemplateMetadata {
@@ -41,14 +28,12 @@ class TemplateMetadata {
   final int version;
   final Uri projectHomepage;
   final String previewUrl;
-  final List<Platform> platforms;
   final InstallerConfig install;
 
   TemplateMetadata(
     this.name,
     this.version,
     this.projectHomepage,
-    this.platforms,
     this.install,
   ) : previewUrl =
             "https://chromacraftdev.github.io/templates/previews/$name.webp";
@@ -58,17 +43,13 @@ class TemplateMetadata {
       parsed['name'],
       parsed['version'],
       Uri.parse(parsed['project_homepage']),
-      (parsed['platforms'] as List<dynamic>)
-          .map((it) => it as String)
-          .map(Platform.fromString)
-          .toList(),
       InstallerConfig.fromJson(parsed['install']),
     );
   }
 
   @override
   String toString() {
-    return 'TemplateMetadata{name: $name, version: $version, projectHomepage: $projectHomepage, platforms: $platforms, install: $install}';
+    return 'TemplateMetadata{name: $name, version: $version, projectHomepage: $projectHomepage, install: $install}';
   }
 }
 

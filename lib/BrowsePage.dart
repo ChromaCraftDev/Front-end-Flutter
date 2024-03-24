@@ -252,6 +252,16 @@ class _Browser extends State<Browser> {
   }
 
   Widget _buildTemplateCard(TemplateMetadata meta) {
+    final title = OutlinedButton(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Text(
+          meta.name,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
+      onPressed: () => launchUrl(meta.projectHomepage),
+    );
     final action = FutureBuilder(
         future: statTemplate(meta.name, _templates!),
         builder: (context, snapshot) {
@@ -303,16 +313,6 @@ class _Browser extends State<Browser> {
           errorBuilder: (context, error, stackTrace) =>
               const Text("Preview image not available."),
         ));
-    final infoSection = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        OutlinedButton(
-          child: const Text("Project Homepage"),
-          onPressed: () => launchUrl(meta.projectHomepage),
-        ),
-        Row(children: meta.platforms.map(Platform.icon).toList()),
-      ],
-    );
     final locationConfig = FutureBuilder(
         future: getTemplateInstallPath(meta.name),
         builder: (context, snapshot) {
@@ -364,20 +364,11 @@ class _Browser extends State<Browser> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                      Text(
-                        meta.name,
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    ] +
-                    (meta.platforms.contains(Platform.current())
-                        ? [action]
-                        : []),
+                children: <Widget>[title, action],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               previewImage,
               const SizedBox(height: 10),
-              infoSection,
               locationConfig,
             ],
           ),

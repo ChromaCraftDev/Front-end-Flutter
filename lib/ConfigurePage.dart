@@ -450,7 +450,10 @@ class _ConfigurePageState extends State<ConfigurePage>
   void _applyButtonPressed() async {
     if (kDebugMode) print("Installing...");
     saveConfig();
-    storage.installAllDownloaded(config);
+    storage.installAllDownloaded(config).onError((error, _) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.toString())));
+    });
 
     // Show loading overlay
     showDialog(

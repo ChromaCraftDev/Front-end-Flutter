@@ -148,7 +148,10 @@ Future<void> compileAndInstall(Config config, Directory template) async {
   final compilePath = await compiledDirectory + meta.name;
   final installPath = await getTemplateInstallPath(meta.name) ??
       meta.install.dest[Platform.current()];
-  if (installPath == null) throw "Unspported platform!";
+  if (installPath == null) {
+    throw "Template ${meta.name} doesn't provide a default installation path for this platform!\n"
+        "Set one in the browse page or uninstall this template.";
+  }
   final mappedInstallPath = mapEnv(installPath);
   final backupPath = await backupDirectory + meta.name;
 

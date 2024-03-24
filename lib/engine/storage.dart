@@ -80,7 +80,7 @@ Future<void> uninstallTemplate(String name) async {
 /// 2. Backs up any files that would've been overriden during installation.
 /// 3. Copies all that is compiled to the install directory.
 /// 4. Register the name in the installed list.
-Stream<File> compileAndInstall(Config config, Directory template) async* {
+Future<void> compileAndInstall(Config config, Directory template) async {
   final meta = TemplateMetadata.fromJson(
       jsonDecode(await File(template + "meta.json").readAsString()));
 
@@ -102,26 +102,35 @@ Stream<File> compileAndInstall(Config config, Directory template) async* {
 
   await movePath(from: installPath, to: backupPath); // backup
 
-  final installed = copyFiles(
-    files: compiled,
-    from: compilePath,
-    to: installPath,
-  );
+  final Future<void> installed;
+  if (meta.install.zip) {
+    await compiled.join();
+    installed = ZipFileEncoder().zipDirectoryAsync(
+      Directory(compilePath),
+      filename: installPath,
+    );
+  } else {
+    installed = copyFiles(
+      files: compiled,
+      from: compilePath,
+      to: installPath,
+    ).join().then((_) {});
+  }
 
   await (await installedFile).appendLine(installPath);
 
-  yield* installed;
+  return installed;
 }
 
 /// A helper function for usage in the UI
-Stream<File> installAllDownloaded(Config config) async* {
+Stream<void> installAllDownloaded(Config config) async* {
   await for (final template in (await templateDirectory).list()) {
     final name = path.basename(template.path);
     if (template is Directory) {
       if (kDebugMode) {
         print("Found template '$name'. Trying to compile...");
       }
-      yield* compileAndInstall(config, template);
+      yield compileAndInstall(config, template);
     } else {
       throw "Invalid item found in templates directory: $name";
     }

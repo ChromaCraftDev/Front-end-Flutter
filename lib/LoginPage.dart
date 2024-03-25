@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -29,9 +30,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeNotifier themeNotifier = context.read<ThemeNotifier>();
-    final String logoImagePath = themeNotifier.currentTheme.brightness == Brightness.dark
-        ? 'Images/logo.PNG'
-        : 'Images/logo2.PNG';
+    final String logoImagePath =
+        themeNotifier.currentTheme.brightness == Brightness.dark
+            ? 'Images/logo.PNG'
+            : 'Images/logo2.PNG';
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(1.0),
@@ -53,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
                         height: 600,
                       ),
                     ),
-                    const SizedBox(width: 300), // Add spacing between image and text boxes
+                    const SizedBox(
+                        width: 300), // Add spacing between image and text boxes
                     Expanded(
                       flex: 3,
                       child: Column(
@@ -73,10 +76,13 @@ class _LoginPageState extends State<LoginPage> {
                             alignment: Alignment.topCenter,
                             child: Text(
                               'LOGIN',
-                              style: TextStyle(fontSize: 80, fontFamily: 'Schyler'),
+                              style: TextStyle(
+                                  fontSize: 80, fontFamily: 'Schyler'),
                             ),
                           ),
-                          const SizedBox(height: 60.0), // Add space between "LOGIN" and text fields
+                          const SizedBox(
+                              height:
+                                  60.0), // Add space between "LOGIN" and text fields
                           TextField(
                             controller: emailController,
                             decoration: const InputDecoration(
@@ -87,19 +93,26 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 20.0),
                           TextField(
                             controller: passwordController,
-                            obscureText: _isObscure, // Toggle this value to show/hide password
+                            obscureText:
+                                _isObscure, // Toggle this value to show/hide password
                             decoration: InputDecoration(
                               labelText: 'Password',
-                              prefixIcon: const Icon(Icons.key), // Add password icon
+                              prefixIcon:
+                                  const Icon(Icons.key), // Add password icon
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    _isObscure = !_isObscure; // Toggle the value to show/hide password
+                                    _isObscure =
+                                        !_isObscure; // Toggle the value to show/hide password
                                   });
                                 },
                                 icon: Opacity(
                                   opacity: 0.5, // Set the opacity value here
-                                  child: Icon(_isObscure ? Icons.visibility_off : Icons.visibility,),
+                                  child: Icon(
+                                    _isObscure
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
                                 ),
                               ),
                             ),
@@ -110,12 +123,14 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Text('Login'),
                           ),
                           //------Dev only-----------------
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/config');
-                            },
-                            child: const Text('Developer only'),
-                          ),
+                          (kDebugMode
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/config');
+                                  },
+                                  child: const Text('Developer only'),
+                                )
+                              : const SizedBox.shrink()),
                           const SizedBox(height: 30.0),
                           Row(
                             mainAxisSize: MainAxisSize.max,
@@ -136,7 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                                     'Create an Account',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.blue, // Change font color here
+                                      color:
+                                          Colors.blue, // Change font color here
                                       decoration: TextDecoration.underline,
                                       decorationColor: Colors.blue,
                                     ),
@@ -148,7 +164,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
@@ -183,85 +198,87 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() async {
-  setState(() {
-    isLoading = true;
-    loadingStatus = 'Validating credentials...';
-  });
-  final email = emailController.text;
-  final password = passwordController.text;
-
-  if(email.contains(RegExp(r'[A-Z]'))){
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Email cannot contains capital letters...'),
-      ),
-    );
     setState(() {
-        isLoading = false;
+      isLoading = true;
+      loadingStatus = 'Validating credentials...';
     });
-  }else{
-    try {
-      // Set status message for validating credentials
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    if (email.contains(RegExp(r'[A-Z]'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email cannot contains capital letters...'),
+        ),
+      );
       setState(() {
-        loadingStatus = 'Validating credentials...';
+        isLoading = false;
       });
-
-      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
-
-      if(email == newEmail){
+    } else {
+      try {
+        // Set status message for validating credentials
         setState(() {
-        loadingStatus = 'Login successful. Redirecting to Home Page...';
-          
+          loadingStatus = 'Validating credentials...';
         });
-        await Future.delayed(const Duration(seconds: 2));
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful'),
-          ),
-        );
-        Navigator.pushNamed(context, '/config');
+        final response = await Supabase.instance.client.auth
+            .signInWithPassword(email: email, password: password);
 
-      }else{
-        setState(() {
-        loadingStatus = 'Login successful. Redirecting to Browse Template Page...';
-        });
-        await Future.delayed(const Duration(seconds: 2));
+        if (email == newEmail) {
+          setState(() {
+            loadingStatus = 'Login successful. Redirecting to Home Page...';
+          });
+          await Future.delayed(const Duration(seconds: 2));
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login successful'),
+            ),
+          );
+          Navigator.pushNamed(context, '/config');
+        } else {
+          setState(() {
+            loadingStatus =
+                'Login successful. Redirecting to Browse Template Page...';
+          });
+          await Future.delayed(const Duration(seconds: 2));
 
           // Save email to a text file
-        _saveEmailToFile(email);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful'),
-          ),
-        );
-        Navigator.pushNamed(context, '/browse');
-      }
+          _saveEmailToFile(email);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login successful'),
+            ),
+          );
+          Navigator.pushNamed(context, '/browse');
+        }
       } catch (e) {
-      if (e is AuthException) {
+        if (e is AuthException) {
+          setState(() {
+            loadingStatus =
+                'Invalid email or password. Check your credentials and try again';
+          });
+          await Future.delayed(const Duration(seconds: 2));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Invalid email or password. Check your Credentials and try again'),
+            ),
+          );
+        } else {
+          setState(() {
+            loadingStatus = 'An error occured !';
+          });
+        }
+      } finally {
         setState(() {
-        loadingStatus = 'Invalid email or password. Check your credentials and try again';
-        });
-        await Future.delayed(const Duration(seconds: 2));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Invalid email or password. Check your Credentials and try again'),
-          ),
-        );
-      }else{
-        setState(() {
-        loadingStatus = 'An error occured !';
+          isLoading = false;
         });
       }
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
-}
 
-Future<void> _getEmailFromStorage() async {
+  Future<void> _getEmailFromStorage() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/auth/userData.txt');
@@ -269,14 +286,11 @@ Future<void> _getEmailFromStorage() async {
     } catch (e) {
       print('Error reading email from file: $e');
     }
-}
+  }
 
-
-Future <void> _saveEmailToFile(String email) async {
+  Future<void> _saveEmailToFile(String email) async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/auth/userData.txt');
     await file.writeAsString(email);
   }
 }
-
-  

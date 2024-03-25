@@ -122,15 +122,6 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: isLoading ? null : () => _login(),
                             child: const Text('Login'),
                           ),
-                          //------Dev only-----------------
-                          (kDebugMode
-                              ? ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, '/config');
-                                  },
-                                  child: const Text('Developer only'),
-                                )
-                              : const SizedBox.shrink()),
                           const SizedBox(height: 30.0),
                           Row(
                             mainAxisSize: MainAxisSize.max,

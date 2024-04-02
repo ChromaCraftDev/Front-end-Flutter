@@ -263,8 +263,10 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
                             8.0), // Add some space between the text and the TextField
                     TextField(
                       controller: _textEditingController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Text prompt',
+                        labelStyle:
+                            TextStyle(color: config.semantic.subtle.color),
                       ),
                       onChanged: (String text) {
                         setState(() {}); // Trigger a state update
@@ -283,14 +285,29 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 50, top: 20),
-                    child: Text(
-                      _response,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.normal,
-                        letterSpacing: 1.0,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 20),
+                    child: Container(
+                      decoration: _response == ''
+                          ? null
+                          : BoxDecoration(
+                              border: Border.all(
+                                  width: 2,
+                                  color: config.semantic.primary.color),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _response,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FontStyle.normal,
+                            letterSpacing: 1.0,
+                            color: config.semantic.subtle.color,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -309,26 +326,37 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
               ),
               itemCount: config.optionMap.length,
               itemBuilder: (BuildContext context, int index) {
+                final name =
+                    config.optionMap.keys.toList(growable: false)[index];
+                final option =
+                    config.optionMap.values.toList(growable: false)[index];
+
+                final contrast =
+                    (ThemeData.estimateBrightnessForColor(option.color) ==
+                                    Brightness.dark) &&
+                                option != config.semantic.text ||
+                            option == config.semantic.base
+                        ? config.semantic.text.color
+                        : config.semantic.base.color;
                 return SizedBox(
                   width: 150, // Set the fixed width
                   height: 150, // Set the fixed height
                   child: AnimatedContainer(
                     duration: const Duration(
                         milliseconds: 500), // Adjust the duration as needed
-                    curve: Curves.decelerate, // Adjust the curve as needed
+                    curve: Curves.decelerate, // Adust the curve as needed
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: config.optionMap.values
-                          .toList(growable: false)[index]
-                          .color,
+                      color: option.color,
+                      border: Border.all(color: contrast),
                       borderRadius:
                           BorderRadius.circular(8.0), // Add border radius
                     ),
                     child: Center(
                       child: Text(
-                        config.optionMap.keys.toList(growable: false)[index],
-                        style: const TextStyle(
-                          color: Colors.white,
+                        name,
+                        style: TextStyle(
+                          color: contrast,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -406,22 +434,15 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
 }
 
 class OpenAIService {
-  static const apiUri = 'https://api.openai.com/v1/chat/completions';
-  static const apiKey = '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';
-
-  Future<String> chatGPTAPI(String prompt) async {
-    final List<Map<String, String>> messages = [];
-    messages.add({
-      "role": "system",
-      "content": """
+  static final systemPrompt = """
 You are 'ChromaCraft AI', an AI used for generating readable color schemes based on natural language prompts.
 Whenever the user gives you a prompt, you will reply with a list of hex colours in the following order.
 
 Semantic Colors:
 ${config.semantic.toMap().map((name, option) {
-                return MapEntry(name,
-                    "- $name: ${option.description?.replaceAll("\n", "")}");
-              }).values.join("\n")}
+            return MapEntry(
+                name, "- $name: ${option.description?.replaceAll("\n", "")}");
+          }).values.join("\n")}
 
 Rainbow Colors:
 ${config.rainbow.toMap().keys.map((it) => "- $it").join("\n")}
@@ -435,7 +456,18 @@ The format expected of your reply should follow the template below
 
 mode = dark|light
 ${config.optionMap.keys.map((it) => "$it = #XXXXXX").join("\n")}
-"""
+
+Happy theming! Contrast and readability is your highest concern!
+""";
+
+  static const apiUri = 'https://api.openai.com/v1/chat/completions';
+  static const apiKey = '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';
+
+  Future<String> chatGPTAPI(String prompt) async {
+    final List<Map<String, String>> messages = [];
+    messages.add({
+      "role": "system",
+      "content": systemPrompt,
     });
     messages.add({
       "role": "user",

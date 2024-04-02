@@ -239,7 +239,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'Semantic Colors',
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      style: TextStyle(
+                          color: config.semantic.text.color, fontSize: 30),
                     ),
                   ),
                   Wrap(
@@ -262,7 +263,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
                       'Rainbow Colors',
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      style: TextStyle(
+                          color: config.semantic.text.color, fontSize: 30),
                     ),
                   ),
                   Wrap(

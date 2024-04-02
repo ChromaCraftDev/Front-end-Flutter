@@ -308,8 +308,8 @@ class _ConfigurePageState extends State<ConfigurePage>
                   children: [
                         Text(
                           name,
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: config.semantic.text.color,
                               fontSize: 15,
                               fontWeight: FontWeight.bold),
                           softWrap: true,
@@ -318,11 +318,10 @@ class _ConfigurePageState extends State<ConfigurePage>
                       (option.description == null
                           ? []
                           : [
-                              Text(
-                                option.description!,
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              )
+                              Text(option.description!,
+                                  style: TextStyle(
+                                      color: config.semantic.text.color,
+                                      fontSize: 12))
                             ]),
                 ),
                 Container(

@@ -255,7 +255,8 @@ Welcome to ChromaCraft AI, your color scheme assistant!
 Please provide a brief description of the colors you'd like to see, including any preferences or themes.
 ChromaCraft will then create a personalized palette just for you, guaranteeing a cohesive and visually pleasing design experience.
 """,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: TextStyle(
+                          color: config.semantic.text.color, fontSize: 12),
                     ),
                     const SizedBox(
                         height:
@@ -272,6 +273,8 @@ ChromaCraft will then create a personalized palette just for you, guaranteeing a
                         _generateResponse(text);
                       },
                       maxLines: null,
+                      style: TextStyle(
+                          color: config.semantic.text.color, fontSize: 12),
                     ),
                     _buildGenerateButton(), // Call the function to display the button or loading indicator
                   ],
